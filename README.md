@@ -3,7 +3,7 @@
 YouTube kanalı için AI destekli video üretim otomasyonu. Üç aşamalı bir hat:
 
 1. **Script → Google Sheets** *(bu repo, hazır)*: Claude'un yazdığı script en
-   fazla 10 sahneye (her biri en fazla 999 karakter) bölünmüş halde, görsel
+   fazla 12 sahneye (her biri en fazla 999 karakter) bölünmüş halde, görsel
    üretme promptları, title, description ve tag'lerle birlikte JSON olarak
    make.com webhook'una gönderilir; make.com bunu Google Sheets'e bir satır
    olarak işler.
@@ -36,7 +36,7 @@ Bu repo şu an sadece 1. aşamayı içeriyor.
 
 - `video_code`: Drive'daki `eg1`, `eg2`, ... klasör adıyla eşleşir; görselleri
   doğru videoya bağlamak için kullanılır.
-- `scenes`: en fazla 10 öğe, her `script` alanı en fazla 999 karakter.
+- `scenes`: en fazla 12 öğe, her `script` alanı en fazla 999 karakter.
 - `tags`: liste ya da virgülle ayrılmış tek string olabilir.
 
 ## Kullanım
@@ -55,11 +55,11 @@ JSON'u şu alanlara dönüştürür:
 
 ```
 video_code, title, description, tags, publish_time,
-scene_1..scene_10, prompt_1..prompt_10
+scene_1..scene_12, prompt_1..prompt_12
 ```
 
 make.com tarafında **Custom Webhook** → **Google Sheets: Add a Row** modülü bu
-alanları ilgili sütunlara eşleyecek şekilde kurulmalı (10 sahneden azı
+alanları ilgili sütunlara eşleyecek şekilde kurulmalı (12 sahneden azı
 kullanılırsa kalan `scene_N`/`prompt_N` alanları boş string olarak gönderilir).
 
 ## Sahne bölme yardımcı aracı (opsiyonel)

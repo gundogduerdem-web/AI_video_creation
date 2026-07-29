@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Video script JSON'unu make.com webhook'una POST eder.
 
-Girdi: video_code, title, description, tags ve en fazla 10 sahneden
+Girdi: video_code, title, description, tags ve en fazla 12 sahneden
 (her biri en fazla 999 karakter script + görsel üretme prompt'u) oluşan
 bir JSON dosyası. Örnek için examples/example_video.json dosyasına bak.
 
 make.com tarafında Custom Webhook -> Google Sheets "Add a Row" modülü
 aşağıdaki düz (flat) alanları sütunlara eşleyecek şekilde kurulmalı:
   video_code, title, description, tags, publish_time,
-  scene_1..scene_10, prompt_1..prompt_10
+  scene_1..scene_12, prompt_1..prompt_12
 """
 import argparse
 import json
@@ -18,7 +18,7 @@ from urllib import error as urlerror
 from urllib import request as urlrequest
 
 MAX_SCENE_CHARS = 999
-MAX_SCENES = 10
+MAX_SCENES = 12
 
 
 def load_video(path):

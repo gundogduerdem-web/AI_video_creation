@@ -12,7 +12,7 @@ import re
 import sys
 
 MAX_SCENE_CHARS = 999
-MAX_SCENES = 10
+MAX_SCENES = 12
 
 
 def split_into_scenes(text, max_chars=MAX_SCENE_CHARS, max_scenes=MAX_SCENES):
