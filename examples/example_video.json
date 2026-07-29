@@ -1,0 +1,21 @@
+{
+  "video_code": "eg1",
+  "title": "Uzayın Derinliklerinde Kayıp Bir Gezegen",
+  "description": "Bilim insanlarının yıllardır aradığı gizemli gezegen hakkında şaşırtıcı gerçekler. Bu videoda evrenin en ilginç keşiflerinden birini keşfediyoruz.",
+  "tags": ["uzay", "bilim", "gezegen", "astronomi", "keşif"],
+  "publish_time": "",
+  "scenes": [
+    {
+      "script": "2016 yılında astronomlar, Güneş Sistemi'nin en dış bölgelerinde beklenmedik bir kütle çekimi anomalisi fark ettiler. Bu anomali, bilinen hiçbir gökcismiyle açıklanamıyordu ve bilim dünyasını heyecanlandırdı.",
+      "image_prompt": "Dark deep space scene, distant faint planet silhouette, stars and nebula in background, cinematic lighting, realistic digital art"
+    },
+    {
+      "script": "Yapılan hesaplamalar, Neptün'ün yörüngesindeki küçük buzul cisimlerin garip bir şekilde kümelendiğini gösteriyordu. Bu durum, dışarıda bilinmeyen dev bir gezegenin varlığına işaret ediyor olabilirdi.",
+      "image_prompt": "Icy asteroid belt objects clustering unusually in outer solar system, faint blue glow, space telescope perspective"
+    },
+    {
+      "script": "Bilim insanları bu varsayımsal cisme 'Dokuzuncu Gezegen' adını verdi. Dünya'dan kat kat büyük olabileceği tahmin edilen bu gezegen, hala doğrudan gözlemlenebilmiş değil.",
+      "image_prompt": "Massive mysterious planet glowing faintly at the edge of the solar system, artist concept, dramatic dark background"
+    }
+  ]
+}
