@@ -51,10 +51,10 @@ Bu rehberle YouTube'da başarılı bir kanal kurmak için gereken tüm aşamalar
 **Kritik prensip:** Değerlendirme **ismin ne kadar tanınır olduğu değil**, seçilen **SPESİFİK AÇI/DETAYIN** başka kanallarda ne kadar işlendiğidir.
 
 **Konu seçim formülü: TANINIR İSİM + AZ İŞLENMİŞ AÇI**
-Gerçekten obskür/duyulmamış isimler hedef değildir — isim tanınırlığı, 60+ kitle için thumbnail tıklama davranışını yönlendiren temel faktördür. Örnek: Audrey Hepburn çok tanınır bir isim, ama II. Dünya Savaşı direniş kuryeliği az işlenmiş bir açıdır. Robin Williams çok tanınır bir isim, ama Koko the Gorilla ile dostluğu neredeyse hiç işlenmemiş bir açıdır.
+Gerçekten obskür/duyulmamış isimler hedef değildir — isim tanınırlığı, 60+ kitle için thumbnail tıklama davranışını yönlendiren temel faktördür. Örnek: Audrey Hepburn çok tanınır bir isim, ama II. Dünya Savaşı direniş kuryeliği az işlenmiş bir açıdır.
 
 **Adımlar:**
-1. **Açı doygunluğu kontrolü:** Üretime başlamadan önce, seçilen SPESİFİK açının/detayın başka kanallarda ne kadar işlendiğini değerlendir. Açı aşırı doymuşsa, ya aynı figürde gerçekten az işlenmiş başka bir açı bul ya da rotasyondaki başka bir tanınır isme geç.
+1. **Açı doygunluğu kontrolü:** Üretime başlamadan önce, seçilen SPESİFİK açının/detayın başka kanallarda ne kadar işlendiğini değerlendir. Açı aşırı doymuşsa, ya aynı figürde gerçekten az işlenmiş başka bir açı bul ya da konu havuzundaki başka bir tanınır isme geç.
 2. **Başlık kuralı kontrolü:** Her başlık alternatifinin "sonucu veriyor mu?" testinden açıkça geçirildiğini belirt. Sonucu ima eden/çözen başlıklar önerilmez.
 3. **Hook yapısı:** Tanınır isim + az işlenmiş açı formülü varsayılan olduğu için, **hook varsayılan olarak DOĞRUDAN-DETAY-ÖNCE** açılır (şaşırtıcı, spesifik bir detayla başlar). Atmosferik/sahne kurulumu açılışı yalnızca seçilen konu **gerçekten az tanınan bir isimse** kullanılır (istisna, varsayılan değil).
 4. **Yayın sonrası kontrol (24-48 saat):** CTR %3'ün altındaysa thumbnail revizyonu düşünülür; erken izleyici kaybı yüksekse bir sonraki benzer videonun hook'una bu öğrenme yansıtılır.
@@ -69,19 +69,6 @@ Bir hikayenin az işlenmiş açısı, ünlü kişiyle bağlantılı **ikincil bi
 - Script'in anlatı odağı ve perspektifi, **tüm 12 sahne boyunca isimli/tanınır ünlü kişide kalmalıdır.**
 - İkincil figür yalnızca ünlü kişinin karakterine dair bir şey ortaya çıkaran **detay/pencere** görevi görür — asla ortak kahraman veya kendi biyografisi/iç dünyası anlatının omurgası olan bağımsız bir özne haline gelmemelidir.
 - Bir taslak yanlışlıkla ikincil figürün hikayesini anlatmaya kayarsa, sahne sahne yeniden yazılarak ünlü kişinin neredeyse her sahne açılış cümlesinin öznesi olması sağlanmalıdır.
-
-*(Bu kural, Robin Williams & Koko the Gorilla prodüksiyonunda yaşanan bir düzeltmeden doğmuştur — ilk taslak yanlışlıkla Koko'nun hikayesi gibi okunuyordu.)*
-
----
-
-## HAFTALIK KATEGORİ ROTASYONU
-
-- **2 × şarkıcı/müzisyen slotu** (ayrı, sadece müzisyenlere ayrılmış)
-- **1 × politikacı slotu**
-- **1 × sporcu slotu**
-- **1 × asker/diğer sanatçı slotu**
-
-**Şarkıcı seçim mantığı:** Büyük/doymuş isimlerin kendi hikayesini işlemek yerine, o hayran ekosistemi içindeki az bilinen açılar hedeflenir (çağdaşlar, iş birlikçiler, aile üyeleri, az işlenmiş dönemler).
 
 ---
 
@@ -185,18 +172,14 @@ Erdem'in performans testi istediği videolarda, iki farklı thumbnail prompt'u h
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi
 - **Karakter Tanıtımı:** Gerçek kişilerin isimleri açıkça kullanılır
 - **Betimleme Stili:** Duygu ve düşünceler dışarıdan bir gözlemci gibi, belgelenmiş kaynaklara dayanarak aktarılır
-- Örnek: "Robin Williams kapıya doğru yürüdü. Yüzünde endişeli bir ifade vardı."
+- Örnek: "[Konu kişi] kapıya doğru yürüdü. Yüzünde endişeli bir ifade vardı."
 
 ---
 
 ## GÜNCEL ÜRETİM DURUMU (Backlog)
 
-**27 Club (ileriki haftalar için, "27 Club" çerçevesi kullanılmaz — her figürün bireysel az-işlenmiş açısı kullanılır):**
+**27 Club ("27 Club" çerçevesi kullanılmaz — her figürün bireysel az-işlenmiş açısı kullanılır):**
 - Brian Jones (Rolling Stones'tan çıkarılması/güç mücadelesi — düşük doygunluk, yüksek fırsat)
 - Jim Morrison (Paris'e taşınması, şöhretten kaçış — orta doygunluk, daha keskin mikro-açı gerekli)
 - Amy Winehouse (büyükannesi Cynthia'nın etkisi; veya sessiz hayır işleri)
 - Kurt Cobain (sanat öğretmeni Bob Hunter mentörlüğü; Meat Puppets'ı MTV Unplugged'da öne çıkarma motivasyonu; Frances Bean ile ev videoları)
-
-**Bu haftaki durum:**
-- Şarkıcı slotu: Janis Joplin (lise dönemi/alay eden sınıf arkadaşları açısı) — devam ediyor
-- Asker/diğer sanatçı slotu: **Robin Williams — Koko the Gorilla ile dostluğu** — tam prodüksiyon paketi tamamlandı (script, görsel prompt'lar, A/B thumbnail, başlıklar, SEO)
