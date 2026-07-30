@@ -1,0 +1,30 @@
+name: Send Video to Webhook
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload_file:
+        description: 'Path to JSON payload file in the repo'
+        required: true
+        default: 'data/pending_video.json'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate payload JSON
+        run: python3 -c "import json; json.load(open('${{ github.event.inputs.payload_file }}', encoding='utf-8')); print('payload JSON gecerli')"
+
+      - name: Send payload to make.com webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+        run: |
+          if [ -z "$WEBHOOK_URL" ]; then
+            echo "MAKE_WEBHOOK_URL secret ayarlanmamis" >&2
+            exit 1
+          fi
+          curl -sS -f -X POST "$WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            --data @"${{ github.event.inputs.payload_file }}"
