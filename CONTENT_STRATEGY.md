@@ -224,6 +224,18 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
 4. Karakter sayısı doğrulaması — Python regex ile sahne etiketlerinden
    (`[SCENE1]...[/SCENE1]` vb.) her sahnenin 970–999 karakter olduğu
    üretime/Erdem'e sunulmadan önce doğrulanır.
+5. **Tekrar/benzerlik kontrolü (kritik, kanal riski):** Yeni script/hikaye,
+   daha önce üretilmiş videolarla (özellikle olay örgüsü, hook, açılış/kapanış
+   yapısı ve görsel sahne kompozisyonları) karşılaştırılıp **belirgin şekilde
+   farklı** olduğu doğrulanır. Erdem'in benzer içerik üreten tanıdıkları,
+   tekrarlayan/formülsel içerik nedeniyle YouTube'un "reused/duplicative
+   content" politikası kapsamında kanal kapatılmasıyla karşılaşmış — bu
+   somut, gerçek bir kanal riski. Tek karakter (Audrey Hepburn) + tek dönem
+   (II. Dünya Savaşı) formatında bu risk daha yüksek olduğu için, her yeni
+   video için: (a) farklı bir olay/açı seçilir (aynı "yaralı asker saklama"
+   kalıbı tekrarlanmaz), (b) hook yapısı ve sahne kompozisyonları önceki
+   videolardan görsel/yapısal olarak ayrıştırılır, (c) şüpheli bir benzerlik
+   varsa üretime geçmeden önce Erdem'e açıkça belirtilir.
 
 ### Oturum iş akışı sırası
 Konsept fikri → konu onayı → hook seçimi → karakter sayısı doğrulamalı script
