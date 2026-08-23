@@ -337,11 +337,29 @@ az-işlenmiş açısı kullanılır):
 - Konu/açı: Audrey Hepburn (kurgusal, yetişkin), II. Dünya Savaşı, Nazi
   işgali altındaki Hollanda'da yaralı bir müttefik askerini gizlice
   saklaması ve aralarında gelişen ilişki.
-- Durum: **Tam prodüksiyon paketi tamamlandı** — 12 sahnelik script,
-  görseller (Gemini API, watermark'sız), seslendirme (Gemini TTS,
+- Durum: **Yayında.** Tam prodüksiyon paketi tamamlandı — 12 sahnelik
+  script, görseller (Gemini API, watermark'sız), seslendirme (Gemini TTS,
   "Enceladus" sesi), gerçek kelime zamanlamalı altyazı (Google
   Speech-to-Text ile), FFmpeg ile birleştirilmiş final video, thumbnail
-  (renkli, yakın plan, tek kare), SEO paketi.
+  (renkli, yakın plan, tek kare), SEO paketi. Kullanıcı onayıyla public
+  yapıldı.
 - Seçilen başlık: **"The Man Audrey Hepburn Never Named"**
 - Video ve görseller Drive'da `AI Videos/eg2` klasöründe.
-- Sıradaki adım: YouTube'a otomatik yükleme (bkz. Adım 8, henüz kurulmadı).
+
+**Video 2 — "Açlık Kışı" (The Hunger Winter)**
+- Konu/açı: Audrey Hepburn (kurgusal, yetişkin), 1944-45 Hollanda
+  Hongerwinter'ı (Nazi ablukası nedeniyle yaşanan gerçek kıtlık); aile
+  fedakarlığı ve hayatta kalma — Video 1'den kasıtlı olarak farklı bir
+  görsel/duygusal kayıt (gündüz/ev içi, orman/gece yok, ikincil aşk
+  karakteri yok; tekrar kontrolü — checklist madde 5 — bu videoda
+  uygulandı).
+- Durum: **Tam prodüksiyon paketi tamamlandı, YouTube'a private olarak
+  yüklendi, kullanıcı onayı bekleniyor.** 12 sahnelik script, görseller
+  (Gemini API), seslendirme (Gemini TTS, "Enceladus"), gerçek kelime
+  zamanlamalı altyazı (Speech-to-Text), FFmpeg final video (~12.5 dk),
+  thumbnail (renkli, yakın plan, tek kare), SEO paketi.
+- Seçilen başlık: **"Audrey Hepburn Ate Tulip Bulbs to Survive World War II"**
+- Video ve görseller Drive'da `AI Videos/eg3` klasöründe.
+- YouTube linki (private): https://youtube.com/watch?v=QyZ7kl8G6Fc
+- Sıradaki adım: Kullanıcının video içeriğini onaylaması, ardından
+  yayın zamanı belirlenip public/scheduled yapılması.
