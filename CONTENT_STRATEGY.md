@@ -215,7 +215,21 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
 - **Adım 5:** Kapak Metni — thumbnail (istenirse A/B test formatında)
 - **Adım 6:** Yayın Paketi — 5 başlık alternatifi (sonuç-çözme kontrolünden geçirilmiş) + SEO açıklama + etiketler
 - **Adım 7:** Kanal adı/açıklaması güncellemesi — video yayına hazır olduğunda, "The Stories History Left Behind" belgesel formatından kurgusal/dramatize içerik formatına geçişi yansıtacak şekilde YouTube kanal adı ve açıklaması güncellenir (bkz. Studio → Customization → Basic info); açıklamada içeriğin kurgusal olduğu açıkça belirtilir.
-- **Adım 8:** YouTube'a yükleme otomasyonu — tamamlanan video + başlık + açıklama + etiketlerin YouTube Data API üzerinden otomatik yüklenmesi (henüz kurulmadı, planlanıyor).
+- **Adım 8:** YouTube'a yükleme otomasyonu — tamamlanan video + başlık + açıklama + etiketlerin YouTube Data API üzerinden otomatik yüklenmesi (private olarak yüklenir, Erdem'in açık onayı olmadan asla public/scheduled yapılmaz).
+
+### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
+**Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
+geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
+sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
+yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
+- **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
+- **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
+- **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
+
+### YouTube video meta verisi standardı (Video 3'ten itibaren geçerli)
+- **Location:** United States (U.S.A)
+- **Video dili / Language:** English (United States) — `snippet.defaultLanguage` ve `defaultAudioLanguage` = `en-US`
+- **Made for kids:** Hayır — `status.selfDeclaredMadeForKids: false`
 
 ### Ön-prodüksiyon kontrol listesi (her video için)
 1. Doygunluk kontrolü — konu/açı başka kanallarda ne kadar işlenmiş.
