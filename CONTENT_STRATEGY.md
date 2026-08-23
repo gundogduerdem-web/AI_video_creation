@@ -144,10 +144,15 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
 - **Toplam script hedefi:** 12 sahne × bu aralık = **~11.640–11.988 karakter**.
 - **Görsel stil:** Siyah-beyaz sinematik belgesel, 35mm film grain, yüksek
   kontrast, 16:9.
-- **Thumbnail standardı:** Konunun ismi mutlaka yer alır (60+ kitlede
-  tanınırlık odaklı tıklama davranışı); Anton font; isim küçük/beyaz üstte,
-  curiosity-gap metni büyük/kırmızı (ya da kanalın altın #E8B923 vurgusuyla)
-  altta; monokrom temele karşı en az bir yüksek kontrastlı vurgu rengi.
+- **Thumbnail standardı (güncellendi):** Eski kural (B&W split-frame,
+  öncesi/sonrası kontrastı) düşük CTR verdiği için değiştirildi. **Yeni
+  kural: video sahnesinin (genelde Sahne 1) renkli, yakın plan bir versiyonu**
+  — tek kadraj, geniş/uzak çekim değil, yüzler net ve okunaklı olacak
+  kadar yakın. Konunun ismi mutlaka yer alır (60+ kitlede tanınırlık odaklı
+  tıklama davranışı); Anton font; isim küçük/beyaz üstte, curiosity-gap
+  metni büyük/altın (#E8B923) altta, siyah 8px kontur + drop shadow.
+  B&W/split-frame format artık varsayılan değil — istenirse A/B test için
+  ayrıca denenebilir ama varsayılan artık **renkli + yakın plan + tek kare**.
 - **Politika kısıtı:** Reşit olmayanların fotogerçekçi tasviri yok — bunun
   yerine siluet, sembolik obje ya da çevresel kompozisyon kullanılır.
 - **Retention mimarisi:** Kanal intro'su yok; 25–35 saniye civarında pattern
