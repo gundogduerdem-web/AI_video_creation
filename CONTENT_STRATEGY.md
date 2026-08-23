@@ -217,6 +217,21 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
 - **Adım 7:** Kanal adı/açıklaması güncellemesi — video yayına hazır olduğunda, "The Stories History Left Behind" belgesel formatından kurgusal/dramatize içerik formatına geçişi yansıtacak şekilde YouTube kanal adı ve açıklaması güncellenir (bkz. Studio → Customization → Basic info); açıklamada içeriğin kurgusal olduğu açıkça belirtilir.
 - **Adım 8:** YouTube'a yükleme otomasyonu — tamamlanan video + başlık + açıklama + etiketlerin YouTube Data API üzerinden otomatik yüklenmesi (private olarak yüklenir, Erdem'in açık onayı olmadan asla public/scheduled yapılmaz).
 
+### Drive kullanım standardı (Video 3'ten itibaren geçerli)
+Drive artık pipeline'ın zorunlu bir parçası değil — görseller ve ham
+üretim dosyaları Drive'a yüklenmez, sadece local scratchpad'de kalır.
+Tek istisna: **kalite kontrolü için final video.**
+1. Video derlenip YouTube'a private olarak yüklendikten sonra, aynı final
+   video dosyası (görseller değil) tek başına Drive'a yüklenir.
+2. Erdem'e hem Drive linki hem YouTube (private) linki paylaşılır; kalite
+   kontrolünü Drive üzerinden yapabilir.
+3. Erdem onay verdiğinde (video içeriğini/kalitesini onayladığında),
+   `send_later` ile **24 saat sonrasına** bir hatırlatma kurulur.
+4. 24 saat dolunca bu hatırlatma tetiklenir ve Drive'daki video dosyası
+   Drive API ile silinir (YouTube'daki kopyaya dokunulmaz). Bu, video her
+   onaylandığında tekrarlanan standart bir adımdır — ayrıca istenmesine
+   gerek yoktur.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
