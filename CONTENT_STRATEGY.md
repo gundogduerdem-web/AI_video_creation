@@ -1,45 +1,80 @@
-# The Stories History Left Behind — İçerik Stratejisi
+# Audrey Hepburn: Untold Stories — İçerik Stratejisi
 
 > **Bu dosya hakkında:** Bu doküman, Erdem'in ayrı bir Claude.ai projesinde
 > (kanal danışmanlığı) birikmiş proje hafızası ile bu repodaki otomasyon
 > çalışmasında alınan kararların birleştirilmiş, tek kanonik halidir.
-> Kaynaklar arasında **iki noktada bilinçli çelişki/düzeltme** var, ikisi de
-> bu repo oturumunda Erdem tarafından açıkça (iki kez) onaylandı:
+> Kaynaklar arasında **üç noktada bilinçli çelişki/düzeltme/pivot** var,
+> hepsi bu repo oturumunda Erdem tarafından açıkça onaylandı:
 >
 > 1. **Sahne sayısı: 12** (proje hafızasındaki "Exactly 10 sahne" değil).
 > 2. **Haftalık kategori kotası/slot sistemi yok** — asker, sporcu, şarkıcı
 >    vb. için sabit bir limit uygulanmıyor (proje hafızasındaki "Weekly
 >    category rotation" slot sistemi bu repo için geçerli değil).
+> 3. **Büyük pivot (güncel karar):** Kanal, çok kişili "hidden moment"
+>    belgesel formatından (The Stories History Left Behind) **tek karakter,
+>    açıkça kurgusal/dramatize** bir formata geçti — bkz. aşağıdaki
+>    "Kanal Kimliği ve Amaç" bölümü. Aşağıdaki "Öncelikli İçerik
+>    Kategorileri", "Doygunluk Kontrolü" (çoklu isim seçimi) ve "Backlog"
+>    bölümleri **eski format için yazılmıştı, artık aktif olarak
+>    kullanılmıyor** — tarihsel referans olarak saklanıyor, silinmedi.
 >
-> Bunlar dışındaki tüm bilgiler (kanal kimliği, tamamlanmış prodüksiyonlar,
-> performans öğrenmeleri, teknik standartlar, araç zinciri) proje
-> hafızasından olduğu gibi aktarılmıştır.
+> Bunlar dışındaki tüm bilgiler (tamamlanmış prodüksiyonlar, performans
+> öğrenmeleri, teknik standartlar, araç zinciri) proje hafızasından olduğu
+> gibi aktarılmıştır.
 
 ---
 
-## Kanal Kimliği ve Amaç
+## Kanal Kimliği ve Amaç (güncel — pivot sonrası)
 
-**Kanal adı:** The Stories History Left Behind
+**Kanal adı:** Audrey Hepburn: Untold Stories *(eski ad: "The Stories
+History Left Behind")*
 
-Erdem, vefat etmiş Amerikalı kültürel ikonları (müzisyenler, oyuncular,
-sporcular, politikacılar, First Lady'ler, asker figürleri ve diğer
-sanatçılar) konu alan, dramatize edilmiş biyografik bir belgesel kanalı
-işletiyor. Hedef kitle İngilizce konuşan 60+ yaş grubu; aktif hedef, bu
-kitle içindeki **65+ kadın izleyici payını artırmak**.
+**Kanal açıklaması:**
+"Fictional, dramatized stories inspired by the hidden and untold moments
+of Audrey Hepburn's life — many set during World War II, years before the
+world knew her name. Each story blends documented history with imagined
+detail to explore the emotional truths behind her legend. New stories
+every week.
+
+These videos are created using AI-generated visuals and voice, and depict
+fictional, dramatized storytelling — not documentary or biographical fact."
+
+Kanal artık **tek bir karakter** üzerine kurulu: **Audrey Hepburn**. İçerik,
+çoğunlukla **II. Dünya Savaşı** dönemini (Nazi işgali altındaki Hollanda,
+1940-1945) konu alan, **açıkça kurgusal/dramatize edilmiş** hikayelerden
+oluşuyor — gerçek biyografik anlatım değil (bkz. yukarıdaki açıklama metni
+ve aşağıdaki "İçerik Çerçevesi" bölümü). Hedef kitle İngilizce konuşan 60+
+yaş grubu; aktif hedef, bu kitle içindeki **65+ kadın izleyici payını
+artırmak**.
 
 İçerik üretim süreci Türkçe yürütülüyor (Claude ile), yayın için İngilizceye
 çevriliyor/tamamlanıyor.
 
-**Rakiplerden farklılaşma noktaları** (örn. Facts Verse): tek format
-derinliği, sinematik siyah-beyaz estetik, saygın/vakur anlatım tonu, ve
-**"gizli an" açısı** — ünlü bir hayatın arkasındaki gözden kaçan gerçek ya da
-dönüm noktası.
-
 **Başarı ölçütleri:** CTR, retention, hedef demografideki büyüme.
+
+### İçerik Çerçevesi (kurgu kuralları)
+
+- İçerik **açıkça kurgu/dramatizasyon olarak sunulur** — başlık/açıklamada
+  gizlenmez, video açıklamasının sonunda AI üretimi ve kurgusal olduğu
+  açıkça belirtilir (bkz. yukarıdaki kanal açıklaması).
+- Gerçek isim/imaj kullanılır (Audrey Hepburn), ama hikaye örgüsü video
+  video değişebilir: bazıları gerçek bir olaydan yola çıkıp ağırlıklı kurgu
+  içerir (örn. gerçek direniş kuryeliği geçmişi), bazıları tamamen
+  kurgusaldır.
+- Zaman çizgisi/yaş esnetilebilir: gerçek olaylar Audrey Hepburn'ün genç
+  yaşlarında (14-16) geçmiş olsa da, reşit olmayan tasvir kısıtı nedeniyle
+  kurgusal versiyonda **yetişkin (20'li yaşlar)** olarak tasvir edilir.
+- İkincil karakterler (örn. "Ormandaki Asker"daki yaralı asker) tamamen
+  kurgusal/isimsiz olabilir.
+- Anlatım tüm hikayelerde 3. şahıs.
 
 ---
 
-## Konu Uygunluğu
+## Konu Uygunluğu (eski format — artık aktif değil)
+
+> Aşağıdaki bölüm, çok karakterli eski format için yazılmıştı. Kanal artık
+> sadece Audrey Hepburn'ü işlediği için bu bölüm aktif olarak kullanılmıyor,
+> tarihsel referans olarak saklanıyor.
 
 - Tercihen ~2019 veya öncesinde vefat etmiş figürler.
 - 2023 sonrası vefat edenler hariç tutulur ("gizli an" açısı için çok yakın,
@@ -55,7 +90,7 @@ dönüm noktası.
 
 ---
 
-## Öncelikli İçerik Kategorileri (kota/slot yok)
+## Öncelikli İçerik Kategorileri (eski format — artık aktif değil, kota/slot yok)
 
 - Klasik Hollywood / altın çağ aktör ve aktrisleri (evlilik/kayıp temaları) — yüksek öncelik
 - Her dönemden TV yıldızları — yüksek öncelik
@@ -75,7 +110,12 @@ segmentinde performansı bu belirliyor.
 
 ---
 
-## 🔑 Doygunluk Kontrolü (Saturation Check)
+## 🔑 Doygunluk Kontrolü (eski format — artık aktif değil)
+
+> Bu bölüm, çoklu isim havuzundan konu seçimi için yazılmıştı. Kanal artık
+> sadece Audrey Hepburn'ü işlediği için (konu seçimi değil, açı/hikaye
+> seçimi yapılıyor) aktif olarak kullanılmıyor, tarihsel referans olarak
+> saklanıyor.
 
 **Kritik prensip:** Değerlendirme **ismin ne kadar tanınır olduğu değil**,
 seçilen **spesifik açı/detayın** başka kanallarda ne kadar işlendiğidir.
@@ -264,7 +304,11 @@ SEO açıklaması ve etiketler.
 
 ---
 
-## Backlog (Gelecek İçerik Fikirleri)
+## Backlog (eski format — artık aktif değil)
+
+> Kanal artık sadece Audrey Hepburn'ü işlediği için bu liste (başka
+> isimler için fikir havuzu) aktif olarak kullanılmıyor, tarihsel referans
+> olarak saklanıyor.
 
 **27 Club** ("27 Club" çerçevesi kullanılmaz — her figürün bireysel
 az-işlenmiş açısı kullanılır):
@@ -272,3 +316,20 @@ az-işlenmiş açısı kullanılır):
 - Jim Morrison (Paris'e taşınması, şöhretten kaçış — orta doygunluk, daha keskin mikro-açı gerekli)
 - Amy Winehouse (büyükannesi Cynthia'nın etkisi; veya sessiz hayır işleri)
 - Kurt Cobain (sanat öğretmeni Bob Hunter mentörlüğü; Meat Puppets'ı MTV Unplugged'da öne çıkarma motivasyonu; Frances Bean ile ev videoları)
+
+---
+
+## Güncel Prodüksiyon Durumu (aktif)
+
+**Video 1 — "Ormandaki Asker" (The Soldier in the Woods)**
+- Konu/açı: Audrey Hepburn (kurgusal, yetişkin), II. Dünya Savaşı, Nazi
+  işgali altındaki Hollanda'da yaralı bir müttefik askerini gizlice
+  saklaması ve aralarında gelişen ilişki.
+- Durum: **Tam prodüksiyon paketi tamamlandı** — 12 sahnelik script,
+  görseller (Gemini API, watermark'sız), seslendirme (Gemini TTS,
+  "Enceladus" sesi), gerçek kelime zamanlamalı altyazı (Google
+  Speech-to-Text ile), FFmpeg ile birleştirilmiş final video, thumbnail
+  (renkli, yakın plan, tek kare), SEO paketi.
+- Seçilen başlık: **"The Man Audrey Hepburn Never Named"**
+- Video ve görseller Drive'da `AI Videos/eg2` klasöründe.
+- Sıradaki adım: YouTube'a otomatik yükleme (bkz. Adım 8, henüz kurulmadı).
