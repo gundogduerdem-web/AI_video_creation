@@ -169,6 +169,8 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
 - **Adım 4:** Görsel Prompt'ları — kilitli karakter tanımları + sahne başı görsel prompt'lar
 - **Adım 5:** Kapak Metni — thumbnail (istenirse A/B test formatında)
 - **Adım 6:** Yayın Paketi — 5 başlık alternatifi (sonuç-çözme kontrolünden geçirilmiş) + SEO açıklama + etiketler
+- **Adım 7:** Kanal adı/açıklaması güncellemesi — video yayına hazır olduğunda, "The Stories History Left Behind" belgesel formatından kurgusal/dramatize içerik formatına geçişi yansıtacak şekilde YouTube kanal adı ve açıklaması güncellenir (bkz. Studio → Customization → Basic info); açıklamada içeriğin kurgusal olduğu açıkça belirtilir.
+- **Adım 8:** YouTube'a yükleme otomasyonu — tamamlanan video + başlık + açıklama + etiketlerin YouTube Data API üzerinden otomatik yüklenmesi (henüz kurulmadı, planlanıyor).
 
 ### Ön-prodüksiyon kontrol listesi (her video için)
 1. Doygunluk kontrolü — konu/açı başka kanallarda ne kadar işlenmiş.
