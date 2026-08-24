@@ -265,6 +265,12 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
    kalıbı tekrarlanmaz), (b) hook yapısı ve sahne kompozisyonları önceki
    videolardan görsel/yapısal olarak ayrıştırılır, (c) şüpheli bir benzerlik
    varsa üretime geçmeden önce Erdem'e açıkça belirtilir.
+   - **Kanalda daha önce işlenmiş konular (bir daha önerilme/kullanılma):**
+     Direniş kuryeliği (ayakkabıda/gizlice direniş mesajı taşıma anlatısı) —
+     Erdem bu konuyu kanalda daha önce işlemiş.
+6. **Kurgu serbestisi:** Hikayeler tamamen uydurma olabilir — gerçek bir
+   tarihsel olaya dayanma zorunluluğu yok. (Kanal kimliğindeki "açıkça
+   kurgu/dramatizasyon" beyanı her durumda korunur.)
 
 ### Oturum iş akışı sırası
 Konsept fikri → konu onayı → hook seçimi → karakter sayısı doğrulamalı script
