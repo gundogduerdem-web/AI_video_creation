@@ -1,3 +1,45 @@
+# Kanal Portföyü — İçerik Stratejisi
+
+## ÇOKLU KANAL GENİŞLEMESİ (güncel büyük karar)
+
+Tek kanalın başarı ihtimali düşük olduğu için portföy yaklaşımına geçildi.
+**5 kanal:** Audrey Hepburn (mevcut) + Princess Diana + Jacqueline Kennedy +
+Louis Armstrong + Kenny Rogers (hepsi Erdem tarafından seçildi/onaylandı).
+Seçim kriterleri: vefat etmiş, 65+ ABD kitlesinde çok tanınır, agresif
+estate/lisans temsilcisi yok (Elvis, Einstein, James Dean, Sinatra, CMG
+temsilcileri — Billie Holiday, Buddy Holly, Hank Williams, Chuck Berry —
+ABG temsilcileri — Whitney Houston — ve Ray Charles vakfı elendi).
+
+**Merkezi kayıt:** Drive'daki "AI video scenario sheet"
+(ID: 1LaEweSHZb4L_Y-AhnuRxiz7o7qSONKsxYSXhdWTBLBo) — Dashboard + kanal
+başına bir sekme. Her video için: başlık (+alternatifler), konu, hook,
+tam senaryo, doğrulamalar, tekrar-kontrol notu, durum, YouTube/Drive
+linkleri, yayın zamanı, thumbnail konsepti, etiketler, Erdem onayı,
+izlenme verisi.
+
+**Yeni karar akışı (Erdem'in talimatı):** Konu + hook + başlığı Claude
+en yüksek izlenme potansiyeline göre kendisi seçer, Erdem'e sormaz;
+tüm seçimler sheet'e işlenir. Değişmeyen kapılar: final video kalite
+kontrolü (Drive QC linki) ve **açık onay olmadan hiçbir video
+public/scheduled yapılmaz** (onay sheet'teki "Erdem onayı" kolonuyla
+toplu verilebilir).
+
+**Tempo planı:** Lansman fazında kanal başına günde 1 video (algoritma
+yer edinme hızlandırması, Erdem'in kararı), kanal başına ilk 3-4 hafta;
+sonra haftada 2-3'e inilir. Kanallar 3-4 gün arayla kademeli devreye
+alınır (aynı gün toplu açılış "ağ/spam" görünümü riski). Tekrar kontrolü
+hem kanal içi hem **kanallar arası** yapılır.
+
+**Operasyonel önkoşullar:** Erdem 4 yeni marka kanalı oluşturur + her
+kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token).
+
+Aşağıdaki bölümler Audrey Hepburn kanalı için yazılmıştır; teknik
+standartlar (8 sahne/8 görsel, 1450-1499 kr/sahne, 12-13 dk, Batch API,
+zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
+için geçerlidir**.
+
+---
+
 # Audrey Hepburn: Untold Stories — İçerik Stratejisi
 
 > **Bu dosya hakkında:** Bu doküman, Erdem'in ayrı bir Claude.ai projesinde
