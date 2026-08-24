@@ -400,3 +400,25 @@ az-işlenmiş açısı kullanılır):
 - YouTube linki (private): https://youtube.com/watch?v=QyZ7kl8G6Fc
 - Sıradaki adım: Kullanıcının video içeriğini onaylaması, ardından
   yayın zamanı belirlenip public/scheduled yapılması.
+
+**Video 3 — "Karanlık Geceler" (The Black Evenings)**
+- Konu/açı: Audrey Hepburn (kurgusal, yetişkin), işgal altındaki
+  Hollanda'da "zwarte avonden" — perdeleri mühürlü evlerde alkışın
+  yasak olduğu gizli dans gösterileri; toplanan paranın direnişe
+  akışı. Tekrar kontrolü uygulandı: sahne/sanat/performans kaydı,
+  V1'in gece/orman/asker ve V2'nin kıtlık/aile kalıplarından ayrık;
+  kanalda daha önce işlenen "direniş kuryeliği" konusuna girilmedi.
+- Durum: **İlk 8 sahne/8 görsel + Batch API standardıyla üretildi;
+  YouTube'a private yüklendi, kalite onayı bekleniyor.** 8 sahnelik
+  script (970-999 kr/sahne), görseller Batch API ile (%50 indirim,
+  native 16:9), seslendirme (Enceladus), Speech-to-Text altyazı,
+  yavaş zoompan + crf 18 ile FFmpeg final video (~8.4 dk), thumbnail
+  (renkli, yakın plan, tek kare), SEO paketi. Yeni YouTube meta
+  standardı uygulandı (en-US dil, ABD konumu, çocuklar için değil).
+- Seçilen başlık: **"Audrey Hepburn Danced Where Clapping Could Get You Killed"**
+- YouTube linki (private): https://youtube.com/watch?v=nE3dK2bMcJI
+- Drive QC kopyası: https://drive.google.com/file/d/1J8UOFKhDN3EBY2xzvGsxXbZHU8e49g7t/view
+  (görseller Drive'a yüklenmedi — yeni Drive standardı; onaydan 24 saat
+  sonra bu kopya silinecek).
+- Sıradaki adım: Erdem'in kalite onayı → yayın zamanı kararı → onaydan
+  24 saat sonra Drive kopyasının silinmesi.
