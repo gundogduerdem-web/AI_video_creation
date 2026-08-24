@@ -237,8 +237,10 @@ Tek istisna: **kalite kontrolü için final video.**
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
 sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
 yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
-- **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (önceki 12'den düşürüldü — Erdem'in kararı, Video 3'ten itibaren). Sahne başına karakter aralığı (970–999) değişmedi; video süresi buna bağlı olarak ~8-9 dakikaya iner.
-- **Görsel üretimi Batch API ile:** Görseller Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, genelde çok daha hızlı biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
+- **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (Erdem'in kararı, Video 3'ten itibaren).
+- **Video süresi (Video 4'ten itibaren):** Hedef **12-13 dakika** — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1450–1499** (ölçülen anlatım hızı ~15.7 kr/sn ile 8 sahne ≈ 12.3-12.7 dk). Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
+- **Konu serbestisi:** Konular tamamen uydurma olabilir (kurgu beyanı her videoda korunur).
+- **Görsel üretimi HER ZAMAN Batch API ile:** Görseller istisnasız Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, pratikte genelde dakikalar içinde biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
 - **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
 - **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
@@ -253,7 +255,8 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 2. Başlık kuralı doğrulaması — sonucu çözmediği açıkça teyit edilir.
 3. Hook tipi seçimi — atmosferik mi, doğrudan-detay-önce mi.
 4. Karakter sayısı doğrulaması — Python regex ile sahne etiketlerinden
-   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin 970–999 karakter olduğu
+   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 4'ten
+   itibaren **1450–1499** karakter; öncesinde 970–999 idi) olduğu
    üretime/Erdem'e sunulmadan önce doğrulanır.
 5. **Tekrar/benzerlik kontrolü (kritik, kanal riski):** Yeni script/hikaye,
    daha önce üretilmiş videolarla (özellikle olay örgüsü, hook, açılış/kapanış
