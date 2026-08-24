@@ -237,6 +237,8 @@ Tek istisna: **kalite kontrolü için final video.**
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
 sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
 yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
+- **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (önceki 12'den düşürüldü — Erdem'in kararı, Video 3'ten itibaren). Sahne başına karakter aralığı (970–999) değişmedi; video süresi buna bağlı olarak ~8-9 dakikaya iner.
+- **Görsel üretimi Batch API ile:** Görseller Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, genelde çok daha hızlı biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
 - **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
 - **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
