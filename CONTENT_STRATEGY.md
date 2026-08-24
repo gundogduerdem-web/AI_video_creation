@@ -420,5 +420,10 @@ az-işlenmiş açısı kullanılır):
 - Drive QC kopyası: https://drive.google.com/file/d/1J8UOFKhDN3EBY2xzvGsxXbZHU8e49g7t/view
   (görseller Drive'a yüklenmedi — yeni Drive standardı; onaydan 24 saat
   sonra bu kopya silinecek).
-- Sıradaki adım: Erdem'in kalite onayı → yayın zamanı kararı → onaydan
-  24 saat sonra Drive kopyasının silinmesi.
+- Kalite onayı alındı; Erdem'in talimatıyla **25 Ağustos 2026 TR 22:00**
+  (19:00 UTC) için YouTube üzerinden zamanlandı (publishAt).
+- Not: Yayın saati deneyi — önceki videolar TR 19:00'da yayınlanmıştı;
+  bu video ABD ET 15:00'e denk gelen TR 22:00'de yayınlanarak 24-48 saat
+  sonra Analytics'te karşılaştırılacak.
+- Drive QC kopyası duruyor (otomatik silme kurulumu onaylanmadı; Erdem
+  istediğinde manuel silinecek).
