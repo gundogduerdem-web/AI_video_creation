@@ -305,6 +305,38 @@ Tek istisna: **kalite kontrolü için final video.**
    onaylandığında tekrarlanan standart bir adımdır — ayrıca istenmesine
    gerek yoktur.
 
+### 📊 ANALYTICS TEŞHİSİ (25 Ağu 2026) — format kararlarının veri temeli
+
+YouTube Analytics API'den çekilen gerçek veri (Audrey kanalı, 1 Haz–25 Ağu):
+
+- **Terk eğrisi (uzun videolar):** 0:08'de %95 → **0:25'te %57** → 0:42'de %41
+  → 1:24'te %27 → sonunda %9-12. İzleyicinin yarısı **ilk 25 saniyede**
+  gidiyor. 13 dk videonun ortalama izlenmesi 90-150 sn (%12-20).
+- **Trafik:** izlenmelerin **%79'u Shorts akışından**; ana sayfa/Browse
+  önerisi yok denecek kadar az, uzun videoya tek anlamlı kaynak %10
+  "ilgili video". Yani düşük dağıtımın sebebi CTR değil, **retention**.
+- **Shorts retention: %67-105** (100 üstü = tekrar izleme), video başına
+  700-1000 izlenme. Kanalın çalışan tek yüzeyi.
+- **Kitle hedeflemesi doğru:** %88'i 55+ (65+: %67,7 / 55-64: %20,5).
+  Not: 65+ içinde erkek %43,9, kadın %23,8 — kadın payı hedefin altında.
+- API'de CTR/gösterim metrikleri yok (Studio'ya özel), teşhis retention
+  ve trafik kaynağı üzerinden yapıldı.
+
+**Bu teşhise dayanan üç format kararı (Erdem onayladı, 25 Ağu):**
+
+1. **Görsel yoğunluğu:** Sahne metinleri ve 8 sahne yapısı korunur, ama
+   **her sahne için 3 görsel varyasyonu** üretilir (geniş → orta → yakın
+   plan). Video başına **24 görsel**; görsel başına ekran süresi ~90 sn
+   yerine **~28 sn**. Görsel monotonluk retention'ın ana düşmanı.
+2. **İlk 25 saniye kuralı:** Sahne 1, hook cümlesinden sonra **derhal
+   somut bir sahneye** girer (isim, saat, mekan, eylem) — atmosferik
+   betimleme sonraya bırakılır; sahne 1 bir merak sözüyle biter.
+   **Kurgu beyanı sahne 2'den çıkarılıp sahne 8'in sonuna taşınır**
+   (eskiden tam terk noktasında "bu hikaye uydurma" deniyordu).
+   Şeffaflık korunur: beyan hem videonun sonunda hem açıklamada var.
+3. **Shorts frekansı:** Shorts artık sadece teaser değil, kanalın birincil
+   büyüme yüzeyi olarak ele alınır; hafta sonu 3 slotluk sınır esnetilir.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
