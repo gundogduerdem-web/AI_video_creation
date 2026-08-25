@@ -31,7 +31,23 @@ alınır (aynı gün toplu açılış "ağ/spam" görünümü riski). Tekrar kon
 hem kanal içi hem **kanallar arası** yapılır.
 
 **Operasyonel önkoşullar:** Erdem 4 yeni marka kanalı oluşturur + her
-kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token).
+kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token)
++ **her kanal için ayrı telefon doğrulaması** yapar.
+
+**Telefon doğrulaması (kritik kurulum engeli):** Yeni bir YouTube kanalı
+doğrulanmadan **özel thumbnail yüklenemez** (API `403: doesn't have
+permissions to upload and set custom video thumbnails`) ve **15 dakikayı
+aşan video yüklenemez** (mevcut 12-13 dk standardı bu sınırın altında,
+sorun değil). Doğrulama **kanal bazındadır** — ana hesabın doğrulanmış
+olması marka kanalını kapsamaz. Google bir telefon numarasıyla **yılda
+en fazla 2 kanal** doğrulanmasına izin verir; Erdem'in numarası dolduğu
+için (kişisel hesap + Audrey kanalı) kalan 4 kanal **2 ek telefon
+numarası** gerektirir (numara başına 2 kanal). Sanal/VOIP numaraları
+Google genellikle reddeder — gerçek mobil numara gerekir.
+Kanal başına yapılacak: Diana kanalına geçiş → Studio → Ayarlar →
+Kanal → Özellik uygunluğu → Orta düzey özellikler → telefon doğrulaması.
+Thumbnail stratejinin CTR omurgası olduğu için, **doğrulanmamış kanalda
+video yayınlanmaz** — üretim yapılabilir, yayın doğrulama sonrasına kalır.
 
 **Kanal anlatıcı sesleri:** Audrey Hepburn = Enceladus (erkek). Diana =
 Algieba (erkek, pürüzsüz/derin — Erdem seçti; ayrışma için her kanalın
