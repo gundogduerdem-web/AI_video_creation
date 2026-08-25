@@ -287,6 +287,27 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
 - **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
 
+### Shorts standardı (her uzun video için)
+- Her uzun videonun **1 Shorts teaser'ı** üretilir: sahne 1 (hook) sesi +
+  görseli, **maksimum 60 saniye**, dikey 1080x1920 (merkez 9:16 kırpma +
+  yavaş zoompan), aynı altın karaoke altyazı (dikey stil), son 3.5 saniyede
+  "WATCH THE FULL STORY / LINK IN DESCRIPTION" bindirmesi.
+- **Açıklamanın ilk satırı:** `CLICK TO WATCH THE FULL VIDEO 👉 <ana video linki>`
+  + kısa kurgu beyanı + #Shorts etiketleri.
+- **Thumbnail:** dikey 9:16, renkli, vurucu yakın plan (Batch API ile üretilir).
+- Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı
+  uzun videolarla aynıdır.
+
+### Video sonu çapraz tanıtım standardı
+- **Gelecek uzun videolara** son ~15-20 saniyelik outro eklenir: kanalın
+  diğer videolarını öneren anlatım + görsel ("More untold stories on the
+  channel" + önceki videoların thumbnail kompozisyonu), YouTube end-screen
+  alanına uygun düzen (son 20 saniyede sağ/orta alan boş bırakılır).
+- **Kısıt:** YouTube Data API end-screen/kart eklemeyi desteklemiyor —
+  end-screen'ler Studio'dan manuel eklenir (Erdem; video başına ~2 dk:
+  Studio → İçerik → video → Düzenleyici → Son ekran). Baked outro bu
+  manuel adımı güçlendirir ama onun yerine geçer.
+
 ### YouTube video meta verisi standardı (Video 3'ten itibaren geçerli)
 - **Location:** United States (U.S.A)
 - **Video dili / Language:** English (United States) — `snippet.defaultLanguage` ve `defaultAudioLanguage` = `en-US`
