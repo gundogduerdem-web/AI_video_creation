@@ -33,6 +33,10 @@ hem kanal içi hem **kanallar arası** yapılır.
 **Operasyonel önkoşullar:** Erdem 4 yeni marka kanalı oluşturur + her
 kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token).
 
+**Kanal anlatıcı sesleri:** Audrey Hepburn = Enceladus (erkek). Diana =
+Algieba (erkek, pürüzsüz/derin — Erdem seçti; ayrışma için her kanalın
+sesi farklı tutulur). Diğer kanalların sesleri kurulumda seçilecek.
+
 **Yaşayan kişiler kuralı (kritik, tüm kanallar):** Hikayeler vefat etmiş
 ana karakter etrafında kurgulanır; ancak o kişinin çevresindeki
 **yaşayan gerçek kişilere** (örn. Diana hikayelerinde Charles, William,
