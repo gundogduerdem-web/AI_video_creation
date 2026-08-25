@@ -337,6 +337,26 @@ YouTube Analytics API'den çekilen gerçek veri (Audrey kanalı, 1 Haz–25 Ağu
 3. **Shorts frekansı:** Shorts artık sadece teaser değil, kanalın birincil
    büyüme yüzeyi olarak ele alınır; hafta sonu 3 slotluk sınır esnetilir.
 
+### Kanal temizliği (25 Ağu 2026) — Audrey kanalı "yumuşak sıfırlama"
+
+Erdem kanalı silip sıfırdan açmayı düşündü; **silinmedi.** Gerekçe: (a) kanal
+zaten telefon doğrulamalı ve elde yedek numara yok — silmek doğrulanmış tek
+varlığı kaybettirirdi, silinen kanalın doğrulama slotunu serbest bıraktığına
+dair kaynak da yok; (b) sorun kanal kimliği değil retention (bkz. analytics
+teşhisi); (c) korunacak birikim yok (30 abone, 72 saat izlenme).
+
+Bunun yerine **28 eski format videosu "liste dışı" (unlisted)** yapıldı —
+Elvis, Michael Jackson, Sinatra, Prince, Nixon, Marvin Gaye, Johnny Cash,
+Janis Joplin, Oppenheimer vb. Amaç: YouTube'un kanal için tuttuğu konu/kitle
+profilini Audrey'ye sadeleştirmek (eski videolar yeni Audrey içeriğini
+yanlış kitleye gösterilmesine yol açıyordu). Bedeli: kanalın toplam
+izlenmesinin %97'si (5.516/5.668) halka kapalı hale geldi.
+
+Kanalda halka açık kalan: 4 Audrey videosu + 4 private/zamanlı Audrey
+içeriği. **İşlem geri alınabilir** — videolar silinmedi, yedek liste
+`unlist_backup.json` (scratchpad, oturuma bağlı) ve bu kayıt üzerinden
+tek komutla public'e döndürülebilir.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
