@@ -33,6 +33,17 @@ hem kanal içi hem **kanallar arası** yapılır.
 **Operasyonel önkoşullar:** Erdem 4 yeni marka kanalı oluşturur + her
 kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token).
 
+**Yaşayan kişiler kuralı (kritik, tüm kanallar):** Hikayeler vefat etmiş
+ana karakter etrafında kurgulanır; ancak o kişinin çevresindeki
+**yaşayan gerçek kişilere** (örn. Diana hikayelerinde Charles, William,
+Harry, Camilla) uydurma kötü davranış, skandal veya söz atfedilmez —
+yaşayanlar ya hiç geçmez ya isimsiz/nötr arka planda kalır; dram,
+tamamen kurgusal/isimsiz yan karakterler üzerinden kurulur. Ölüm/kaza
+komplo teorileri hiçbir kanalda konu edilmez. (Hukuki zemin: hakaret
+ölümle düşer; Diana özelinde Cairns v. Franklin Mint (9th Cir. 2002) —
+estate, UK ikametgahı nedeniyle ABD'de ölüm sonrası tanıtım hakkı
+ileri süremez.)
+
 Aşağıdaki bölümler Audrey Hepburn kanalı için yazılmıştır; teknik
 standartlar (8 sahne/8 görsel, 1450-1499 kr/sahne, 12-13 dk, Batch API,
 zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
