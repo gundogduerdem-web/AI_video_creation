@@ -297,6 +297,12 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Thumbnail:** dikey 9:16, renkli, vurucu yakın plan (Batch API ile üretilir).
 - Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı
   uzun videolarla aynıdır.
+- **Shorts yayın takvimi (kalıcı kural, Erdem'in talimatı):** Her uzun
+  videonun Shorts'u üretilir ve Shorts'lar yalnızca **hafta sonu
+  akşamları — Cuma, Cumartesi, Pazar TR 22:00** — yayınlanır. Haftanın
+  birikmiş Shorts sayısına bakılarak üç akşama **olabildiğince eşit**
+  dağıtılır (örn. 3 Short → her akşama 1; 5 Short → 2+2+1). Hangi Short'un
+  hangi akşama gideceğine Claude karar verir ve sheet'e işler.
 
 ### Video sonu çapraz tanıtım standardı
 - **Gelecek uzun videolara** son ~15-20 saniyelik outro eklenir: kanalın
