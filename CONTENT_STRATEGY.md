@@ -369,6 +369,8 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
 - **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
 - **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
+- **Kadraj çoğaltma (Erdem'in kararı, maliyet nedeniyle):** Görsel sayısı **8'de sabit** kalır; görsel monotonluğu, her görselden **ffmpeg ile 3 farklı kadraj** çıkararak kırılır (tam kare → %80 merkez → %62 üst-merkez kesit, her birinde yön değiştiren yavaş zoom). Ekranda 24 plan, maliyette 8 görsel. Sınırı bilinmeli: aynı görselin üç kadrajı, üç farklı görsel kadar zengin değildir — bunu telafi etmek için görsel prompt'ları derinlikli kompozisyon, tek güçlü ışık kaynağı ve ön plan bulanıklığı içerecek şekilde yazılır (yakın plana girildiğinde kadrajda detay olsun diye).
+- **Görsel güvenlik filtresi (öğrenilmiş kural):** Prompt'larda yasaklı sembolleri **olumsuz biçimde bile anmayın** — "no swastikas, no political symbols" ifadesi `IMAGE_SAFETY` engeline yol açtı (8 görselden 6'sı reddedildi). Ayrıca düşman/asker karakterleri **milliyet belirtmeden**, yüzü görünmeyen/uzak/silüet figürler olarak tanımlanır. Nötrleştirilmiş prompt'larla 6/6 geçti.
 
 ### Shorts standardı (her uzun video için)
 - Her uzun videonun **1 Shorts teaser'ı** üretilir: sahne 1 (hook) sesi +
