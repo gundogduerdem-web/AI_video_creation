@@ -380,6 +380,8 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Açıklamanın ilk satırı:** `CLICK TO WATCH THE FULL VIDEO 👉 <ana video linki>`
   + kısa kurgu beyanı + #Shorts etiketleri.
 - **Thumbnail:** dikey 9:16, renkli, vurucu yakın plan (Batch API ile üretilir).
+- **Shorts görseli (öğrenilmiş kural):** Yatay sahne görselinin merkezden dikey kırpılması, kompozisyona göre ana karakteri kadraj dışında bırakabiliyor. Bu yüzden Short, **natif 9:16 üretilen dikey thumbnail görseliyle** derlenir (tek görsel + yavaş zoom) — hem yüz merkezde kalır hem ek maliyet olmaz, çünkü o görsel zaten thumbnail için üretiliyor.
+- **Süre:** Sahne 1 anlatımı 60 sn'yi aşarsa, kelime zamanlamalarından **doğal bir cümle sonu** bulunup orada kesilir (yarım cümle bırakılmaz); tercihen merak bırakan bir cümlede.
 - Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı
   uzun videolarla aynıdır.
 - **Shorts yayın takvimi (kalıcı kural, Erdem'in talimatı):** Her uzun
