@@ -81,3 +81,41 @@ JSON çıktı verir (`image_prompt` alanları boş bırakılır, elle doldurulma
 - Drive klasör yapısı (`eg1`, `eg2`, ...) ve Fliki entegrasyonu netleşince
   2. otomasyon için ayrı bir script eklenecek.
 - Publish time bazlı YouTube yayınlama otomasyonu 3. aşamada eklenecek.
+
+## Ambient kanal hattı (cozy jazz / doğa sesleri)
+
+Hikaye kanallarından ayrı, ffmpeg tabanlı ikinci bir hat. Fliki kullanılmaz.
+`scripts/build_ambience.py`, kısa müzik parçalarını + bir ortam sesi yatağını +
+kısa bir görsel döngüyü alıp saatlerce süren tek bir mp4 üretir.
+
+```bash
+python3 scripts/build_ambience.py \
+    --music-dir music/winter_cabin \
+    --bed audio/fireplace.wav --bed-gain -18 \
+    --loop-video visuals/cabin_loop.mp4 \
+    --duration 3h \
+    --out out/winter_cabin_3h.mp4 \
+    --chapters out/winter_cabin_chapters.txt
+```
+
+Yaptığı işler sırayla: her parçayı `loudnorm` ile aynı seviyeye getirir
+(-20 LUFS — ambient içerikte YouTube'un -14 hedefinden daha sessiz kalmak
+tercih edilir), parçaları 6 saniyelik `acrossfade` ile birleştirir, miksi hedef
+süreye kadar döndürür, ortam sesini altına kesintisiz döşer ve görsel döngüyü
+yeniden kodlamadan (`-c:v copy`) sesle birleştirir. `--chapters` verilirse
+YouTube bölüm listesini de yazar.
+
+Notlar:
+
+- **Ortam sesi yatağı (`--bed`) önemli.** Şömine çatırtısı ya da rüzgar,
+  parçaların altında kesintisiz akınca video bir çalma listesi gibi değil tek
+  bir mekân gibi duyuluyor. Parça geçişlerini de gizler.
+- **Yeterli parça üretin.** Miks hedef süreden kısaysa döngü noktasında sert
+  bir kesme duyulur (`-stream_loop` crossfade yapmaz). 3 saatlik video için
+  ~35-40 parça üretip miksi hedefe yaklaştırmak en temizi.
+- **`--loop-video` asıl kullanım, `--still` yedektir.** Sabit görsel hem
+  izleyici için monoton hem de YouTube'un "inauthentic content" politikası
+  açısından riskli; kar, ateş, buhar gibi hareketli katmanlar taşıyan kısa bir
+  döngü tercih edilmeli.
+- `--dry-run` çalıştırmadan üretilecek ffmpeg komutlarını yazdırır.
+- ffmpeg ve ffprobe PATH üzerinde olmalı.
