@@ -1,2 +1,5 @@
-__pycache__/
-*.pyc
+# Kimlik bilgileri asla repoya girmez
+*token*.json
+*client_secret*
+*api_key*
+gcloud_creds/
