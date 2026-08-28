@@ -3,3 +3,5 @@
 *client_secret*
 *api_key*
 gcloud_creds/
+__pycache__/
+*.pyc
