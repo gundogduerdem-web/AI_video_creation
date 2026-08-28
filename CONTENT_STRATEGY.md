@@ -379,7 +379,7 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
   "WATCH THE FULL STORY / LINK IN DESCRIPTION" bindirmesi.
 - **Açıklamanın ilk satırı:** `CLICK TO WATCH THE FULL VIDEO 👉 <ana video linki>`
   + kısa kurgu beyanı + #Shorts etiketleri.
-- **Thumbnail:** dikey 9:16, renkli, vurucu yakın plan (Batch API ile üretilir).
+- **Thumbnail:** dikey **9:16**, renkli, vurucu yakın plan (Batch API ile üretilir). YouTube'un thumbnail sistemi 16:9 tabanlı olduğu için dikey kapak bazı yüzeylerde yanlarda boşlukla gösterilebilir; Erdem 28 Ağu 2026'da mevcut Shorts kapaklarını inceleyip **iyi göründüğünü onayladı** ve dikey formatta devam kararı verdi. 16:9'a çevrilmeyecek.
 - **Shorts görseli (öğrenilmiş kural):** Yatay sahne görselinin merkezden dikey kırpılması, kompozisyona göre ana karakteri kadraj dışında bırakabiliyor. Bu yüzden Short, **natif 9:16 üretilen dikey thumbnail görseliyle** derlenir (tek görsel + yavaş zoom) — hem yüz merkezde kalır hem ek maliyet olmaz, çünkü o görsel zaten thumbnail için üretiliyor.
 - **Süre:** Sahne 1 anlatımı 60 sn'yi aşarsa, kelime zamanlamalarından **doğal bir cümle sonu** bulunup orada kesilir (yarım cümle bırakılmaz); tercihen merak bırakan bir cümlede.
 - Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı

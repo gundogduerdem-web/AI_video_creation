@@ -95,6 +95,10 @@ oluyor, her sahne 3 kez deneniyor.
 kadraj dışında bırakabiliyor; Shorts için natif 9:16 üretilen thumbnail
 görseli kullanılır. Kesim noktası doğal bir cümle sonu olmalı.
 
+**Shorts kapağı 9:16 kalır.** YouTube kapakları 16:9 tuvale oturttuğu için
+dikey kapak bazı yüzeylerde yanlarda boşlukla görünebilir; Erdem mevcut halini
+inceleyip onayladı (28 Ağu 2026). Shorts kapakları dikey üretilmeye devam eder.
+
 **Thumbnail.** Üretilen kare çoğu zaman fazla geniş oluyor; kanal kuralı
 (renkli, yakın plan, tek kare) için ffmpeg ile yüz merkezli kırpılıyor.
 Yeni kanallarda telefon doğrulaması yoksa thumbnail yüklenemiyor (403).
