@@ -20,6 +20,7 @@ Kimlik bilgileri `$PIPELINE_CREDS` altında tutulur (varsayılan:
 | `gemini_api_key.txt` | Gemini API anahtarı |
 | `youtube_token.json` | YouTube refresh token (Audrey kanalı) |
 | `oauth_token_full.json` | Drive/Sheets refresh token |
+| `speech_token.json` | Speech-to-Text refresh token (**cloud-platform** kapsamı) |
 
 **Erdem'in Drive'ında** OAuth istemcisinin JSON yedeği duruyor — client id ve
 secret oradan alınır (Google secret'ı yalnızca oluşturma anında gösterir).
@@ -87,7 +88,7 @@ ifadeleri de engellenebiliyor.
 **Batch timeout yanıltıcı.** İstek timeout görünse bile iş oluşmuş olabilir —
 `generate_images.py` bu durumda batch listesinden işi bulup devam eder.
 
-**Speech-to-Text.** API anahtarı desteklemiyor, OAuth şart. Inline ses ~60 sn
+**Speech-to-Text.** API anahtarı desteklemiyor, OAuth şart ve token **cloud-platform** kapsamlı olmalı — Drive kapsamı yetmiyor (`403 ACCESS_TOKEN_SCOPE_INSUFFICIENT`). Ayrı `speech_token.json` tutulur. Inline ses ~60 sn
 ile sınırlı; uzun sahneler otomatik bölünüp birleştiriliyor. Ağ kopmaları
 oluyor, her sahne 3 kez deneniyor.
 

@@ -10,7 +10,9 @@ Notlar:
   * Inline ses için ~60 sn sınırı var; uzun sahneler otomatik ikiye bölünüp
     ikinci yarının zaman damgaları kaydırılarak birleştirilir.
   * Ağ kopmaları oluyor — her sahne 3 kez denenir.
-  * Servis hesabı yerine OAuth kullanılır (API anahtarı desteklenmiyor).
+  * OAuth şart (API anahtarı desteklenmiyor) ve token **cloud-platform**
+    kapsamlı olmalı — Drive kapsamı yetmez, 403 ACCESS_TOKEN_SCOPE_INSUFFICIENT
+    verir. Kimlik dosyası: speech_token.json
 """
 import base64
 import json
@@ -22,7 +24,7 @@ import urllib.request
 import wave
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import drive_token  # noqa: E402
+from common import access_token  # noqa: E402
 
 PROJECT_ID = "gen-lang-client-0486434271"
 
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     for i in range(start, end + 1):
         for attempt in range(3):
             try:
-                token = drive_token()  # cloud-platform kapsamli kullanici tokeni
+                token = access_token("speech_token.json")
                 words = transcribe_one(os.path.join(audio_dir, f"scene_{i}.wav"), token)
                 with open(os.path.join(out_dir, f"scene_{i}.json"), "w",
                           encoding="utf-8") as fh:
