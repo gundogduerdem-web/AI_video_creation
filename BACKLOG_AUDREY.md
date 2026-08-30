@@ -1,5 +1,16 @@
 # Audrey Hepburn — gerçek konu envanteri
 
+> **DURUM (30 Ağustos 2026, aynı gece): BEKLEMEDE.** Erdem kararını
+> değiştirdi — kurgusal format korunuyor, gerçek olay serisi başlamadan
+> durduruldu. Kanal açıklaması kurgu ibaresine geri alındı. Bu envanter
+> silinmedi: araştırması yapılmış durumda ve format tekrar gündeme gelirse
+> hazır. V9 kurgu olarak üretiliyor.
+>
+> Not: kurgu/gerçek farkının izlenmeye etkisi **hiçbir zaman
+> kanıtlanamadı**; formatı korumak, kanıtlanmamış bir hipoteze göre
+> değiştirmekten daha savunulabilir. Aynı gece yayınlanan V8 (tamamen
+> kurgu) ölçtüğümüz en iyi açılışı yaptı.
+
 Erdem'in sorusu: "gerçek olaylarla ne kadar yeni hikaye çıkarabileceksin?"
 Bu dosya cevabı sayıyla veriyor. Kural: **hiçbir konu doğrulanmadan
 üretime girmez.** Aşağıdaki "durum" sütunu bu dosyanın yazıldığı andaki
