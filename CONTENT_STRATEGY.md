@@ -357,6 +357,48 @@ içeriği. **İşlem geri alınabilir** — videolar silinmedi, yedek liste
 `unlist_backup.json` (scratchpad, oturuma bağlı) ve bu kayıt üzerinden
 tek komutla public'e döndürülebilir.
 
+### Kanal teşhisi #2 (30 Ağustos 2026) — liste dışı kararı geri alındı
+
+Erdem'in sorusu ("bir video 96 izlenme aldı, sonrakiler 3-5, neden?")
+üzerine yapılan ikinci analiz. Analytics 2 gün gecikmeli olduğu için veri
+28 Ağustos'ta bitiyor.
+
+**96 izlenme bir başarı değil, başarısız olan testti.** Video (nE3dK2bMcJI)
+25 Ağustos'ta yayınlandı, ilk iki günde 7 izlenme aldı. 27-28 Ağustos'ta
+YouTube feed'lerde denedi: 76 izlenme geldi, **ortalama izlenme süresi 14
+saniye** (8,5 dk videonun %3,6'sı), izleyenlerin 83'ünün 82'si abone değil.
+Algoritma dağıtımı kesti; sonraki videolar test bile edilmedi.
+
+| | 25-35 sn sonra kalan | 50-70 sn sonra kalan |
+|---|---|---|
+| nE3dK2bMcJI (eski format) | %27,8 | %5,6 |
+| V4 KGP1_ccCZ9A (yeni format) | %45,2 | %35,5 |
+
+**Yeni retention formatı çalışıyor** (açılış tutunması ~6 kat iyi, ortalama
+izlenme yüzdesi %3,6 → %17,9) ama kanalın dağıtımı zaten çökmüşken geldiği
+için kendini kanıtlayacak gösterimi alamadı.
+
+**Ana sayfa (BROWSE_FEATURES) trafiği 1-28 Ağustos boyunca tam sıfır.**
+Kanal geneli: SHORTS 1128 izlenme, RELATED_VIDEO 158, SUBSCRIBER 152,
+YT_SEARCH 63. Shorts'tan uzun videoya giden trafik (SHORTS_CONTENT_LINKS)
+ayda **2 izlenme**.
+
+**İlk 72 saat karşılaştırması (yaş farkı giderilmiş):** eski çok-kişili
+format medyan **35** izlenme, yeni tek-kişili format medyan **7**. Eski
+formatın avantajı muhtemelen içerik kalitesi değil **komşuluk yüzeyi**:
+Prince/Marvin Gaye/Janis Joplin videolarının yanında önerilebiliyordu.
+Tek kişilik kanalın oturabileceği yer çok dar.
+
+**Düzeltme:** 28 Ağustos'ta 28 videoyu liste dışına alma önerisi (bkz. bir
+önceki bölüm) veriye dayanmıyordu ve yanlıştı — o videolar 30-149 izlenme
+taşıyordu, tutunmaları (%16-27) yeni videolardan iyiydi ve kanalın önerilen-
+video yüzeyinin tamamıydı. **30 Ağustos 2026'da 28 videonun tamamı Erdem'in
+onayıyla tekrar public yapıldı.**
+
+**Açık soru (Erdem'e sunuldu):** tek kişi = tek kanal modeli, 5 kanallık
+genişleme planının temeli. Bu bulgu o modele karşı bir kanıt; alternatif,
+her kanalı bir kişi yerine bir temaya oturtmak.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
