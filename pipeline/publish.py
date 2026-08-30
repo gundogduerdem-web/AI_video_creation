@@ -41,7 +41,12 @@ def upload(video, seo_path, thumb=None, token_file="youtube_token.json"):
             "defaultLanguage": "en-US",
             "defaultAudioLanguage": "en-US",
         },
-        "status": {"privacyStatus": "private", "selfDeclaredMadeForKids": False},
+        # containsSyntheticMedia: YouTube'un "altered or synthetic content"
+        # beyani. Gercek bir kisiyi ve gercek gorunumlu sahneleri yapay
+        # goruntu + yapay sesle canlandirdigimiz icin ZORUNLU; aciklamadaki
+        # kurgu ibaresi kaldirilinca tek beyan bu kaliyor.
+        "status": {"privacyStatus": "private", "selfDeclaredMadeForKids": False,
+                   "containsSyntheticMedia": True},
         "recordingDetails": {"location": US_LOCATION},
     }
     init = urllib.request.Request(
