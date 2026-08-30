@@ -65,7 +65,7 @@ estate, UK ikametgahı nedeniyle ABD'de ölüm sonrası tanıtım hakkı
 ileri süremez.)
 
 Aşağıdaki bölümler Audrey Hepburn kanalı için yazılmıştır; teknik
-standartlar (8 sahne/8 görsel, 1450-1499 kr/sahne, 12-13 dk, Batch API,
+standartlar (8 sahne/8 görsel, 1690-1749 kr/sahne, 12-13 dk, Batch API,
 zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
 için geçerlidir**.
 
@@ -363,7 +363,8 @@ geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
 sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
 yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (Erdem'in kararı, Video 3'ten itibaren).
-- **Video süresi (Video 4'ten itibaren):** Hedef **12-13 dakika** — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1450–1499** (ölçülen anlatım hızı ~15.7 kr/sn ile 8 sahne ≈ 12.3-12.7 dk). Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
+- **Video süresi (Video 4'ten itibaren):** Hedef **12-13 dakika** — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1690–1749** (Video 8'de düzeltildi). Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
+  - **Düzeltme (30 Ağu 2026, Video 8):** Önceki 1450–1499 aralığı ~15,7 kr/sn varsayımına dayanıyordu; gerçek ölçüm **~18,4 kr/sn** çıktı. Bu yüzden V4–V7 hedefin altında kaldı (V7: 11 dk 02 sn, 11.867 karakter). Yeni aralık ölçüme dayanıyor: 8 × ~1720 kr ≈ **12 dk**. Süre, TTS bittiğinde `TOPLAM` satırından doğrulanır; 12 dk altındaysa metin uzatılıp TTS tekrar üretilir. **Yayınlanmış videolar geriye dönük düzeltilmez.**
 - **Konu serbestisi:** Konular tamamen uydurma olabilir (kurgu beyanı her videoda korunur).
 - **Görsel üretimi HER ZAMAN Batch API ile:** Görseller istisnasız Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, pratikte genelde dakikalar içinde biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
@@ -411,8 +412,8 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 2. Başlık kuralı doğrulaması — sonucu çözmediği açıkça teyit edilir.
 3. Hook tipi seçimi — atmosferik mi, doğrudan-detay-önce mi.
 4. Karakter sayısı doğrulaması — Python regex ile sahne etiketlerinden
-   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 4'ten
-   itibaren **1450–1499** karakter; öncesinde 970–999 idi) olduğu
+   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 8'den
+   itibaren **1690–1749** karakter; V4-V7 1450–1499, öncesinde 970–999 idi) olduğu
    üretime/Erdem'e sunulmadan önce doğrulanır.
 5. **Tekrar/benzerlik kontrolü (kritik, kanal riski):** Yeni script/hikaye,
    daha önce üretilmiş videolarla (özellikle olay örgüsü, hook, açılış/kapanış

@@ -62,7 +62,11 @@ python3 transcribe.py $WORK/audio $WORK/timings
 python3 build_short.py isim s1.txt timings/scene_1.json audio/scene_1.wav dikey.png
 python3 build_short.py isim s1.txt timings/scene_1.json audio/scene_1.wav dikey.png 50.6
 
-# 6) Yayın
+# 6) Senaryo tablosu (Drive'daki AI video scenario sheet)
+python3 sheet.py "Audrey Hepburn"          # son satırları göster
+# kod içinden: from sheet import append_row, update_cell
+
+# 7) Yayın
 python3 publish.py upload isim.mp4 seo.json thumb.jpg
 python3 publish.py drive isim.mp4          # kalite kontrol kopyası
 python3 publish.py schedule <video_id> 2026-08-28T19:00:00Z
@@ -88,9 +92,24 @@ ifadeleri de engellenebiliyor.
 **Batch timeout yanıltıcı.** İstek timeout görünse bile iş oluşmuş olabilir —
 `generate_images.py` bu durumda batch listesinden işi bulup devam eder.
 
-**Speech-to-Text.** API anahtarı desteklemiyor, OAuth şart ve token **cloud-platform** kapsamlı olmalı — Drive kapsamı yetmiyor (`403 ACCESS_TOKEN_SCOPE_INSUFFICIENT`). Ayrı `speech_token.json` tutulur. Inline ses ~60 sn
-ile sınırlı; uzun sahneler otomatik bölünüp birleştiriliyor. Ağ kopmaları
-oluyor, her sahne 3 kez deneniyor.
+**Speech-to-Text.** API anahtarı desteklemiyor, OAuth şart ve token
+**cloud-platform** kapsamlı olmalı — Drive kapsamı yetmiyor
+(`403 ACCESS_TOKEN_SCOPE_INSUFFICIENT`). Ayrı `speech_token.json` tutulur.
+**v2 API kullanılıyor:** v1'in `longrunningrecognize` ucu 30 Ağustos 2026'da
+saatlerce `500 An error occurred while checking permissions` /
+`503 Policy checks are unavailable` verdi; aynı kimlikle v2 sorunsuz çalıştı
+(üstelik senkron, operation beklemiyor). v2'de alan adları `startOffset` /
+`endOffset` ve **0 saniyelik ofset JSON'da hiç gönderilmiyor** — `.get(...,
+"0s")` şart. Inline ses ~60 sn ile sınırlı; sahneler 55 sn'lik parçalara
+bölünüyor ve kesim noktası enerji taraması ile **en sessiz ana** kaydırılıyor
+(ortadan bölmek sınırdaki kelimeyi kaybediyordu). Bölme noktaları **bayt**
+ofsetidir; örnek sayısıyla karıştırılırsa parçalar iki kat uzun olur ve API
+400 verir.
+
+**Süre hedefi ölçümle doğrulanır.** Anlatım hızı **~18,4 karakter/saniye**
+(ölçüldü). 12-13 dakika için sahne başına **1690-1749** karakter gerekir;
+eski 1450-1499 aralığı ~11 dakika veriyordu. TTS bitince `TOPLAM` satırındaki
+süre kontrol edilir.
 
 **Shorts kaynak görseli.** Yatay sahne görselinin dikey kırpımı ana karakteri
 kadraj dışında bırakabiliyor; Shorts için natif 9:16 üretilen thumbnail
