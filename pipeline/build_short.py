@@ -22,6 +22,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"
 FPS = 25
 
+# Yonlendirme bindirmesi. Shorts'ta aciklama katlanmis geldigi icin tek basina
+# "link in description" zayif kaliyor; bu yuzden kapanis kartindan once ustte
+# erken bir kue de gosteriliyor. Ust bant (y=120) secildi: altyazi bandiyla da,
+# YouTube'un kendi alt arayuzuyle de (baslik/kanal/related link) cakismiyor.
+CUE_SEC = 10.0     # erken kue kac saniye once basliyor
+CARD_SEC = 4.0     # kapanis karti kac saniye once basliyor
+CUE_TEXT = "FULL STORY ON THIS CHANNEL"
+# Kanal "advanced features"e gecip Shorts'a Related video baglarsa bu satir
+# "TAP THE LINK BELOW" olarak degistirilir (baglanti o zaman oynaticida gorunur).
+CARD_TEXT = "LINK IN DESCRIPTION"
+
 
 def sentence_ends(text_path, timings_path, limit=60.0):
     """Kesime uygun cümle sonlarını (saniye, önizleme) olarak döndürür."""
@@ -66,16 +77,24 @@ def build(name, text_path, timings_path, audio_path, image_path, cut):
                     kept_text, tim_out, ass, "--vertical"], check=True)
 
     frames = int(dur * FPS) + 5
-    overlay_at = f"{dur - 3.5:.2f}"
+    cue_at = f"{max(0.0, dur - CUE_SEC):.2f}"      # erken, kucuk hatirlatma
+    card_at = f"{max(0.0, dur - CARD_SEC):.2f}"    # kapanis karti
     vf = (f"[0:v]scale=1080:1920:flags=lanczos,"
           f"zoompan=z='min(zoom+0.00009,1.10)':d={frames}"
           f":x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1080x1920:fps={FPS},"
           f"drawbox=x=0:y=1380:w=1080:h=260:color=black@1.0:t=fill,"
           f"ass={ass},"
+          # erken kue: ustte, koyu plaka uzerinde (goruntu acik olsa da okunur)
+          f"drawbox=x=0:y=120:w=1080:h=86:color=black@0.55:t=fill"
+          f":enable='between(t,{cue_at},{card_at})',"
+          f"drawtext=fontfile={FONT}:text='{CUE_TEXT}':fontcolor=0xE8B923"
+          f":fontsize=46:x=(w-text_w)/2:y=142"
+          f":enable='between(t,{cue_at},{card_at})',"
+          # kapanis karti
           f"drawtext=fontfile={FONT}:text='WATCH THE FULL STORY':fontcolor=0xE8B923"
-          f":fontsize=58:x=(w-text_w)/2:y=300:enable='gte(t,{overlay_at})',"
-          f"drawtext=fontfile={FONT}:text='LINK IN DESCRIPTION':fontcolor=white"
-          f":fontsize=40:x=(w-text_w)/2:y=390:enable='gte(t,{overlay_at})'[v]")
+          f":fontsize=58:x=(w-text_w)/2:y=300:enable='gte(t,{card_at})',"
+          f"drawtext=fontfile={FONT}:text='{CARD_TEXT}':fontcolor=white"
+          f":fontsize=40:x=(w-text_w)/2:y=390:enable='gte(t,{card_at})'[v]")
 
     out = f"shorts/{name}.mp4"
     subprocess.run(["ffmpeg", "-y", "-loop", "1", "-i", image_path, "-i", wav,
