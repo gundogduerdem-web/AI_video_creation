@@ -106,10 +106,17 @@ bölünüyor ve kesim noktası enerji taraması ile **en sessiz ana** kaydırıl
 ofsetidir; örnek sayısıyla karıştırılırsa parçalar iki kat uzun olur ve API
 400 verir.
 
-**Süre hedefi ölçümle doğrulanır.** Anlatım hızı **~18,4 karakter/saniye**
-(ölçüldü). 12-13 dakika için sahne başına **1690-1749** karakter gerekir;
-eski 1450-1499 aralığı ~11 dakika veriyordu. TTS bitince `TOPLAM` satırındaki
-süre kontrol edilir.
+**Süre hedefi ölçümle doğrulanır.** Anlatım hızı sabit değil: ölçülen
+aralık **16,7-21,0 karakter/saniye** (içeriğe göre değişiyor). 12-13 dakika
+için sahne başına **1690-1749** karakter iyi bir başlangıç, ama karakter
+sayısı süreyi garanti etmez — TTS bitince `TOPLAM` satırındaki süre mutlaka
+kontrol edilir.
+
+**TTS metni tekrarlayabiliyor.** V9'da model 8. sahnenin metnini baştan sona
+iki kez okudu: 1746 karakter için 177 saniye. Sessizce geçse videonun sonunda
+aynı paragraf iki kez duyulacaktı. `generate_tts.py` artık her sahnede
+karakter/saniye oranını kontrol ediyor (12-26 aralığı dışı hata sayılır) ve
+tekrar deniyor. Aynı belirti kesilme durumunda da yakalanır.
 
 **Shorts kaynak görseli.** Yatay sahne görselinin dikey kırpımı ana karakteri
 kadraj dışında bırakabiliyor; Shorts için natif 9:16 üretilen thumbnail

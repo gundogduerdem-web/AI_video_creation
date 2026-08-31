@@ -29,6 +29,13 @@ def scenes_from(path):
             re.findall(r"\[SCENE(\d+)\]\s*\n(.*?)\n\[/SCENE\1\]", text, re.S)}
 
 
+# Olculen anlatim hizi 16-19 karakter/saniye arasinda degisiyor (icerige gore).
+# Bu sinirlarin disi model hatasidir: V9'da model 8. sahnenin metnini iki kez
+# okudu ve ses iki katina cikti (177 sn / 1746 karakter). Sessizce gecerse
+# videonun sonunda ayni paragraf iki kez duyuluyor.
+MIN_CPS, MAX_CPS = 12.0, 26.0
+
+
 def synth(text, voice, out_path, retries=3):
     key = gemini_key()
     url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
@@ -48,6 +55,13 @@ def synth(text, voice, out_path, retries=3):
                 data = json.loads(resp.read())
             pcm = base64.b64decode(
                 data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+            dur = len(pcm) / 2 / 24000
+            cps = len(text) / dur if dur else 0
+            if not MIN_CPS <= cps <= MAX_CPS:
+                raise ValueError(
+                    f"sure tutarsiz: {dur:.1f} sn / {len(text)} karakter "
+                    f"= {cps:.1f} kr/sn (beklenen {MIN_CPS}-{MAX_CPS}); "
+                    "model metni tekrarlamis ya da kesmis olabilir")
             with wave.open(out_path, "wb") as wf:
                 wf.setnchannels(1)
                 wf.setsampwidth(2)
