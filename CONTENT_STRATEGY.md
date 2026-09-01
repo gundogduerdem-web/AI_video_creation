@@ -399,6 +399,47 @@ onayıyla tekrar public yapıldı.**
 genişleme planının temeli. Bu bulgu o modele karşı bir kanıt; alternatif,
 her kanalı bir kişi yerine bir temaya oturtmak.
 
+### Monetizasyon eşikleri ve Shorts kararı (1 Eylül 2026)
+
+Erdem'in itirazı: "Shorts'tan para kazanmam için çok uzun bir izlenme süresi
+gerekiyor, bu hedef gerçekçi değil." İtiraz doğru; ölçüldü.
+
+**YouTube Partner Program eşikleri:** 1.000 abone **ve** ya 12 ayda 4.000
+izlenme saati ya da 90 günde 10 milyon Shorts izlenmesi. İkisi **hiçbir zaman
+birleşmiyor** ve **Shorts izlenme süresi 4.000 saate sayılmıyor.**
+⚠️ **1 Şubat 2027'de eşik ikiye katlanıyor** (8.000 saat / 20 milyon Shorts).
+
+**Kanalın konumu (1 Eylül 2026, son 365 gün):**
+
+| Eşik | Gereken | Mevcut | Fark |
+|---|---|---|---|
+| Abone | 1.000 | 31 | 32× |
+| İzlenme saati | 4.000 | 86,4 | 46× |
+| Shorts izlenme (90 gün) | 10.000.000 | 5.766 | 1.735× |
+
+**Shorts monetizasyon yolu kapalı.** 1.735 kat fark kapatılabilir değil.
+
+**Claude'un önceki "Shorts'u ana ürün yap" önerisi eksik gerekçeliydi ve
+düzeltildi.** Gerekçe "kanalın izlenmesinin %74'ü Shorts'tan geliyor" idi;
+doğru ama varış noktası yok: Shorts'tan uzun videoya giden trafik ayda **2
+izlenme**, ve 5.766 Shorts izlenmesine karşılık bir yılda **+34 abone**.
+Shorts dağıtım üretiyor, gelire giden yolu beslemiyor.
+
+**Tek monetize edilebilir yol uzun video izlenme saati.** Bugünkü tutunmayla
+(12 dk videoda ~%20 = izlenme başına ~2,4 dk) 4.000 saat ≈ yılda **100.000
+uzun video izlenmesi**; haftada 2 video ile video başına ~960 izlenme
+gerekiyor. Mevcut: video başına 1-40. Tutunma %40'a çıkarsa gereken izlenme
+50.000'e iniyor — tutunma, izlenme kadar değerli bir kaldıraç.
+
+**Claude'un dürüst değerlendirmesi kayda geçti:** mevcut gidişatla 5 ay içinde
+(Şubat 2027 öncesi) eşiğe ulaşmak gerçekçi değil ve bunu değiştirecek
+kanıtlanmış bir yöntem elde yok.
+
+**ERDEM'İN KARARI (1 Eylül 2026): Shorts üretimi DURDURULMAYACAK, mevcut
+format aynen sürdürülecek.** Yukarıdaki analiz kararı değiştirmedi; karar
+bilgi tam olarak verildikten sonra alındı. Shorts her videoda üretilmeye ve
+planlanmaya devam eder.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
