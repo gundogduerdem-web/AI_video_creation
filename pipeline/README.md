@@ -132,3 +132,10 @@ Yeni kanallarda telefon doğrulaması yoksa thumbnail yüklenemiyor (403).
 
 **`cd` + arka plan.** `cd X && cmd &` tüm zinciri alt kabuğa alır; sonraki
 komut eski dizinde çalışır. Script'ler bu yüzden mutlak yol kullanır.
+
+**Drive yüklemesi ile derlemeyi aynı anda çalıştırma.** `publish.py drive`
+170 MB'lık dosyanın tamamını belleğe alıyor; aynı anda `build_short.py`
+çalıştırıldığında V11'de ffmpeg öldürüldü (exit 137) ve **geriye bozuk ama
+dolu görünen bir mp4 kaldı** — `moov atom not found`. Boyutu makul
+göründüğü için gözden kaçabilir; şüphe varsa `ffprobe` ile süre kontrol
+edilir. Drive yüklemesi bitmeden derleme başlatılmaz.
