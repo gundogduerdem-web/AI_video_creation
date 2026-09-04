@@ -32,8 +32,12 @@ verdiği tüm refresh token'ları tam 7 gün sonra iptal ediyor. Belirti:
 gün. Token dosyasındaki `refresh_token_expires_in: 604799` (=7,0 gün) bunun
 göstergesidir; süre token'ın **oluşturulma** anından işler.
 
-**Kalıcı çözüm:** Google Cloud Console → APIs & Services → OAuth consent
-screen → **Publish app** (Testing → In production). Yayınlandıktan sonra
+**Kalıcı çözüm:** Google Cloud Console → APIs & Services → **Google Auth
+Platform** → **Audience** sekmesi → **Publish app** → Confirm.
+(Doğrudan: `https://console.cloud.google.com/auth/audience?project=gen-lang-client-0486434271`)
+Google 2024'te bu ekranı yeniden düzenledi; eski "OAuth consent screen"
+menü öğesi artık yok, ayarlar Branding / Audience / Clients sekmelerine
+bölündü. Yayınlandıktan sonra
 refresh token'ların süresiz olur. Hassas kapsamlar (YouTube, Drive)
 kullandığımız için Google doğrulama isteyebilir; istemezse bile yayınlamak
 7 gün sınırını kaldırır. Bu yapılmazsa her hafta üç token da yeniden
