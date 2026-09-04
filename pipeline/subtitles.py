@@ -52,16 +52,28 @@ def align(original, stt):
 
 
 def build(word_times, chunk_size, layout):
-    lines = [HEADER.format(**layout)]
+    events = []
     for i in range(0, len(word_times), chunk_size):
         chunk = word_times[i:i + chunk_size]
         for idx, (_, start, end) in enumerate(chunk):
             parts = ["{\\c" + (GOLD_BRIGHT if j <= idx else GOLD_DIM) + "}" + w
                      for j, (w, _, _) in enumerate(chunk)]
-            if end <= start:
-                end = start + 0.15
-            lines.append(
-                f"Dialogue: 0,{fmt(start)},{fmt(end)},Default,,0,0,0,,{' '.join(parts)}")
+            events.append([start, end, " ".join(parts)])
+
+    # Ayni anda EN FAZLA BIR altyazi. align() oransal esleme yaptigi icin
+    # birden fazla kelime ayni STT kaydina denk gelebiliyor; o zaman iki
+    # olay ayni anda basiliyor ve altyazi ekranda ust uste CIFT gorunuyor
+    # (V13'te yakalandi, V10-V12'de de vardi). Her olayin sonunu bir
+    # sonrakinin baslangicina kis; suresi kalmayani hic yazma.
+    for a, b in zip(events, events[1:]):
+        a[1] = min(a[1], b[0])
+
+    lines = [HEADER.format(**layout)]
+    for start, end, text in events:
+        if end - start < 0.02:
+            continue
+        lines.append(
+            f"Dialogue: 0,{fmt(start)},{fmt(end)},Default,,0,0,0,,{text}")
     return "\n".join(lines)
 
 
