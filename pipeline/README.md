@@ -25,6 +25,20 @@ Kimlik bilgileri `$PIPELINE_CREDS` altında tutulur (varsayılan:
 **Erdem'in Drive'ında** OAuth istemcisinin JSON yedeği duruyor — client id ve
 secret oradan alınır (Google secret'ı yalnızca oluşturma anında gösterir).
 
+⚠️ **Refresh token'lar 7 GÜNDE BİR ÖLÜYOR.** OAuth onay ekranı (consent
+screen) **Testing** modunda olduğu sürece Google, doğrulanmamış uygulamanın
+verdiği tüm refresh token'ları tam 7 gün sonra iptal ediyor. Belirti:
+`400 invalid_grant — Token has been expired or revoked`, üç token da aynı
+gün. Token dosyasındaki `refresh_token_expires_in: 604799` (=7,0 gün) bunun
+göstergesidir; süre token'ın **oluşturulma** anından işler.
+
+**Kalıcı çözüm:** Google Cloud Console → APIs & Services → OAuth consent
+screen → **Publish app** (Testing → In production). Yayınlandıktan sonra
+refresh token'ların süresiz olur. Hassas kapsamlar (YouTube, Drive)
+kullandığımız için Google doğrulama isteyebilir; istemezse bile yayınlamak
+7 gün sınırını kaldırır. Bu yapılmazsa her hafta üç token da yeniden
+alınmak zorunda.
+
 Token'ları yenilemek için:
 
 ```python
