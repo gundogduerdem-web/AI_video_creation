@@ -399,6 +399,16 @@ onayıyla tekrar public yapıldı.**
 genişleme planının temeli. Bu bulgu o modele karşı bir kanıt; alternatif,
 her kanalı bir kişi yerine bir temaya oturtmak.
 
+### Yayın saati kuralı (4 Eylül 2026, Erdem'in kararı)
+
+**Shorts ile uzun video aynı saatte yayınlanabilir; çakışma sorun değil.**
+İkisi de **23:00 (TR)** slotunu kullanır.
+
+Bu, Claude'un üç kez uyguladığı "çakışmayı önlemek için Shorts'u 21:00'e
+al" davranışının yerine geçer. Erdem bilgilendirildikten sonra ikisinin de
+23:00'te kalmasını istedi. **Bundan sonra Shorts saatleri çakışma
+gerekçesiyle kaydırılmaz, sorulmaz.**
+
 ### Monetizasyon eşikleri ve Shorts kararı (1 Eylül 2026)
 
 Erdem'in itirazı: "Shorts'tan para kazanmam için çok uzun bir izlenme süresi
