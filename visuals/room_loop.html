@@ -1,4 +1,4 @@
-<title>Snowfall Room</title>
+<title>Hearth Loop</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Barlow+Condensed:wght@400;500;600&display=swap">
 <style>
@@ -9,52 +9,89 @@
     --display:"Fraunces","Iowan Old Style",Georgia,serif;
     --ui:"Barlow Condensed","Helvetica Neue",Arial,sans-serif;
   }
-  /* Bu sayfa tek bir gorsel dunyaya baglanir: gece sahnesi icin karanlik
-     bir izleme odasi. Her renk acikca boyanir, tema degiskeni yoktur. */
+  /* Tek gorsel dunya: gece sahnesini izlemek icin karanlik bir kesme odasi.
+     Tema degiskeni yok, her renk acikca boyanir. */
   body{background:var(--ground);color:var(--ink);font-family:var(--ui);}
-  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 48px;display:flex;flex-direction:column;gap:18px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 46px;display:flex;flex-direction:column;gap:16px;}
   header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,3.4vw,40px);margin:0;letter-spacing:-.01em;color:var(--ink);}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,3.4vw,40px);margin:0;letter-spacing:-.01em;}
   .sub{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
   .stage{position:relative;background:#000;border:1px solid var(--line);overflow:hidden;}
-  canvas{display:block;width:100%;height:auto;}
-  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  button{font-family:var(--ui);font-size:16px;letter-spacing:.06em;text-transform:uppercase;
-    background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 16px;cursor:pointer;}
-  button:hover{border-color:var(--ember);color:var(--ember);}
-  button:focus-visible{outline:2px solid var(--ember);outline-offset:2px;}
+  canvas{display:block;width:100%;height:auto;cursor:default;}
+  canvas.editing{cursor:crosshair;}
+  .bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  button,.filebtn{font-family:var(--ui);font-size:16px;letter-spacing:.06em;text-transform:uppercase;
+    background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 15px;cursor:pointer;}
+  button:hover,.filebtn:hover{border-color:var(--ember);color:var(--ember);}
+  button:focus-visible,.filebtn:focus-within{outline:2px solid var(--ember);outline-offset:2px;}
   button[disabled]{opacity:.45;cursor:default;border-color:var(--line);color:var(--ink-faint);}
+  button.on{border-color:var(--ember);color:var(--ember);background:#241610;}
   .meta{font-size:15px;color:var(--ink-dim);letter-spacing:.04em;margin-left:auto;font-variant-numeric:tabular-nums;}
-  .note{font-size:15px;line-height:1.6;color:var(--ink-dim);max-width:62ch;border-left:2px solid var(--line);padding-left:14px;}
-  .note b{color:var(--ink);font-weight:500;}
+  .panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:10px 26px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;}
+  .ctl{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;}
+  .ctl label{font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);}
+  .ctl output{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .ctl input,.ctl select{grid-column:1/-1;width:100%;accent-color:var(--ember);
+    background:var(--panel);color:var(--ink);border:1px solid var(--line);font-family:var(--ui);font-size:15px;}
+  .ctl input[type=range]{border:0;background:none;}
   #status{font-size:15px;color:var(--ember);letter-spacing:.04em;min-height:1.4em;}
+  .note{font-size:15px;line-height:1.6;color:var(--ink-dim);max-width:64ch;
+    border-left:2px solid var(--line);padding-left:14px;}
+  .note b{color:var(--ink);font-weight:500;}
+  .note+.note{margin-top:-6px;}
 </style>
 
 <div class="wrap">
   <header>
-    <h1>Snowfall Room</h1>
-    <span class="sub">24 sn &middot; kusursuz dongu</span>
+    <h1>Hearth Loop</h1>
+    <span class="sub">fotograf &rarr; kusursuz dongu</span>
   </header>
 
   <div class="stage"><canvas id="scene" width="1920" height="1080"></canvas></div>
 
   <div class="bar">
+    <label class="filebtn">Fotograf yukle<input id="file" type="file" accept="image/*" hidden></label>
+    <button id="edit">Alanlari duzenle</button>
+    <button id="redraw">Pencereyi yeniden ciz</button>
+    <button id="reset">Ornege don</button>
     <button id="toggle">Duraklat</button>
-    <button id="rec">Donguyu kaydet (WebM)</button>
+    <button id="rec">Donguyu kaydet</button>
     <span class="meta" id="clock">0.0 / 24.0 sn</span>
   </div>
+
+  <div class="panel">
+    <div class="ctl"><label for="c_snow">Kar yogunlugu</label><output id="o_snow"></output>
+      <input id="c_snow" type="range" min="0" max="500" step="10"></div>
+    <div class="ctl"><label for="c_fall">Kar hizi</label><output id="o_fall"></output>
+      <select id="c_fall"><option value="1">yavas</option><option value="2">orta</option><option value="3">hizli</option></select></div>
+    <div class="ctl"><label for="c_fire">Ates titremesi</label><output id="o_fire"></output>
+      <input id="c_fire" type="range" min="0" max="100" step="5"></div>
+    <div class="ctl"><label for="c_spark">Kivilcim</label><output id="o_spark"></output>
+      <input id="c_spark" type="range" min="0" max="90" step="2"></div>
+    <div class="ctl"><label for="c_drift">Kamera kaymasi</label><output id="o_drift"></output>
+      <input id="c_drift" type="range" min="0" max="200" step="5"></div>
+    <div class="ctl"><label for="c_grain">Tanecik</label><output id="o_grain"></output>
+      <input id="c_grain" type="range" min="0" max="100" step="5"></div>
+  </div>
+
   <div id="status"></div>
 
-  <p class="note">Sahnedeki her hareket &mdash; kar, alev, kivilcimlar, duvardaki isik titremesi &mdash;
-  24 saniyenin tam kati periyotlarla surer, bu yuzden dongu noktasinda dikis gorunmez.
-  <b>Kaydet</b> dugmesi dosyayi bilgisayarinizda actiginizda calisir; buradaki onizlemede
-  tarayici indirmeyi engeller.</p>
+  <p class="note"><b>Nasil calisir:</b> Gemini'den fotogercekci bir oda karesi uretin,
+  <b>Fotograf yukle</b> ile secin. Sonra <b>Alanlari duzenle</b>'ye basip pencerenin dort
+  kosesini ve ates noktasini yerine surukleyin &mdash; kar yalnizca pencerenin icinde yagar,
+  isik ve kivilcimlar atesten yukselir.</p>
+
+  <p class="note">Her hareket dongu suresinin tam kati periyotlarla surer, bu yuzden
+  bas ve son kare birebir aynidir. <b>Donguyu kaydet</b> dosyayi bilgisayarinizda
+  actiginizda calisir; onizlemede tarayici indirmeyi engeller. Yuklediginiz fotograf
+  tarayicinizdan disari cikmaz.</p>
 </div>
 
 <script>
 (function(){
   "use strict";
-  var W=1920, H=1080, LOOP=24, FPS=30;
+  var W=1920, H=1080, FPS=30, LOOP=24;
   var cv=document.getElementById("scene"), ctx=cv.getContext("2d");
 
   var C={
@@ -400,39 +437,6 @@
     c.restore();
   }
 
-  // ---------------------------------------------------------------------
-  // KARE BASINA CIZILEN HAREKETLI KATMANLAR
-  // Butun periyotlar 1/LOOP'un tam katidir; dongu noktasinda dikis olmaz.
-  // ---------------------------------------------------------------------
-  var FLAKES=[];
-  for(var i=0;i<210;i++){
-    FLAKES.push({
-      x:rnd(i)*1.0,
-      off:rnd(i+300),
-      cyc:1+Math.floor(rnd(i+600)*2),        // dongu basina dusus sayisi (1-2): yavas
-      sway:1+Math.floor(rnd(i+900)*3),       // yatay salinim harmonigi
-      amp:6+rnd(i+1200)*26,
-      r:1.1+rnd(i+1500)*2.6,
-      a:0.28+rnd(i+1800)*0.62
-    });
-  }
-
-  function drawSnow(c,p){
-    c.save();
-    c.beginPath(); c.rect(WIN.x+2,WIN.y+2,WIN.w-4,WIN.h-4); c.clip();
-    for(var i=0;i<FLAKES.length;i++){
-      var f=FLAKES[i];
-      var prog=(p*f.cyc+f.off)%1;
-      var y=WIN.y-20+prog*(WIN.h+40);
-      var x=WIN.x+f.x*WIN.w+Math.sin(TAU*(p*f.sway+f.off))*f.amp;
-      var fade=Math.min(1,Math.min(prog*8,(1-prog)*8));
-      c.globalAlpha=f.a*fade;
-      c.fillStyle="#EAF3FA";
-      c.beginPath(); c.arc(x,y,f.r,0,TAU); c.fill();
-    }
-    c.restore();
-  }
-
   // Alev dili: taban sabit, uc birkac sinusun toplamiyla salinir.
   function tongue(c,cx,baseY,w,h,ph,p,inner){
     var s1=Math.sin(TAU*(p*3+ph)), s2=Math.sin(TAU*(p*5+ph*1.7)), s3=Math.sin(TAU*(p*8+ph*0.6));
@@ -449,102 +453,301 @@
     c.closePath(); c.fill();
   }
 
-  function drawFire(c,p){
+  // -------------------------------------------------------------------
+  // ORNEK ZEMIN: kullanici kendi fotografini yukleyene kadar gorunur.
+  // Cizilmis oda burada "fotograf" yerine gecer; hareketli katmanlar
+  // gercek fotografta oldugu gibi bunun da uzerine biner.
+  // -------------------------------------------------------------------
+  var sample=document.createElement("canvas"); sample.width=W; sample.height=H;
+  (function(){
+    bakeRoom();
+    var c=sample.getContext("2d");
+    c.drawImage(bgC,0,0);
     var f=FIRE, baseY=f.oy+f.oh-64;
-    // titreme: iki harmonik toplami, LOOP'a tam oturur
-    var flick=0.80+0.14*Math.sin(TAU*p*7)+0.06*Math.sin(TAU*p*13);
-    c.save();
-    c.globalCompositeOperation="lighter";
-    // kor yatagi
-    c.fillStyle=rg(c,f.cx,baseY+8,6,118,[[0,"rgba(255,150,50,"+(0.38*flick)+")"],[1,"rgba(120,30,10,0)"]]);
+    c.save(); c.globalCompositeOperation="lighter";
+    c.fillStyle=rg(c,f.cx,baseY+8,6,118,[[0,"rgba(255,150,50,0.42)"],[1,"rgba(120,30,10,0)"]]);
     c.fillRect(f.ox,f.oy,f.ow,f.oh);
-    // alevler: disdan ice
-    tongue(c,f.cx-58,baseY,120,150,0.11,p,false);
-    tongue(c,f.cx+54,baseY,128,166,0.47,p,false);
-    tongue(c,f.cx- 6,baseY,168,232,0.79,p,false);
-    tongue(c,f.cx-28,baseY, 74,124,0.31,p,true);
-    tongue(c,f.cx+30,baseY, 66,110,0.63,p,true);
-    tongue(c,f.cx+ 2,baseY, 52,158,0.91,p,true);
+    tongue(c,f.cx-58,baseY,120,150,0.11,0.0,false);
+    tongue(c,f.cx+54,baseY,128,166,0.47,0.0,false);
+    tongue(c,f.cx- 6,baseY,168,232,0.79,0.0,false);
+    tongue(c,f.cx-28,baseY, 74,124,0.31,0.0,true);
+    tongue(c,f.cx+30,baseY, 66,110,0.63,0.0,true);
     c.restore();
+    c.drawImage(fgC,0,0);
+  })();
 
-    // kivilcimlar: her biri LOOP icinde sarilan bir yasa sahip
-    c.save();
-    c.globalCompositeOperation="lighter";
-    var N=44, life=3.6;
-    for(var j=0;j<N;j++){
-      var born=(j/N)*LOOP;
-      var age=((p*LOOP)-born+LOOP)%LOOP;
-      if(age>life) continue;
-      var k=age/life;
-      var sx=f.cx+(rnd(j)-0.5)*160+Math.sin(TAU*(k*1.5+rnd(j+50)))*30*k;
-      var sy=baseY-24-k*(150+rnd(j+100)*230);
-      var a=(1-k)*(1-k)*(0.55+rnd(j+150)*0.45);
-      var r=0.9+rnd(j+200)*1.5;
-      c.globalAlpha=a;
-      c.fillStyle=k<0.45?"#FFEFC0":"#F0913C";
-      c.beginPath(); c.arc(sx,sy,r,0,TAU); c.fill();
+  // -------------------------------------------------------------------
+  // DURUM
+  // Pencere dortgeni ve ates noktasi 0..1 arasinda normalize tutulur,
+  // boylece farkli olculerdeki fotograflarda ayni degerler calisir.
+  // -------------------------------------------------------------------
+  var DEF={
+    win:[[0.6042,0.1389],[0.8958,0.1389],[0.8958,0.4972],[0.6042,0.4972]],
+    fire:{x:0.1589,y:0.7361,r:0.20},
+    snow:220, fall:1, fire_i:70, spark:44, drift:90, grain:50
+  };
+  var S=JSON.parse(JSON.stringify(DEF));
+  try{
+    var saved=localStorage.getItem("hearthloop");
+    if(saved){ var o=JSON.parse(saved); for(var k in o) if(k in S) S[k]=o[k]; }
+  }catch(e){}
+  function save(){ try{ localStorage.setItem("hearthloop",JSON.stringify(S)); }catch(e){} }
+
+  var photo=null;          // yuklenen gorsel (yoksa ornek kullanilir)
+  var editing=false, picking=0, pickBuf=[], drag=null;
+
+  // -------------------------------------------------------------------
+  // KAR
+  // Her tanenin dusus sayisi tam sayidir; dongu basinda ve sonunda
+  // konumlar birebir ayni olur.
+  // -------------------------------------------------------------------
+  var FLAKES=[];
+  function seedFlakes(){
+    FLAKES.length=0;
+    var n=S.snow|0;
+    for(var i=0;i<n;i++){
+      var near=i%5<2;                       // %40 on planda: daha buyuk, daha hizli
+      FLAKES.push({
+        x:rnd(i), off:rnd(i+3000),
+        cyc:(S.fall|0)+(near?1:0),
+        sway:1+Math.floor(rnd(i+6000)*3),
+        amp:(near?18:7)+rnd(i+9000)*(near?30:14),
+        r:near?(2.0+rnd(i+12000)*2.6):(0.9+rnd(i+15000)*1.3),
+        a:near?(0.42+rnd(i+18000)*0.5):(0.18+rnd(i+21000)*0.34)
+      });
     }
-    c.restore();
+  }
+  seedFlakes();
 
-    // odaya vuran titrek sicak isik
+  function px(pt){ return [pt[0]*W, pt[1]*H]; }
+  function quadPath(c,q){
+    var p0=px(q[0]),p1=px(q[1]),p2=px(q[2]),p3=px(q[3]);
+    c.beginPath(); c.moveTo(p0[0],p0[1]); c.lineTo(p1[0],p1[1]);
+    c.lineTo(p2[0],p2[1]); c.lineTo(p3[0],p3[1]); c.closePath();
+  }
+  function quadBox(q){
+    var xs=[q[0][0],q[1][0],q[2][0],q[3][0]], ys=[q[0][1],q[1][1],q[2][1],q[3][1]];
+    var x0=Math.min.apply(null,xs)*W, x1=Math.max.apply(null,xs)*W;
+    var y0=Math.min.apply(null,ys)*H, y1=Math.max.apply(null,ys)*H;
+    return {x:x0,y:y0,w:x1-x0,h:y1-y0};
+  }
+
+  function drawSnow(c,p){
+    if(!FLAKES.length) return;
+    var box=quadBox(S.win);
+    if(box.w<4||box.h<4) return;
     c.save();
-    c.globalCompositeOperation="lighter";
-    c.globalAlpha=0.20+0.10*(flick-0.80)/0.20;
-    c.fillStyle=rg(c,f.cx,700,60,1050,[[0,"rgba(240,145,60,0.55)"],[0.5,"rgba(185,80,30,0.16)"],[1,"rgba(0,0,0,0)"]]);
-    c.fillRect(0,0,W,H);
+    quadPath(c,S.win); c.clip();
+    for(var i=0;i<FLAKES.length;i++){
+      var f=FLAKES[i];
+      var prog=(p*f.cyc+f.off)%1;
+      var y=box.y-24+prog*(box.h+48);
+      var x=box.x+f.x*box.w+Math.sin(TAU*(p*f.sway+f.off))*f.amp;
+      var fade=Math.min(1,Math.min(prog*9,(1-prog)*9));
+      c.globalAlpha=f.a*fade;
+      c.fillStyle="#EDF4FA";
+      c.beginPath(); c.arc(x,y,f.r,0,TAU); c.fill();
+    }
     c.restore();
   }
 
-  // Tanecik: 4 doku, LOOP'a tam bolunen bir hizla donuyor.
+  // -------------------------------------------------------------------
+  // ATES
+  // Fotografta alev zaten var; uzerine alev CIZMEK gercekligi bozar.
+  // Bunun yerine isik module edilir: titrek sicak parlama + kivilcim.
+  // -------------------------------------------------------------------
+  function drawFire(c,p){
+    var inten=S.fire_i/100;
+    var fx=S.fire.x*W, fy=S.fire.y*H, fr=S.fire.r*W;
+    var flick=0.78+0.14*Math.sin(TAU*p*7)+0.08*Math.sin(TAU*p*13);
+
+    if(inten>0){
+      c.save(); c.globalCompositeOperation="lighter";
+      c.globalAlpha=inten*0.42*flick;
+      c.fillStyle=rg(c,fx,fy,fr*0.06,fr,[[0,"rgba(255,176,86,0.85)"],[0.42,"rgba(214,104,38,0.28)"],[1,"rgba(0,0,0,0)"]]);
+      c.fillRect(0,0,W,H);
+      // odaya yayilan genis, cok daha yumusak sicaklik
+      c.globalAlpha=inten*0.16*flick;
+      c.fillStyle=rg(c,fx,fy-H*0.05,fr*0.2,fr*3.4,[[0,"rgba(240,145,60,0.6)"],[0.5,"rgba(185,80,30,0.18)"],[1,"rgba(0,0,0,0)"]]);
+      c.fillRect(0,0,W,H);
+      c.restore();
+    }
+
+    var N=S.spark|0;
+    if(N>0){
+      c.save(); c.globalCompositeOperation="lighter";
+      var life=3.6;
+      for(var j=0;j<N;j++){
+        var born=(j/N)*LOOP;
+        var age=((p*LOOP)-born+LOOP)%LOOP;
+        if(age>life) continue;
+        var k=age/life;
+        var sx=fx+(rnd(j)-0.5)*fr*0.85+Math.sin(TAU*(k*1.5+rnd(j+50)))*fr*0.16*k;
+        var sy=fy-fr*0.16-k*(fr*0.8+rnd(j+100)*fr*1.25);
+        c.globalAlpha=(1-k)*(1-k)*(0.5+rnd(j+150)*0.45);
+        c.fillStyle=k<0.45?"#FFEFC0":"#F0913C";
+        c.beginPath(); c.arc(sx,sy,0.9+rnd(j+200)*1.5,0,TAU); c.fill();
+      }
+      c.restore();
+    }
+  }
+
+  // Tanecik: dort doku, LOOP'a tam bolunen bir hizla donuyor.
   var GRAIN=[];
   (function(){
     for(var g=0;g<4;g++){
       var gc=document.createElement("canvas"); gc.width=480; gc.height=270;
       var gx=gc.getContext("2d"), im=gx.createImageData(480,270), d=im.data;
-      for(var i=0;i<d.length;i+=4){
-        var v=(Math.random()*255)|0;
-        d[i]=d[i+1]=d[i+2]=v; d[i+3]=13;
-      }
+      for(var i=0;i<d.length;i+=4){ var v=(Math.random()*255)|0; d[i]=d[i+1]=d[i+2]=v; d[i+3]=15; }
       gx.putImageData(im,0,0); GRAIN.push(gc);
     }
   })();
 
+  function drawBackdrop(c){
+    if(!photo){ c.drawImage(sample,0,0,W,H); return; }
+    // fotografi kirpip kareyi tamamen doldur (cover)
+    var s=Math.max(W/photo.width,H/photo.height);
+    var w=photo.width*s, h=photo.height*s;
+    c.drawImage(photo,(W-w)/2,(H-h)/2,w,h);
+  }
+
   function drawFrame(t){
     var p=((t%LOOP)+LOOP)%LOOP/LOOP;
     ctx.clearRect(0,0,W,H);
-    ctx.drawImage(bgC,0,0);
-    drawSnow(ctx,p);
-    ctx.drawImage(fgC,0,0);
-    drawFire(ctx,p);
 
-    // pencere isiginin cam onundeki soguk parlamasi
+    // Yavas kamera kaymasi: durgun bir fotografi "cekim"e ceviren sey bu.
+    // cos(2*pi*p) tam bir devir yapar, bas ve son kare cakisir.
+    var amp=(S.drift/100)*0.01;
+    var sc=1.015+amp*0.5*(1-Math.cos(TAU*p));
+    var dx=Math.sin(TAU*p)*W*amp*0.35, dy=Math.cos(TAU*p)*H*amp*0.20;
     ctx.save();
-    ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=0.5;
-    ctx.fillStyle=rg(ctx,WIN.x+WIN.w/2,WIN.y+WIN.h/2,40,620,[[0,"rgba(159,187,208,0.20)"],[1,"rgba(0,0,0,0)"]]);
-    ctx.fillRect(0,0,W,H);
+    ctx.translate(W/2+dx,H/2+dy); ctx.scale(sc,sc); ctx.translate(-W/2,-H/2);
+    drawBackdrop(ctx);
+    drawSnow(ctx,p);
+    drawFire(ctx,p);
     ctx.restore();
 
-    // vinyet
-    ctx.fillStyle=rg(ctx,W/2,H*0.52,H*0.42,H*1.05,[[0,"rgba(0,0,0,0)"],[1,"rgba(0,0,0,0.72)"]]);
-    ctx.fillRect(0,0,W,H);
-
-    // tanecik
-    var gi=Math.floor(p*192)%4;
-    ctx.save(); ctx.globalAlpha=0.5;
-    ctx.drawImage(GRAIN[gi],0,0,W,H);
-    ctx.restore();
+    if(S.grain>0){
+      ctx.save(); ctx.globalAlpha=(S.grain/100)*0.62;
+      ctx.drawImage(GRAIN[Math.floor(p*192)%4],0,0,W,H);
+      ctx.restore();
+    }
+    if(editing) drawHandles(ctx);
   }
 
-  bakeRoom();
-  drawFrame(0);
+  // -------------------------------------------------------------------
+  // ALAN DUZENLEME
+  // -------------------------------------------------------------------
+  function handles(){
+    var hs=[];
+    for(var i=0;i<4;i++) hs.push({t:"win",i:i,x:S.win[i][0]*W,y:S.win[i][1]*H});
+    hs.push({t:"fire",x:S.fire.x*W,y:S.fire.y*H});
+    hs.push({t:"radius",x:(S.fire.x+S.fire.r)*W,y:S.fire.y*H});
+    return hs;
+  }
+  function drawHandles(c){
+    c.save();
+    c.strokeStyle="rgba(159,187,208,0.9)"; c.lineWidth=3; c.setLineDash([12,9]);
+    quadPath(c,S.win); c.stroke();
+    c.setLineDash([]);
+    c.strokeStyle="rgba(232,135,58,0.9)";
+    c.beginPath(); c.arc(S.fire.x*W,S.fire.y*H,S.fire.r*W,0,TAU); c.stroke();
+    var hs=handles();
+    for(var i=0;i<hs.length;i++){
+      var h=hs[i], warm=(h.t!=="win");
+      c.fillStyle=warm?"#E8873A":"#9FBBD0";
+      c.strokeStyle="rgba(10,7,5,0.85)"; c.lineWidth=3;
+      c.beginPath(); c.arc(h.x,h.y,13,0,TAU); c.fill(); c.stroke();
+    }
+    if(picking){
+      c.fillStyle="rgba(10,7,5,0.72)"; c.fillRect(0,0,W,86);
+      c.fillStyle="#F0E2CC"; c.font="600 40px 'Barlow Condensed',Arial,sans-serif";
+      c.fillText("Pencerenin koselerine sirayla tikla — kalan: "+(4-pickBuf.length),36,56);
+    }
+    c.restore();
+  }
+  function toCanvas(ev){
+    var r=cv.getBoundingClientRect();
+    return {x:(ev.clientX-r.left)*(W/r.width), y:(ev.clientY-r.top)*(H/r.height)};
+  }
+  cv.addEventListener("pointerdown",function(ev){
+    if(!editing) return;
+    var q=toCanvas(ev);
+    if(picking){
+      pickBuf.push([q.x/W,q.y/H]);
+      if(pickBuf.length===4){ S.win=pickBuf.slice(); pickBuf=[]; picking=0; save(); }
+      drawFrame(tNow); return;
+    }
+    var hs=handles(), best=null, bd=1e9;
+    for(var i=0;i<hs.length;i++){
+      var d=Math.hypot(hs[i].x-q.x,hs[i].y-q.y);
+      if(d<bd){ bd=d; best=hs[i]; }
+    }
+    if(bd<40){ drag=best; cv.setPointerCapture(ev.pointerId); }
+  });
+  cv.addEventListener("pointermove",function(ev){
+    if(!drag) return;
+    var q=toCanvas(ev);
+    if(drag.t==="win"){ S.win[drag.i]=[q.x/W,q.y/H]; }
+    else if(drag.t==="fire"){ S.fire.x=q.x/W; S.fire.y=q.y/H; }
+    else { S.fire.r=Math.max(0.03,Math.abs(q.x/W-S.fire.x)); }
+    if(!playing) drawFrame(tNow);
+  });
+  cv.addEventListener("pointerup",function(){ if(drag){ drag=null; save(); } });
 
-  // --- oynatma ----------------------------------------------------------
+  // -------------------------------------------------------------------
+  // ARAYUZ
+  // -------------------------------------------------------------------
+  var clock=document.getElementById("clock"), status=document.getElementById("status");
+  var toggle=document.getElementById("toggle"), editBtn=document.getElementById("edit");
+  var CTLS=[["snow","c_snow","o_snow",function(v){return v+" tane";}],
+            ["fall","c_fall","o_fall",function(v){return v+"\u00d7 / dongu";}],
+            ["fire_i","c_fire","o_fire",function(v){return v+"%";}],
+            ["spark","c_spark","o_spark",function(v){return v+" adet";}],
+            ["drift","c_drift","o_drift",function(v){return (v/100).toFixed(2)+"%";}],
+            ["grain","c_grain","o_grain",function(v){return v+"%";}]];
+  CTLS.forEach(function(t){
+    var el=document.getElementById(t[1]), out=document.getElementById(t[2]);
+    el.value=S[t[0]];
+    out.textContent=t[3](+el.value);
+    el.addEventListener("input",function(){
+      S[t[0]]=+el.value; out.textContent=t[3](+el.value);
+      if(t[0]==="snow"||t[0]==="fall") seedFlakes();
+      save(); if(!playing) drawFrame(tNow);
+    });
+  });
+
+  document.getElementById("file").addEventListener("change",function(ev){
+    var f=ev.target.files&&ev.target.files[0];
+    if(!f) return;
+    var img=new Image();
+    img.onload=function(){ photo=img; status.textContent="Fotograf yuklendi — alanlari duzenleyip pencereyi ve atesi yerine tasi."; if(!playing) drawFrame(tNow); };
+    img.onerror=function(){ status.textContent="Bu dosya gorsel olarak acilamadi."; };
+    img.src=URL.createObjectURL(f);
+  });
+  document.getElementById("reset").addEventListener("click",function(){
+    photo=null; status.textContent="Ornek sahneye donuldu."; if(!playing) drawFrame(tNow);
+  });
+  editBtn.addEventListener("click",function(){
+    editing=!editing; picking=0; pickBuf=[];
+    editBtn.classList.toggle("on",editing);
+    cv.classList.toggle("editing",editing);
+    editBtn.textContent=editing?"Duzenlemeyi bitir":"Alanlari duzenle";
+    if(!playing) drawFrame(tNow);
+  });
+  document.getElementById("redraw").addEventListener("click",function(){
+    editing=true; editBtn.classList.add("on"); cv.classList.add("editing");
+    editBtn.textContent="Duzenlemeyi bitir";
+    picking=1; pickBuf=[];
+    if(!playing) drawFrame(tNow);
+  });
+
+  // -------------------------------------------------------------------
+  // OYNATMA
+  // -------------------------------------------------------------------
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var playing=!reduce, t0=performance.now()/1000, tNow=0, raf=null;
-  var clock=document.getElementById("clock"), toggle=document.getElementById("toggle");
-  var status=document.getElementById("status");
-  if(reduce){ toggle.textContent="Oynat"; }
-
+  if(reduce) toggle.textContent="Oynat";
   function tick(){
     if(!playing) return;
     tNow=(performance.now()/1000-t0)%LOOP;
@@ -552,41 +755,45 @@
     clock.textContent=tNow.toFixed(1)+" / "+LOOP.toFixed(1)+" sn";
     raf=requestAnimationFrame(tick);
   }
+  drawFrame(0);
   if(playing) raf=requestAnimationFrame(tick);
-
   toggle.addEventListener("click",function(){
     playing=!playing;
     toggle.textContent=playing?"Duraklat":"Oynat";
     if(playing){ t0=performance.now()/1000-tNow; raf=requestAnimationFrame(tick); }
-    else if(raf){ cancelAnimationFrame(raf); }
+    else if(raf) cancelAnimationFrame(raf);
   });
 
-  // --- tam bir donguyu WebM olarak kaydet -------------------------------
+  // -------------------------------------------------------------------
+  // TAM BIR DONGUYU KAYDET
+  // Kareler gercek zamanda degil sabit adimlarla cizilir; kaydin suresi
+  // makine hizindan bagimsiz olarak tam olarak LOOP saniyedir.
+  // -------------------------------------------------------------------
   var rec=document.getElementById("rec");
   rec.addEventListener("click",function(){
     if(typeof MediaRecorder==="undefined"){ status.textContent="Bu tarayici kayit desteklemiyor."; return; }
     var type=["video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"]
       .filter(function(m){ return MediaRecorder.isTypeSupported(m); })[0];
     if(!type){ status.textContent="Bu tarayici WebM kaydi desteklemiyor."; return; }
-    rec.disabled=true; toggle.disabled=true;
+    var wasEditing=editing; editing=false;
+    rec.disabled=true; toggle.disabled=true; editBtn.disabled=true;
     if(raf) cancelAnimationFrame(raf);
     playing=false; toggle.textContent="Oynat";
 
-    var stream=cv.captureStream(FPS), mr=new MediaRecorder(stream,{mimeType:type,videoBitsPerSecond:16000000});
+    var stream=cv.captureStream(FPS);
+    var mr=new MediaRecorder(stream,{mimeType:type,videoBitsPerSecond:16000000});
     var chunks=[];
     mr.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
     mr.onstop=function(){
       var url=URL.createObjectURL(new Blob(chunks,{type:"video/webm"}));
       var a=document.createElement("a");
-      a.href=url; a.download="snowfall_room_loop.webm"; a.click();
+      a.href=url; a.download="hearth_loop.webm"; a.click();
       setTimeout(function(){ URL.revokeObjectURL(url); },4000);
       status.textContent="Kayit bitti. Indirme baslamadiysa dosyayi bilgisayarinizda acin — onizleme indirmeyi engelliyor.";
-      rec.disabled=false; toggle.disabled=false;
+      rec.disabled=false; toggle.disabled=false; editBtn.disabled=false;
+      editing=wasEditing; drawFrame(tNow);
     };
     mr.start();
-
-    // Kareler gercek zamanda degil, sabit adimlarla cizilir: kayit
-    // makine hizindan bagimsiz olarak tam olarak LOOP saniye surer.
     var total=LOOP*FPS, n=0;
     (function step(){
       drawFrame(n/FPS);
@@ -597,8 +804,6 @@
     })();
   });
 
-  // Kare yakalama araci icin: sahneyi verilen saniyede ciz.
   window.__renderAt=function(sec){ drawFrame(sec); };
-  window.__loop=LOOP; window.__fps=FPS;
 })();
 </script>
