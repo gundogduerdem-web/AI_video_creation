@@ -1,0 +1,604 @@
+<title>Snowfall Room</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Barlow+Condensed:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#F0E2CC; --ink-dim:#A8927A; --ink-faint:#6E5C4B;
+    --ground:#120C0A; --panel:#1C1310; --line:#2E211B;
+    --ember:#E8873A; --frost:#8FA9BE;
+    --display:"Fraunces","Iowan Old Style",Georgia,serif;
+    --ui:"Barlow Condensed","Helvetica Neue",Arial,sans-serif;
+  }
+  /* Bu sayfa tek bir gorsel dunyaya baglanir: gece sahnesi icin karanlik
+     bir izleme odasi. Her renk acikca boyanir, tema degiskeni yoktur. */
+  body{background:var(--ground);color:var(--ink);font-family:var(--ui);}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 48px;display:flex;flex-direction:column;gap:18px;}
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,3.4vw,40px);margin:0;letter-spacing:-.01em;color:var(--ink);}
+  .sub{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+  .stage{position:relative;background:#000;border:1px solid var(--line);overflow:hidden;}
+  canvas{display:block;width:100%;height:auto;}
+  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  button{font-family:var(--ui);font-size:16px;letter-spacing:.06em;text-transform:uppercase;
+    background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 16px;cursor:pointer;}
+  button:hover{border-color:var(--ember);color:var(--ember);}
+  button:focus-visible{outline:2px solid var(--ember);outline-offset:2px;}
+  button[disabled]{opacity:.45;cursor:default;border-color:var(--line);color:var(--ink-faint);}
+  .meta{font-size:15px;color:var(--ink-dim);letter-spacing:.04em;margin-left:auto;font-variant-numeric:tabular-nums;}
+  .note{font-size:15px;line-height:1.6;color:var(--ink-dim);max-width:62ch;border-left:2px solid var(--line);padding-left:14px;}
+  .note b{color:var(--ink);font-weight:500;}
+  #status{font-size:15px;color:var(--ember);letter-spacing:.04em;min-height:1.4em;}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Snowfall Room</h1>
+    <span class="sub">24 sn &middot; kusursuz dongu</span>
+  </header>
+
+  <div class="stage"><canvas id="scene" width="1920" height="1080"></canvas></div>
+
+  <div class="bar">
+    <button id="toggle">Duraklat</button>
+    <button id="rec">Donguyu kaydet (WebM)</button>
+    <span class="meta" id="clock">0.0 / 24.0 sn</span>
+  </div>
+  <div id="status"></div>
+
+  <p class="note">Sahnedeki her hareket &mdash; kar, alev, kivilcimlar, duvardaki isik titremesi &mdash;
+  24 saniyenin tam kati periyotlarla surer, bu yuzden dongu noktasinda dikis gorunmez.
+  <b>Kaydet</b> dugmesi dosyayi bilgisayarinizda actiginizda calisir; buradaki onizlemede
+  tarayici indirmeyi engeller.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var W=1920, H=1080, LOOP=24, FPS=30;
+  var cv=document.getElementById("scene"), ctx=cv.getContext("2d");
+
+  var C={
+    night:"#0B1524", nightHi:"#22384E", moon:"#C9DCEA", pine:"#050B14",
+    snowGround:"#33485E", glass:"#101E2E",
+    wall:"#241811", wallHi:"#4B2F1E", floor:"#1A110C", floorHi:"#38241A",
+    wood:"#3A2618", woodHi:"#6E4A2C", stone:"#2E2422", stoneHi:"#584744",
+    ember:"#F0913C", flame:"#FFC24A", hot:"#FFEFC0", deepRed:"#B93E17",
+    fabric:"#432F27", fabricHi:"#7C5541", fabricTop:"#8E6349",
+    rug:"#5A2A22", rugHi:"#8A4433", cream:"#E9D8B6", frost:"#9FBBD0",
+    brass:"#C9A05A"
+  };
+
+  // --- kucuk yardimcilar -----------------------------------------------
+  function rr(c,x,y,w,h,r){
+    r=Math.min(r,Math.abs(w)/2,Math.abs(h)/2);
+    c.beginPath();
+    c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+    c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+    c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y); c.closePath();
+  }
+  function lg(c,x0,y0,x1,y1,stops){
+    var g=c.createLinearGradient(x0,y0,x1,y1);
+    for(var i=0;i<stops.length;i++) g.addColorStop(stops[i][0],stops[i][1]);
+    return g;
+  }
+  function rg(c,x,y,r0,r1,stops){
+    var g=c.createRadialGradient(x,y,r0,x,y,r1);
+    for(var i=0;i<stops.length;i++) g.addColorStop(stops[i][0],stops[i][1]);
+    return g;
+  }
+  // Deterministik sozde-rastgele: her kare ayni degeri versin diye.
+  function rnd(i){ var x=Math.sin(i*127.1+i*i*0.017)*43758.5453; return x-Math.floor(x); }
+  var TAU=Math.PI*2;
+
+  // --- sahne olculeri ---------------------------------------------------
+  var FIRE={x:90,y:500,w:430,h:390, ox:150,oy:566,ow:310,oh:284, cx:305, floorY:850};
+  var WIN ={x:1160,y:150,w:560,h:500};
+  var SHELF={x:620,y:140,w:440,h:460};
+  var FLOOR_Y=838;
+
+  // ---------------------------------------------------------------------
+  // SABIT ODA: bir kez cizilip her karede kopyalanir.
+  // ---------------------------------------------------------------------
+  // Oda iki katmanda pisirilir: kar, arka katman ile on katmanin ARASINA
+  // cizilir; boylece pencerede yagar ama koltuklarin uzerine dusmez.
+  var bgC=document.createElement("canvas"); bgC.width=W; bgC.height=H;
+  var fgC=document.createElement("canvas"); fgC.width=W; fgC.height=H;
+  function bakeRoom(){
+    var c=bgC.getContext("2d");
+    c.clearRect(0,0,W,H);
+
+    // duvar
+    c.fillStyle=lg(c,0,0,0,FLOOR_Y,[[0,"#1B120D"],[0.55,C.wall],[1,"#2C1D14"]]);
+    c.fillRect(0,0,W,FLOOR_Y);
+    // somineden gelen sicak yikama (statik taban; titreme kare basina eklenir)
+    c.fillStyle=rg(c,FIRE.cx,700,40,1000,[[0,"rgba(240,145,60,0.34)"],[0.45,"rgba(185,90,35,0.14)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(0,0,W,FLOOR_Y);
+    // pencereden gelen soguk yikama
+    c.fillStyle=rg(c,WIN.x+WIN.w/2,WIN.y+WIN.h/2,60,760,[[0,"rgba(159,187,208,0.16)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(0,0,W,FLOOR_Y);
+
+    drawFloor(c);
+    drawWindow(c);
+    drawCurtains(c);
+    drawShelf(c);
+    drawFireplaceShell(c);
+
+    var f=fgC.getContext("2d");
+    f.clearRect(0,0,W,H);
+    drawRug(f);
+    drawSofa(f);
+    drawArmchair(f);
+    drawBookAndGlasses(f);
+  }
+
+  function drawFloor(c){
+    c.fillStyle=lg(c,0,FLOOR_Y,0,H,[[0,"#241710"],[1,"#0F0A07"]]);
+    c.fillRect(0,FLOOR_Y,W,H-FLOOR_Y);
+    // tahta derzleri: perspektif icin merkeze dogru daralir
+    c.strokeStyle="rgba(0,0,0,0.35)"; c.lineWidth=2;
+    for(var i=-6;i<=10;i++){
+      var xt=W/2+i*150, xb=W/2+i*260;
+      c.beginPath(); c.moveTo(xt,FLOOR_Y); c.lineTo(xb,H); c.stroke();
+    }
+    // atesin yerdeki yansimasi
+    c.fillStyle=rg(c,FIRE.cx,FLOOR_Y+40,20,620,[[0,"rgba(240,145,60,0.30)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(0,FLOOR_Y,W,H-FLOOR_Y);
+  }
+
+  function drawWindow(c){
+    var x=WIN.x,y=WIN.y,w=WIN.w,h=WIN.h;
+    // gece gokyuzu
+    c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+    c.fillStyle=lg(c,0,y,0,y+h,[[0,"#060D18"],[0.45,C.night],[1,C.nightHi]]);
+    c.fillRect(x,y,w,h);
+    // ay parlamasi
+    c.fillStyle=rg(c,x+w*0.76,y+h*0.16,10,240,[[0,"rgba(201,220,234,0.42)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(x,y,w,h);
+    // uzak camlar
+    c.fillStyle=C.pine;
+    for(var i=0;i<11;i++){
+      var px=x+18+i*54+rnd(i)*22, ph=90+rnd(i+40)*95, pw=40+rnd(i+80)*22, by=y+h-58;
+      c.beginPath(); c.moveTo(px,by); c.lineTo(px+pw/2,by-ph); c.lineTo(px+pw,by); c.closePath(); c.fill();
+    }
+    // karli zemin
+    c.fillStyle=lg(c,0,y+h-70,0,y+h,[[0,"rgba(51,72,94,0.9)"],[1,"rgba(90,116,140,0.95)"]]);
+    c.fillRect(x,y+h-70,w,70);
+    c.restore();
+
+    // cam kenarindaki kirag
+    c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+    var corners=[[x,y],[x+w,y],[x,y+h],[x+w,y+h]];
+    for(var k=0;k<4;k++){
+      c.fillStyle=rg(c,corners[k][0],corners[k][1],4,150,[[0,"rgba(214,232,244,0.34)"],[1,"rgba(0,0,0,0)"]]);
+      c.fillRect(x,y,w,h);
+    }
+    c.restore();
+
+    // kanat cubuklari ve cerceve
+    c.fillStyle=C.wood;
+    c.fillRect(x+w/2-9,y,18,h);
+    c.fillRect(x,y+h*0.42-9,w,18);
+    c.strokeStyle=C.wood; c.lineWidth=26; c.strokeRect(x-13,y-13,w+26,h+26);
+    c.strokeStyle="rgba(110,74,44,0.85)"; c.lineWidth=3; c.strokeRect(x-24,y-24,w+48,h+48);
+    // denizlik
+    c.fillStyle=lg(c,0,y+h+13,0,y+h+52,[[0,C.woodHi],[1,"#2B1B10"]]);
+    rr(c,x-40,y+h+13,w+80,39,5); c.fill();
+  }
+
+  function drawCurtains(c){
+    var tops=WIN.y-52, bot=FLOOR_Y-10;
+    [[WIN.x-150,1],[WIN.x+WIN.w+22,-1]].forEach(function(pair){
+      var cx0=pair[0], dir=pair[1];
+      c.save();
+      c.fillStyle=lg(c,cx0,0,cx0+128,0,
+        dir>0?[[0,"#2A1A15"],[0.5,"#4A2D22"],[1,"#1E120E"]]:[[0,"#1E120E"],[0.5,"#4A2D22"],[1,"#2A1A15"]]);
+      c.beginPath();
+      c.moveTo(cx0,tops); c.lineTo(cx0+128,tops);
+      c.quadraticCurveTo(cx0+128-dir*30,(tops+bot)/2,cx0+128-dir*8,bot);
+      c.lineTo(cx0+dir*10,bot);
+      c.quadraticCurveTo(cx0-dir*16,(tops+bot)/2,cx0,tops);
+      c.closePath(); c.fill();
+      // kivrimlar
+      for(var i=1;i<6;i++){
+        var fx=cx0+i*21;
+        c.strokeStyle=i%2?"rgba(0,0,0,0.30)":"rgba(124,85,65,0.26)";
+        c.lineWidth=i%2?9:6;
+        c.beginPath(); c.moveTo(fx,tops+6);
+        c.quadraticCurveTo(fx-dir*14,(tops+bot)/2,fx-dir*4,bot-4); c.stroke();
+      }
+      c.restore();
+    });
+    // kornis
+    c.fillStyle=C.woodHi; rr(c,WIN.x-170,WIN.y-72,WIN.w+340,20,10); c.fill();
+  }
+
+  function drawShelf(c){
+    var x=SHELF.x,y=SHELF.y,w=SHELF.w,h=SHELF.h;
+    c.fillStyle=lg(c,x,0,x+w,0,[[0,"#2F1E13"],[1,"#1B110B"]]);
+    rr(c,x-14,y-14,w+28,h+28,6); c.fill();
+    c.fillStyle="#150D09"; c.fillRect(x,y,w,h);
+    var rows=4, rh=h/rows;
+    for(var r=0;r<rows;r++){
+      var by=y+(r+1)*rh, cursor=x+12, idx=r*40;
+      while(cursor<x+w-26){
+        var bw=17+rnd(idx)*22, bh=rh*(0.52+rnd(idx+7)*0.34);
+        var hue=[C.deepRed,"#6B4A2E","#3E5148","#7A4A22","#4A3550","#8A5A2A"][Math.floor(rnd(idx+13)*6)];
+        c.save();
+        if(rnd(idx+3)>0.9){ c.translate(cursor+bw/2,by); c.rotate(-0.16); c.translate(-(cursor+bw/2),-by); }
+        c.fillStyle=hue; c.fillRect(cursor,by-bh,bw,bh);
+        c.fillStyle="rgba(233,216,182,0.16)"; c.fillRect(cursor+2,by-bh+bh*0.2,bw-4,2);
+        c.fillStyle="rgba(0,0,0,0.34)"; c.fillRect(cursor+bw-3,by-bh,3,bh);
+        c.restore();
+        cursor+=bw+2+rnd(idx+21)*4; idx++;
+      }
+      c.fillStyle=lg(c,0,by,0,by+11,[[0,C.woodHi],[1,"#2A1A10"]]);
+      c.fillRect(x,by,w,11);
+    }
+    // rafin somineye bakan kenarinda sicak kenar isigi
+    c.fillStyle=lg(c,x-14,0,x+70,0,[[0,"rgba(240,145,60,0.30)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(x-14,y-14,90,h+28);
+  }
+
+  function drawFireplaceShell(c){
+    var f=FIRE;
+    // tas kaplama
+    c.fillStyle=lg(c,f.x,0,f.x+f.w,0,[[0,"#241C1B"],[0.5,C.stone],[1,"#1D1615"]]);
+    c.fillRect(f.x,f.y,f.w,f.floorY-f.y);
+    for(var i=0;i<26;i++){
+      var sx=f.x+8+rnd(i)*(f.w-70), sy=f.y+12+rnd(i+31)*(f.floorY-f.y-40);
+      if(sx>f.ox-60&&sx<f.ox+f.ow&&sy>f.oy-30) continue;
+      c.fillStyle="rgba(88,71,68,"+(0.20+rnd(i+9)*0.30)+")";
+      rr(c,sx,sy,44+rnd(i+3)*26,22+rnd(i+5)*10,4); c.fill();
+    }
+    // ocak agzi
+    c.fillStyle="#080503"; rr(c,f.ox,f.oy,f.ow,f.oh,10); c.fill();
+    c.fillStyle=lg(c,0,f.oy,0,f.oy+f.oh,[[0,"rgba(34,11,4,0.96)"],[1,"rgba(84,25,8,0.62)"]]);
+    rr(c,f.ox+8,f.oy+8,f.ow-16,f.oh-16,8); c.fill();
+    // kutuk
+    c.fillStyle="#2A1A11";
+    rr(c,f.ox+30,f.oy+f.oh-74,f.ow-60,34,16); c.fill();
+    rr(c,f.ox+56,f.oy+f.oh-104,f.ow-140,30,14); c.fill();
+    c.fillStyle="rgba(110,74,44,0.5)";
+    rr(c,f.ox+34,f.oy+f.oh-72,f.ow-68,7,4); c.fill();
+    // raf
+    c.fillStyle=lg(c,0,f.y-34,0,f.y+8,[[0,C.woodHi],[1,"#2A1A10"]]);
+    rr(c,f.x-40,f.y-34,f.w+80,42,6); c.fill();
+    c.fillStyle="rgba(240,145,60,0.22)"; c.fillRect(f.x-40,f.y+2,f.w+80,6);
+  }
+
+  function drawRug(c){
+    c.save();
+    c.fillStyle=lg(c,0,900,0,1040,[[0,C.rug],[1,"#2C140F"]]);
+    c.beginPath(); c.ellipse(940,960,760,120,0,0,TAU); c.fill();
+    c.strokeStyle="rgba(138,68,51,0.55)"; c.lineWidth=6;
+    c.beginPath(); c.ellipse(940,960,700,104,0,0,TAU); c.stroke();
+    c.fillStyle=rg(c,FIRE.cx,930,20,700,[[0,"rgba(240,145,60,0.26)"],[1,"rgba(0,0,0,0)"]]);
+    c.beginPath(); c.ellipse(940,960,760,120,0,0,TAU); c.fill();
+    c.restore();
+  }
+
+  function cushion(c,x,y,w,h,r,warm){
+    c.fillStyle=lg(c,x,y,x,y+h,[[0,warm?C.fabricTop:C.fabricHi],[0.6,C.fabric],[1,"#2A1C16"]]);
+    rr(c,x,y,w,h,r); c.fill();
+    c.strokeStyle="rgba(0,0,0,0.30)"; c.lineWidth=3; rr(c,x,y,w,h,r); c.stroke();
+    c.fillStyle="rgba(233,216,182,0.10)"; rr(c,x+8,y+6,w-16,10,5); c.fill();
+  }
+
+  function drawSofa(c){
+    // sirtlik
+    cushion(c,566,548,676,224,26,true);
+    // arka minderler
+    cushion(c,596,566,300,190,20,true);
+    cushion(c,910,566,300,190,20,true);
+    // oturak
+    cushion(c,584,700,650,120,20,false);
+    c.strokeStyle="rgba(0,0,0,0.4)"; c.lineWidth=3;
+    c.beginPath(); c.moveTo(909,706); c.lineTo(909,814); c.stroke();
+    // kollar
+    cushion(c,540,636,92,214,26,false);
+    cushion(c,1188,636,92,214,26,false);
+    // etek
+    c.fillStyle=lg(c,0,812,0,884,[[0,"#31221B"],[1,"#170F0B"]]);
+    rr(c,566,812,676,72,10); c.fill();
+    // ayaklar
+    c.fillStyle="#1A1109"; c.fillRect(600,878,22,26); c.fillRect(1188,878,22,26);
+    // sag kola atilmis ortu
+    // dis yuzden asagi sarkan etek
+    c.fillStyle=lg(c,1248,660,1300,876,[[0,"#8E7A58"],[1,"#3A3022"]]);
+    c.beginPath();
+    c.moveTo(1246,660); c.lineTo(1290,664);
+    c.quadraticCurveTo(1300,772,1274,868);
+    c.quadraticCurveTo(1250,878,1236,856);
+    c.quadraticCurveTo(1252,762,1246,660); c.closePath(); c.fill();
+    // kolun ust yuzune serilen kisim
+    c.save(); c.translate(1234,646); c.rotate(-0.06); c.translate(-1234,-646);
+    c.fillStyle=lg(c,0,620,0,684,[[0,"#B39C74"],[1,"#7E6A4C"]]);
+    rr(c,1178,620,112,56,20); c.fill();
+    c.fillStyle="rgba(233,216,182,0.16)"; rr(c,1186,626,96,10,5); c.fill();
+    c.restore();
+    // ic yuzden sarkan kisa uc
+    c.fillStyle=lg(c,1170,660,1206,748,[[0,"#8E7A58"],[1,"#3A3022"]]);
+    c.beginPath();
+    c.moveTo(1182,656); c.lineTo(1208,660);
+    c.quadraticCurveTo(1206,714,1192,744);
+    c.quadraticCurveTo(1176,748,1172,726);
+    c.quadraticCurveTo(1182,694,1182,656); c.closePath(); c.fill();
+    c.strokeStyle="rgba(0,0,0,0.24)"; c.lineWidth=3;
+    c.beginPath(); c.moveTo(1262,676); c.quadraticCurveTo(1276,772,1258,858); c.stroke();
+    // somineye bakan sicak kenar isigi
+    c.fillStyle=lg(c,540,0,700,0,[[0,"rgba(240,145,60,0.34)"],[1,"rgba(0,0,0,0)"]]);
+    rr(c,540,548,180,336,26); c.fill();
+    // pencereden gelen soguk kenar isigi
+    c.fillStyle=lg(c,1150,0,1282,0,[[0,"rgba(0,0,0,0)"],[1,"rgba(159,187,208,0.20)"]]);
+    rr(c,1150,548,132,336,26); c.fill();
+  }
+
+  function drawArmchair(c){
+    c.save();
+    c.translate(1660,830); c.rotate(-0.10); c.translate(-1660,-830);
+    cushion(c,1452,590,420,250,30,true);
+    cushion(c,1470,700,384,130,22,false);
+    cushion(c,1420,650,86,230,26,false);
+    cushion(c,1832,650,86,230,26,false);
+    c.fillStyle=lg(c,0,824,0,896,[[0,"#31221B"],[1,"#170F0B"]]);
+    rr(c,1440,824,462,72,10); c.fill();
+    c.fillStyle=lg(c,1420,0,1560,0,[[0,"rgba(240,145,60,0.26)"],[1,"rgba(0,0,0,0)"]]);
+    rr(c,1420,590,180,306,26); c.fill();
+    // pencere tarafindaki soguk kenar isigi
+    c.fillStyle=lg(c,1452,590,1452,700,[[0,"rgba(159,187,208,0.30)"],[1,"rgba(0,0,0,0)"]]);
+    rr(c,1452,590,420,110,30); c.fill();
+    c.restore();
+  }
+
+  function drawBookAndGlasses(c){
+    // oturagin uzerinde acik kitap
+    var bx=846, by=690;
+    c.save();
+    c.fillStyle="rgba(0,0,0,0.34)";
+    c.beginPath(); c.ellipse(bx+112,by+52,140,22,0,0,TAU); c.fill();
+    // sol sayfa
+    c.fillStyle=lg(c,bx,by,bx+110,by+40,[[0,"#E9D8B6"],[1,"#B7A177"]]);
+    c.beginPath(); c.moveTo(bx,by+34); c.lineTo(bx+108,by+8);
+    c.lineTo(bx+112,by+44); c.lineTo(bx+6,by+66); c.closePath(); c.fill();
+    // sag sayfa
+    c.fillStyle=lg(c,bx+112,by,bx+226,by+40,[[0,"#DFCCA8"],[1,"#A08B64"]]);
+    c.beginPath(); c.moveTo(bx+116,by+8); c.lineTo(bx+224,by+34);
+    c.lineTo(bx+218,by+66); c.lineTo(bx+116,by+44); c.closePath(); c.fill();
+    // satirlar
+    c.strokeStyle="rgba(60,42,26,0.34)"; c.lineWidth=2;
+    for(var i=0;i<6;i++){
+      c.beginPath(); c.moveTo(bx+12,by+38+i*5); c.lineTo(bx+98,by+16+i*5); c.stroke();
+      c.beginPath(); c.moveTo(bx+128,by+16+i*5); c.lineTo(bx+212,by+38+i*5); c.stroke();
+    }
+    // sirt golgesi
+    c.fillStyle="rgba(50,32,18,0.5)";
+    c.beginPath(); c.moveTo(bx+108,by+8); c.lineTo(bx+118,by+8);
+    c.lineTo(bx+116,by+46); c.lineTo(bx+110,by+46); c.closePath(); c.fill();
+    c.restore();
+
+    // kitabin yaninda okuma gozlugu
+    var gx=1092, gy=756;
+    c.save();
+    c.translate(gx,gy); c.rotate(-0.20);
+    c.fillStyle="rgba(0,0,0,0.32)";
+    c.beginPath(); c.ellipse(6,16,74,12,0,0,TAU); c.fill();
+    c.strokeStyle=C.brass; c.lineWidth=5; c.lineJoin="round";
+    c.beginPath(); c.ellipse(-38,0,32,21,0,0,TAU); c.stroke();
+    c.beginPath(); c.ellipse(38,0,32,21,0,0,TAU); c.stroke();
+    c.beginPath(); c.moveTo(-7,-4); c.quadraticCurveTo(0,-13,7,-4); c.stroke();
+    c.lineWidth=4;
+    c.beginPath(); c.moveTo(-69,-6); c.quadraticCurveTo(-104,-14,-124,4); c.stroke();
+    c.beginPath(); c.moveTo(69,-6); c.quadraticCurveTo(104,-14,124,4); c.stroke();
+    // camlarda hafif yansima
+    c.fillStyle="rgba(159,187,208,0.13)";
+    c.beginPath(); c.ellipse(-38,0,29,18,0,0,TAU); c.fill();
+    c.beginPath(); c.ellipse(38,0,29,18,0,0,TAU); c.fill();
+    c.strokeStyle="rgba(255,239,192,0.7)"; c.lineWidth=2;
+    c.beginPath(); c.moveTo(-52,-10); c.quadraticCurveTo(-44,-16,-32,-16); c.stroke();
+    c.beginPath(); c.moveTo(24,-10); c.quadraticCurveTo(32,-16,44,-16); c.stroke();
+    c.restore();
+  }
+
+  // ---------------------------------------------------------------------
+  // KARE BASINA CIZILEN HAREKETLI KATMANLAR
+  // Butun periyotlar 1/LOOP'un tam katidir; dongu noktasinda dikis olmaz.
+  // ---------------------------------------------------------------------
+  var FLAKES=[];
+  for(var i=0;i<210;i++){
+    FLAKES.push({
+      x:rnd(i)*1.0,
+      off:rnd(i+300),
+      cyc:1+Math.floor(rnd(i+600)*2),        // dongu basina dusus sayisi (1-2): yavas
+      sway:1+Math.floor(rnd(i+900)*3),       // yatay salinim harmonigi
+      amp:6+rnd(i+1200)*26,
+      r:1.1+rnd(i+1500)*2.6,
+      a:0.28+rnd(i+1800)*0.62
+    });
+  }
+
+  function drawSnow(c,p){
+    c.save();
+    c.beginPath(); c.rect(WIN.x+2,WIN.y+2,WIN.w-4,WIN.h-4); c.clip();
+    for(var i=0;i<FLAKES.length;i++){
+      var f=FLAKES[i];
+      var prog=(p*f.cyc+f.off)%1;
+      var y=WIN.y-20+prog*(WIN.h+40);
+      var x=WIN.x+f.x*WIN.w+Math.sin(TAU*(p*f.sway+f.off))*f.amp;
+      var fade=Math.min(1,Math.min(prog*8,(1-prog)*8));
+      c.globalAlpha=f.a*fade;
+      c.fillStyle="#EAF3FA";
+      c.beginPath(); c.arc(x,y,f.r,0,TAU); c.fill();
+    }
+    c.restore();
+  }
+
+  // Alev dili: taban sabit, uc birkac sinusun toplamiyla salinir.
+  function tongue(c,cx,baseY,w,h,ph,p,inner){
+    var s1=Math.sin(TAU*(p*3+ph)), s2=Math.sin(TAU*(p*5+ph*1.7)), s3=Math.sin(TAU*(p*8+ph*0.6));
+    var lean=s1*w*0.30+s3*w*0.11;
+    var hh=h*(1+s2*0.17+s1*0.07);
+    var g=c.createLinearGradient(cx,baseY,cx+lean,baseY-hh);
+    if(inner){ g.addColorStop(0,"rgba(255,239,192,0.95)"); g.addColorStop(0.55,"rgba(255,194,74,0.55)"); g.addColorStop(1,"rgba(255,150,40,0)"); }
+    else     { g.addColorStop(0,"rgba(255,170,60,0.72)"); g.addColorStop(0.5,"rgba(230,100,30,0.36)"); g.addColorStop(1,"rgba(180,60,20,0)"); }
+    c.fillStyle=g;
+    c.beginPath();
+    c.moveTo(cx-w/2,baseY);
+    c.bezierCurveTo(cx-w*0.62+lean*0.3,baseY-hh*0.42, cx-w*0.28+lean*0.8,baseY-hh*0.74, cx+lean,baseY-hh);
+    c.bezierCurveTo(cx+w*0.28+lean*0.8,baseY-hh*0.74, cx+w*0.62+lean*0.3,baseY-hh*0.42, cx+w/2,baseY);
+    c.closePath(); c.fill();
+  }
+
+  function drawFire(c,p){
+    var f=FIRE, baseY=f.oy+f.oh-64;
+    // titreme: iki harmonik toplami, LOOP'a tam oturur
+    var flick=0.80+0.14*Math.sin(TAU*p*7)+0.06*Math.sin(TAU*p*13);
+    c.save();
+    c.globalCompositeOperation="lighter";
+    // kor yatagi
+    c.fillStyle=rg(c,f.cx,baseY+8,6,118,[[0,"rgba(255,150,50,"+(0.38*flick)+")"],[1,"rgba(120,30,10,0)"]]);
+    c.fillRect(f.ox,f.oy,f.ow,f.oh);
+    // alevler: disdan ice
+    tongue(c,f.cx-58,baseY,120,150,0.11,p,false);
+    tongue(c,f.cx+54,baseY,128,166,0.47,p,false);
+    tongue(c,f.cx- 6,baseY,168,232,0.79,p,false);
+    tongue(c,f.cx-28,baseY, 74,124,0.31,p,true);
+    tongue(c,f.cx+30,baseY, 66,110,0.63,p,true);
+    tongue(c,f.cx+ 2,baseY, 52,158,0.91,p,true);
+    c.restore();
+
+    // kivilcimlar: her biri LOOP icinde sarilan bir yasa sahip
+    c.save();
+    c.globalCompositeOperation="lighter";
+    var N=44, life=3.6;
+    for(var j=0;j<N;j++){
+      var born=(j/N)*LOOP;
+      var age=((p*LOOP)-born+LOOP)%LOOP;
+      if(age>life) continue;
+      var k=age/life;
+      var sx=f.cx+(rnd(j)-0.5)*160+Math.sin(TAU*(k*1.5+rnd(j+50)))*30*k;
+      var sy=baseY-24-k*(150+rnd(j+100)*230);
+      var a=(1-k)*(1-k)*(0.55+rnd(j+150)*0.45);
+      var r=0.9+rnd(j+200)*1.5;
+      c.globalAlpha=a;
+      c.fillStyle=k<0.45?"#FFEFC0":"#F0913C";
+      c.beginPath(); c.arc(sx,sy,r,0,TAU); c.fill();
+    }
+    c.restore();
+
+    // odaya vuran titrek sicak isik
+    c.save();
+    c.globalCompositeOperation="lighter";
+    c.globalAlpha=0.20+0.10*(flick-0.80)/0.20;
+    c.fillStyle=rg(c,f.cx,700,60,1050,[[0,"rgba(240,145,60,0.55)"],[0.5,"rgba(185,80,30,0.16)"],[1,"rgba(0,0,0,0)"]]);
+    c.fillRect(0,0,W,H);
+    c.restore();
+  }
+
+  // Tanecik: 4 doku, LOOP'a tam bolunen bir hizla donuyor.
+  var GRAIN=[];
+  (function(){
+    for(var g=0;g<4;g++){
+      var gc=document.createElement("canvas"); gc.width=480; gc.height=270;
+      var gx=gc.getContext("2d"), im=gx.createImageData(480,270), d=im.data;
+      for(var i=0;i<d.length;i+=4){
+        var v=(Math.random()*255)|0;
+        d[i]=d[i+1]=d[i+2]=v; d[i+3]=13;
+      }
+      gx.putImageData(im,0,0); GRAIN.push(gc);
+    }
+  })();
+
+  function drawFrame(t){
+    var p=((t%LOOP)+LOOP)%LOOP/LOOP;
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(bgC,0,0);
+    drawSnow(ctx,p);
+    ctx.drawImage(fgC,0,0);
+    drawFire(ctx,p);
+
+    // pencere isiginin cam onundeki soguk parlamasi
+    ctx.save();
+    ctx.globalCompositeOperation="lighter"; ctx.globalAlpha=0.5;
+    ctx.fillStyle=rg(ctx,WIN.x+WIN.w/2,WIN.y+WIN.h/2,40,620,[[0,"rgba(159,187,208,0.20)"],[1,"rgba(0,0,0,0)"]]);
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
+
+    // vinyet
+    ctx.fillStyle=rg(ctx,W/2,H*0.52,H*0.42,H*1.05,[[0,"rgba(0,0,0,0)"],[1,"rgba(0,0,0,0.72)"]]);
+    ctx.fillRect(0,0,W,H);
+
+    // tanecik
+    var gi=Math.floor(p*192)%4;
+    ctx.save(); ctx.globalAlpha=0.5;
+    ctx.drawImage(GRAIN[gi],0,0,W,H);
+    ctx.restore();
+  }
+
+  bakeRoom();
+  drawFrame(0);
+
+  // --- oynatma ----------------------------------------------------------
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var playing=!reduce, t0=performance.now()/1000, tNow=0, raf=null;
+  var clock=document.getElementById("clock"), toggle=document.getElementById("toggle");
+  var status=document.getElementById("status");
+  if(reduce){ toggle.textContent="Oynat"; }
+
+  function tick(){
+    if(!playing) return;
+    tNow=(performance.now()/1000-t0)%LOOP;
+    drawFrame(tNow);
+    clock.textContent=tNow.toFixed(1)+" / "+LOOP.toFixed(1)+" sn";
+    raf=requestAnimationFrame(tick);
+  }
+  if(playing) raf=requestAnimationFrame(tick);
+
+  toggle.addEventListener("click",function(){
+    playing=!playing;
+    toggle.textContent=playing?"Duraklat":"Oynat";
+    if(playing){ t0=performance.now()/1000-tNow; raf=requestAnimationFrame(tick); }
+    else if(raf){ cancelAnimationFrame(raf); }
+  });
+
+  // --- tam bir donguyu WebM olarak kaydet -------------------------------
+  var rec=document.getElementById("rec");
+  rec.addEventListener("click",function(){
+    if(typeof MediaRecorder==="undefined"){ status.textContent="Bu tarayici kayit desteklemiyor."; return; }
+    var type=["video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"]
+      .filter(function(m){ return MediaRecorder.isTypeSupported(m); })[0];
+    if(!type){ status.textContent="Bu tarayici WebM kaydi desteklemiyor."; return; }
+    rec.disabled=true; toggle.disabled=true;
+    if(raf) cancelAnimationFrame(raf);
+    playing=false; toggle.textContent="Oynat";
+
+    var stream=cv.captureStream(FPS), mr=new MediaRecorder(stream,{mimeType:type,videoBitsPerSecond:16000000});
+    var chunks=[];
+    mr.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+    mr.onstop=function(){
+      var url=URL.createObjectURL(new Blob(chunks,{type:"video/webm"}));
+      var a=document.createElement("a");
+      a.href=url; a.download="snowfall_room_loop.webm"; a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); },4000);
+      status.textContent="Kayit bitti. Indirme baslamadiysa dosyayi bilgisayarinizda acin — onizleme indirmeyi engelliyor.";
+      rec.disabled=false; toggle.disabled=false;
+    };
+    mr.start();
+
+    // Kareler gercek zamanda degil, sabit adimlarla cizilir: kayit
+    // makine hizindan bagimsiz olarak tam olarak LOOP saniye surer.
+    var total=LOOP*FPS, n=0;
+    (function step(){
+      drawFrame(n/FPS);
+      clock.textContent=(n/FPS).toFixed(1)+" / "+LOOP.toFixed(1)+" sn";
+      status.textContent="Kaydediliyor — kare "+(n+1)+" / "+total;
+      n++;
+      if(n<=total) requestAnimationFrame(step); else setTimeout(function(){ mr.stop(); },120);
+    })();
+  });
+
+  // Kare yakalama araci icin: sahneyi verilen saniyede ciz.
+  window.__renderAt=function(sec){ drawFrame(sec); };
+  window.__loop=LOOP; window.__fps=FPS;
+})();
+</script>

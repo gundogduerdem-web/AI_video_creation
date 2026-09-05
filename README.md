@@ -119,3 +119,25 @@ Notlar:
   döngü tercih edilmeli.
 - `--dry-run` çalıştırmadan üretilecek ffmpeg komutlarını yazdırır.
 - ffmpeg ve ffprobe PATH üzerinde olmalı.
+
+### Görsel döngü: `visuals/cozy_room.html`
+
+Kanalın sahnesi kod olarak çizilmiştir (canvas): şömine, kütüphane, açık kitap,
+okuma gözlüğü, perdeleri açık pencere ve dışarıda yavaş yağan kar. Kar, alev,
+kıvılcımlar ve duvardaki ışık titremesi 24 saniyenin tam katı periyotlarla
+sürer — bu yüzden döngü noktasında dikiş görünmez.
+
+Video dosyasına çevirmek için dosyayı tarayıcıda açıp **Döngüyü kaydet (WebM)**
+düğmesine basmak yeterli; tam bir döngü sabit adımlarla kaydedilir, yani süre
+makine hızından bağımsızdır. Çıkan WebM doğrudan hatta verilir:
+
+```bash
+python3 scripts/build_ambience.py \
+    --music-dir music/winter_cabin \
+    --bed audio/fireplace.wav \
+    --loop-video visuals/snowfall_room_loop.webm --reencode-video \
+    --duration 2h --out out/winter_cabin_2h.mp4
+```
+
+WebM/VP9 mp4 kabına kopyalanamadığı için bu girdide `--reencode-video`
+gereklidir.
