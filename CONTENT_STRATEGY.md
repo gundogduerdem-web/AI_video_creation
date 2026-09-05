@@ -399,15 +399,19 @@ onayıyla tekrar public yapıldı.**
 genişleme planının temeli. Bu bulgu o modele karşı bir kanıt; alternatif,
 her kanalı bir kişi yerine bir temaya oturtmak.
 
-### Yayın saati kuralı (4 Eylül 2026, Erdem'in kararı)
+### Yayın saati standardı (5 Eylül 2026, Erdem'in kararı)
 
-**Shorts ile uzun video aynı saatte yayınlanabilir; çakışma sorun değil.**
-İkisi de **23:00 (TR)** slotunu kullanır.
+**Varsayılan yayın saati: 00:00 (TR) = 21:00 UTC.** Uzun video da Shorts da
+bu slotu kullanır. Erdem ayrı bir saat vermedikçe her yayın buraya konur,
+sorulmaz.
 
-Bu, Claude'un üç kez uyguladığı "çakışmayı önlemek için Shorts'u 21:00'e
-al" davranışının yerine geçer. Erdem bilgilendirildikten sonra ikisinin de
-23:00'te kalmasını istedi. **Bundan sonra Shorts saatleri çakışma
-gerekçesiyle kaydırılmaz, sorulmaz.**
+**Çakışma sorun değil.** Aynı saatte birden fazla içerik (uzun + Shorts,
+ya da iki Shorts) yayınlanabilir. Claude'un daha önce üç kez uyguladığı
+"çakışmayı önlemek için Shorts'u öne al" davranışı **iptal edildi**;
+saatler bu gerekçeyle kaydırılmaz.
+
+Not: TR = UTC+3, yani 00:00 TR bir **önceki günün 21:00 UTC**'sidir.
+Zamanlama yazılırken bu kayma hesaba katılmalı (`publishAt` UTC ister).
 
 ### Monetizasyon eşikleri ve Shorts kararı (1 Eylül 2026)
 
