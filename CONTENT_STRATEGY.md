@@ -275,8 +275,21 @@ veya canlı** (bir hayvan, az bilinen bir yakın kişi vb.) içeriyorsa:
   karar). Ayrı outro yok, kapanış Sahne 12'ye katlanır.
 - **Sahne başına karakter sayısı:** kesinlikle **970–999 karakter**.
 - **Toplam script hedefi:** 12 sahne × bu aralık = **~11.640–11.988 karakter**.
-- **Görsel stil:** Siyah-beyaz sinematik belgesel, 35mm film grain, yüksek
-  kontrast, 16:9.
+- **Görsel stil (güncellendi 6 Eylül 2026):** Siyah-beyaz **belgesel
+  fotoğrafı** — 16:9. Prompt sonu şu kalıpla biter:
+  `— black and white documentary photograph taken in <yıl> on Kodak Tri-X 400
+  35mm film, available light only, photojournalism, natural skin texture and
+  pores, visible film grain, slight camera shake, imperfect framing, high
+  contrast, 16:9`
+  **Neden değişti:** eski kalıp ("B&W cinematic documentary, 35mm film grain,
+  high contrast") illüstrasyon/render görünümü veriyordu — Erdem'in Diana V1
+  QC'sinde tespit edildi. "Cinematic" kelimesi modeli stilize tarafa itiyor;
+  fotoğraf makinesi/film/kusur dili (grain, camera shake, imperfect framing,
+  skin pores) gerçekçiliği taşıyan asıl unsurlar. Renkli thumbnail karesinde
+  aynı kalıbın Portra 400'lü hali kullanılır.
+  **Uyarı:** prompt'a yıl yazmak bazen modelin kareye tarih *metni* basmasına
+  yol açıyor (test varyantında sağ alt köşeye "1987" yazdı) — üretilen kare
+  bu açıdan kontrol edilir.
 - **Thumbnail standardı (güncellendi):** Eski kural (B&W split-frame,
   öncesi/sonrası kontrastı) düşük CTR verdiği için değiştirildi. **Yeni
   kural: video sahnesinin (genelde Sahne 1) renkli, yakın plan bir versiyonu**
