@@ -36,8 +36,13 @@ MODEL = "gemini-2.5-flash-image"
 LOCATION = "global"
 
 
-def generate(prompt, out_path, aspect="16:9", retries=3):
-    """Tek sahne üretir. Basarili ise True, guvenlik engeli ise sebep doner."""
+def generate(prompt, out_path, aspect="16:9", retries=4, backoff=30):
+    """Tek sahne üretir. Basarili ise True, guvenlik engeli ise sebep doner.
+
+    Vertex'in dakikalik istek siniri, arka arkaya uretimde her basarili
+    cagrinin sonrakini 429'a dusurmesine yol acti. Geri cekilme bu yuzden
+    dakika penceresini asacak kadar uzun ve artan: 30, 60, 90, 120 sn.
+    """
     url = (f"https://aiplatform.googleapis.com/v1/projects/{PROJECT}"
            f"/locations/{LOCATION}/publishers/google/models/{MODEL}:generateContent")
     body = json.dumps({
@@ -62,12 +67,14 @@ def generate(prompt, out_path, aspect="16:9", retries=3):
                     return True
             return "GORSEL_YOK"
         except urllib.error.HTTPError as exc:
-            detail = exc.read().decode()[:200]
-            print(f"  deneme {attempt + 1} basarisiz: {exc.code} {detail}", flush=True)
-            time.sleep(10)
+            wait = backoff * (attempt + 1)
+            print(f"  deneme {attempt + 1} basarisiz: {exc.code} "
+                  f"{exc.read().decode()[:120]} -> {wait} sn bekleniyor", flush=True)
+            time.sleep(wait)
         except Exception as exc:
-            print(f"  deneme {attempt + 1} basarisiz: {exc}", flush=True)
-            time.sleep(10)
+            wait = backoff * (attempt + 1)
+            print(f"  deneme {attempt + 1} basarisiz: {exc} -> {wait} sn", flush=True)
+            time.sleep(wait)
     return "AG_HATASI"
 
 
@@ -80,7 +87,9 @@ if __name__ == "__main__":
     os.makedirs(out_dir, exist_ok=True)
 
     saved, blocked = [], []
-    for key in sorted(prompts, key=int):
+    for n, key in enumerate(sorted(prompts, key=int)):
+        if n:
+            time.sleep(20)   # dakikalik pencereyi arka arkaya doldurmamak icin
         name = f"scene_{key}"
         result = generate(prompts[key], os.path.join(out_dir, f"{name}.png"))
         if result is True:

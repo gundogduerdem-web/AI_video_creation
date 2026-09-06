@@ -79,9 +79,25 @@ GCS giriş/çıkış zorunlu kılıyor, 8 görsel için karmaşıklığa değmiy
 "credits depleted" değil, "API has not been used in project ... or it is
 disabled" olur — karıştırma.
 
-Vertex tarafında dakikalık istek sınırı var; `generate_images.py` 429
-alınca 10 sn bekleyip 3 kez deniyor, ısrarlı başarısızlıkta `--retry N`
-ile tek sahne yeniden üretilir.
+Vertex tarafında dakikalık istek sınırı var ve arka arkaya üretimde her
+başarılı çağrı sonrakini 429'a düşürüyordu (8 sahnenin 4'ü böyle kaybedildi).
+`generate_images.py` artık sahneler arasında 20 sn bekliyor ve 429'da artan
+geri çekilme uyguluyor (30/60/90/120 sn). Yine de düşen sahne olursa
+`--retry 2,4` ile tek tek yeniden üretilir.
+
+**Kenarlık kırpma:** fotoğraf dili modeli bazen kareye düz siyah bir film
+kenarlığı çizmeye itiyor; build_video.sh kareyi crop'ladığı için bu videoda
+siyah şerit olur. Üretimden sonra:
+
+```bash
+python3 trim_borders.py $WORK/imgs --dry-run   # once olcup goster
+python3 trim_borders.py $WORK/imgs             # sonra kirp
+```
+
+Kenarlığı karanlık sahne içeriğinden ayıran ölçüt varyans: kenarlık tam
+siyah ve düzdür, karanlık koğuş duvarında doku vardır. Eşikler dar tutuldu
+(kenardan en fazla %8) — gece sahnelerinin kompozisyonunu yemesin diye
+`--dry-run` çıktısı gözle doğrulanmadan uygulanmamalı.
 
 ## 🖼️ Thumbnail
 
