@@ -53,6 +53,37 @@ Bu komut kanal adını, ID'sini ve `longUploadsStatus` alanını yazar.
 `allowed` = kanal telefonla doğrulanmış (özel thumbnail ve 15 dk üstü
 video açık); `eligible` = henüz doğrulanmamış.
 
+## ⏳ Token'lar 7 günde doluyor (6 Eylül 2026'da tespit edildi)
+
+Google, OAuth consent screen'i **"Testing"** modunda olan projelere
+**7 günlük** refresh token veriyor — token yanıtındaki
+`refresh_token_expires_in: 604799` bunun göstergesi. Dört token da
+(iki YouTube kanalı + Drive/Sheets + Speech) haftada bir düşüyor ve elle
+yeniden onay gerektiriyor. Bu, container sıfırlamasından ayrı bir
+sorundur; "kimlik bilgileri yine gitmiş" durumunun asıl sebebi çoğunlukla
+budur.
+
+**Haftalık yenileme:**
+
+```bash
+python3 reauth.py                      # kalan süreleri yazar + gereken linkleri basar
+python3 reauth.py diana '<localhost URL>'   # onay sonrası URL'i olduğu gibi ver
+```
+
+`reauth.py` linkleri üretir, hangi onay ekranında hangi hesabın
+seçileceğini söyler, `code=` değerini URL'den kendisi ayıklar ve doğru
+token dosyasına yazar.
+
+**Kalıcı çözüm (henüz yapılmadı, Erdem 7 günlük ile devam etme kararı
+verdi):** Consent screen'i "In production" yapmak sorunu bitirir, ama
+`auth/drive` **restricted** bir kapsam olduğu için Google CASA güvenlik
+değerlendirmesi istiyor (ücretli, yıllık). Bunu aşmanın yolu Drive/Sheets
+ve Speech-to-Text'i **servis hesabına** taşımak: servis hesabının consent
+screen'i ve süre sınırı yoktur, geriye yalnızca iki YouTube token'ı kalır
+ve projede restricted kapsam kalmadığı için publish sorunsuz geçer.
+Gereken: servis hesabı JSON anahtarı + "AI Videos" klasörünün ve senaryo
+sheet'inin o hesapla paylaşılması.
+
 ## Akış
 
 ```bash

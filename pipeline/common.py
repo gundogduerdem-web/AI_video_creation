@@ -94,6 +94,9 @@ def exchange_code(code, out_file):
         headers={"Content-Type": "application/x-www-form-urlencoded"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         data = json.loads(resp.read())
+    # Consent screen "Testing" modundayken refresh token 7 gunde doluyor.
+    # Ne zaman alindigini yazmazsak kalan sureyi hesaplayamayiz (bkz. reauth.py).
+    data["obtained_at"] = int(time.time())
     with open(os.path.join(CREDS, out_file), "w") as fh:
         json.dump(data, fh)
     return data
