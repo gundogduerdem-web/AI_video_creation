@@ -49,6 +49,26 @@ Kanal → Özellik uygunluğu → Orta düzey özellikler → telefon doğrulama
 Thumbnail stratejinin CTR omurgası olduğu için, **doğrulanmamış kanalda
 video yayınlanmaz** — üretim yapılabilir, yayın doğrulama sonrasına kalır.
 
+**Kanal kurulum durumu (6 Eylül 2026):**
+
+| Kanal | Ad | Kanal ID | Doğrulama | Pipeline token'ı |
+|---|---|---|---|---|
+| Audrey | Audrey Hepburn: Untold Stories | `UCCfR24OgxU05DxHJhcuzAig` | ✅ allowed | `youtube_token.json` |
+| Diana | Diana: Untold Chapters | `UCFJDyj-3fsIcv619yvznGTw` | ✅ allowed | `youtube_token_diana.json` |
+| Jacqueline Kennedy | — | — | ⬜ numara gerekiyor | — |
+| Louis Armstrong | — | — | ⬜ numara gerekiyor | — |
+| Kenny Rogers | — | — | ⬜ numara gerekiyor | — |
+
+Diana kanalı ikinci telefon numarasıyla doğrulandı; o numaranın **bir slotu
+daha boşta** (Google numara başına yılda ~2 kanal doğruluyor). Sıradaki kanal
+seçimi: aktif hedef 65+ kadın payını artırmak olduğu için **Jacqueline
+Kennedy** öneriliyor — bu segmentte Louis Armstrong ve Kenny Rogers'tan
+belirgin şekilde güçlü. Armstrong/Rogers üçüncü numaraya kalır.
+
+Doğrulamanın gerçekten geçtiği Studio'daki "Etkin" yazısına değil, API'ye
+sorularak teyit edilir: `python3 pipeline/publish.py whoami --channel diana`
+→ `longUploadsStatus: allowed`.
+
 **Kanal anlatıcı sesleri:** Audrey Hepburn = Enceladus (erkek). Diana =
 Algieba (erkek, pürüzsüz/derin — Erdem seçti; ayrışma için her kanalın
 sesi farklı tutulur). Diğer kanalların sesleri kurulumda seçilecek.
