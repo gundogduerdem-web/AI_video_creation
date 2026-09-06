@@ -2,6 +2,11 @@
 
 Kullanım:
     python3 generate_images.py <prompts.json> <cikti_dizini> [--retry sahne,sahne]
+                               [--vertical | --aspect 9:16]
+
+Varsayilan en-boy orani 16:9'dur. Shorts kapak gorseli icin --vertical
+VERILMEZSE prompt'ta "vertical 9:16 composition" yazsa bile API 16:9
+dondurur; V15'e kadar butun dikey kapaklar bu yuzden yataydi.
 
 prompts.json biçimi:
     {"1": "sahne 1 prompt", "2": "...", ...}
@@ -98,7 +103,10 @@ if __name__ == "__main__":
     if "--retry" in sys.argv:
         wanted = sys.argv[sys.argv.index("--retry") + 1].split(",")
         prompts = {k: v for k, v in prompts.items() if k in wanted}
-    op = submit(prompts, f"batch-{int(time.time())}")
+    aspect = ("9:16" if "--vertical" in sys.argv else
+              sys.argv[sys.argv.index("--aspect") + 1] if "--aspect" in sys.argv
+              else "16:9")
+    op = submit(prompts, f"batch-{int(time.time())}", aspect)
     print("op:", op, flush=True)
     saved, blocked = collect(op, out_dir)
     print("BASARILI:", saved)
