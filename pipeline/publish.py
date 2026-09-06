@@ -13,6 +13,16 @@ Kullanım:
     # kanaldaki private/zamanlı videoları listele
     python3 publish.py status
 
+    # token hangi kanala ait, telefon doğrulaması geçmiş mi?
+    python3 publish.py whoami
+
+Çoklu kanal: her komut sona eklenen `--channel <ad>` ile başka bir kanala
+yönlendirilir; token dosyası `youtube_token_<ad>.json` olur. Bayrak yoksa
+Audrey kanalının `youtube_token.json` dosyası kullanılır.
+
+    python3 publish.py whoami --channel diana
+    python3 publish.py upload video.mp4 seo.json thumb.jpg --channel diana
+
 seo.json:  {"title": ..., "description": ..., "tags": [...]}
 
 Kanal standardı (CONTENT_STRATEGY.md): dil en-US, konum ABD,
@@ -148,15 +158,61 @@ def status(token_file="youtube_token.json"):
                           f"| {v['snippet']['title'][:55]}")
 
 
+def token_file_for(channel):
+    """Kanal adını token dosyasına çevirir (Audrey varsayılan kanaldır)."""
+    if channel is None or channel == "audrey":
+        return "youtube_token.json"
+    return f"youtube_token_{channel}.json"
+
+
+def whoami(token_file="youtube_token.json"):
+    """Token'ın hangi kanala ait olduğunu ve doğrulama durumunu yazar.
+
+    longUploadsStatus, telefon doğrulamasının programatik göstergesidir:
+    "allowed" = doğrulanmış, "eligible" = doğrulanabilir ama henüz değil.
+    """
+    token = youtube_token(token_file)
+    req = urllib.request.Request(
+        "https://www.googleapis.com/youtube/v3/channels"
+        "?part=snippet,status&mine=true",
+        headers={"Authorization": f"Bearer {token}"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        ch = json.loads(resp.read())["items"][0]
+    long_uploads = ch["status"].get("longUploadsStatus", "bilinmiyor")
+    print(f"Kanal:   {ch['snippet']['title']}")
+    print(f"ID:      {ch['id']}")
+    print(f"Token:   {token_file}")
+    print(f"Doğrulama (longUploadsStatus): {long_uploads}"
+          + ("  -> doğrulanmış" if long_uploads == "allowed"
+             else "  -> DOĞRULANMAMIŞ, özel thumbnail yüklenemez"))
+    return ch
+
+
+def _pop_channel(argv):
+    """argv'den `--channel <ad>` bayrağını ayıklayıp kanal adını döndürür."""
+    if "--channel" not in argv:
+        return None
+    i = argv.index("--channel")
+    if i + 1 >= len(argv):
+        sys.exit("--channel bayrağı bir kanal adı bekliyor (örn. --channel diana)")
+    channel = argv[i + 1]
+    del argv[i:i + 2]
+    return channel
+
+
 if __name__ == "__main__":
-    cmd = sys.argv[1]
+    argv = sys.argv[1:]
+    token = token_file_for(_pop_channel(argv))
+    cmd = argv[0] if argv else None
     if cmd == "upload":
-        upload(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
+        upload(argv[1], argv[2], argv[3] if len(argv) > 3 else None, token_file=token)
     elif cmd == "schedule":
-        schedule(sys.argv[2], sys.argv[3])
+        schedule(argv[1], argv[2], token_file=token)
     elif cmd == "drive":
-        drive_upload(sys.argv[2])
+        drive_upload(argv[1])
     elif cmd == "status":
-        status()
+        status(token)
+    elif cmd == "whoami":
+        whoami(token)
     else:
         print(__doc__)

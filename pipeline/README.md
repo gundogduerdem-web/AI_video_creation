@@ -19,6 +19,7 @@ Kimlik bilgileri `$PIPELINE_CREDS` altında tutulur (varsayılan:
 | `desktop_client_secret.txt` | OAuth Desktop istemci sırrı |
 | `gemini_api_key.txt` | Gemini API anahtarı |
 | `youtube_token.json` | YouTube refresh token (Audrey kanalı) |
+| `youtube_token_<kanal>.json` | Diğer kanalların YouTube token'ı (`--channel <kanal>` ile seçilir) |
 | `oauth_token_full.json` | Drive/Sheets refresh token |
 | `speech_token.json` | Speech-to-Text refresh token (**cloud-platform** kapsamı) |
 
@@ -41,7 +42,16 @@ Drive için aynı akış, tek kapsam: `https://www.googleapis.com/auth/drive`
 (bu kapsam Sheets API'sine de yetiyor).
 
 ⚠️ YouTube onayında **doğru kanal** seçilmeli — marka kanalları hesap
-seçiciyle ayrı satır olarak çıkar.
+seçiciyle ayrı satır olarak çıkar. Token'ın gerçekten hangi kanala
+bağlandığını doğrulamak için:
+
+```bash
+python3 publish.py whoami --channel diana
+```
+
+Bu komut kanal adını, ID'sini ve `longUploadsStatus` alanını yazar.
+`allowed` = kanal telefonla doğrulanmış (özel thumbnail ve 15 dk üstü
+video açık); `eligible` = henüz doğrulanmamış.
 
 ## Akış
 
