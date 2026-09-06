@@ -17,7 +17,7 @@ Kimlik bilgileri `$PIPELINE_CREDS` altında tutulur (varsayılan:
 |---|---|
 | `desktop_client_id.txt` | OAuth Desktop istemci kimliği |
 | `desktop_client_secret.txt` | OAuth Desktop istemci sırrı |
-| `gemini_api_key.txt` | Gemini API anahtarı |
+| `gemini_api_key.txt` | Gemini API anahtarı (artık üretimde kullanılmıyor — bkz. "Görsel ve ses Cloud'a taşındı") |
 | `youtube_token.json` | YouTube refresh token (Audrey kanalı) |
 | `youtube_token_<kanal>.json` | Diğer kanalların YouTube token'ı (`--channel <kanal>` ile seçilir) |
 | `oauth_token_full.json` | Drive/Sheets refresh token |
@@ -53,6 +53,51 @@ Bu komut kanal adını, ID'sini ve `longUploadsStatus` alanını yazar.
 `allowed` = kanal telefonla doğrulanmış (özel thumbnail ve 15 dk üstü
 video açık); `eligible` = henüz doğrulanmamış.
 
+## 💳 Görsel ve ses Cloud'a taşındı (6 Eylül 2026)
+
+Görsel üretimi ve seslendirme, AI Studio ucundan (`generativelanguage`,
+API anahtarı) **Google Cloud** uçlarına taşındı:
+
+| | Önce | Sonra |
+|---|---|---|
+| Görsel | Gemini Batch API (%50 indirim) | **Vertex AI** `gemini-2.5-flash-image`, senkron |
+| Ses | Gemini TTS, ses adı `Algieba` | **Cloud TTS** `en-US-Chirp3-HD-Algieba` |
+| Kimlik | `gemini_api_key.txt` | `speech_token.json` (cloud-platform kapsamı) |
+
+**Sebep:** AI Studio'nun ön ödemeli bakiyesi ile projedeki Google Cloud
+kredisi **ayrı kasalar**. Ön ödemeli bakiye boşaldığında her iki servis de
+`429 RESOURCE_EXHAUSTED: prepayment credits are depleted` veriyor, ama
+projede kullanılmayı bekleyen Cloud kredisi duruyordu. Cloud uçları o
+krediden ödeniyor.
+
+Kanal sesi değişmedi — Chirp3-HD sesleri Gemini TTS'tekilerin aynısı
+(Enceladus, Algieba). Batch API'nin %50 indirimi kayboldu: Vertex'te batch
+GCS giriş/çıkış zorunlu kılıyor, 8 görsel için karmaşıklığa değmiyor.
+
+**Projede açık olması gereken API'ler:** `aiplatform.googleapis.com`,
+`texttospeech.googleapis.com`, `speech.googleapis.com`. Kapalıysa hata
+"credits depleted" değil, "API has not been used in project ... or it is
+disabled" olur — karıştırma.
+
+Vertex tarafında dakikalık istek sınırı var; `generate_images.py` 429
+alınca 10 sn bekleyip 3 kez deniyor, ısrarlı başarısızlıkta `--retry N`
+ile tek sahne yeniden üretilir.
+
+## 🖼️ Thumbnail
+
+```bash
+python3 build_thumbnail.py <taban.png> <cikti.jpg> "Princess Diana" "merak metni" left
+```
+
+Renkli yakın plan kare + isim (beyaz, üstte) + merak metni (altın #E8B923,
+altta), Anton font, siyah kontur. Son argüman metnin hangi yarıya
+yaslanacağı — yüzün olduğu tarafa yazma.
+
+Gereken: `pip install Pillow` ve Anton fontu. Font yolu `ANTON_FONT`
+ortam değişkeniyle verilir; kurulumda
+`https://raw.githubusercontent.com/google/fonts/main/ofl/anton/Anton-Regular.ttf`
+adresinden indirilir.
+
 ## ⏳ Token'lar 7 günde doluyor (6 Eylül 2026'da tespit edildi)
 
 Google, OAuth consent screen'i **"Testing"** modunda olan projelere
@@ -87,7 +132,7 @@ sheet'inin o hesapla paylaşılması.
 ## Akış
 
 ```bash
-# 1) Görseller (Batch API, %50 indirim)
+# 1) Görseller (Vertex AI, senkron)
 python3 generate_images.py prompts.json $WORK/imgs
 
 # 2) Seslendirme (senkron; Audrey=Enceladus, Diana=Algieba)

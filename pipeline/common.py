@@ -40,8 +40,21 @@ def _read(name):
         return fh.read().strip()
 
 
+PROJECT = "gen-lang-client-0486434271"
+
+
 def gemini_key():
     return _read("gemini_api_key.txt")
+
+
+def cloud_token():
+    """Vertex AI / Cloud TTS / Speech-to-Text icin cloud-platform kapsamli token.
+
+    Gorsel ve seslendirme AI Studio ucundan (generativelanguage, API anahtari)
+    Cloud ucuna tasindi: AI Studio'nun on odemeli bakiyesi ayri bir kasa ve
+    bostu; Cloud tarafi projedeki Google Cloud kredisinden odeniyor.
+    """
+    return access_token("speech_token.json")
 
 
 def access_token(token_file):

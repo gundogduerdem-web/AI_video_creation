@@ -1,10 +1,16 @@
-"""Gemini Batch API ile sahne görselleri üretir (%50 indirimli).
+"""Vertex AI ile sahne görselleri üretir.
 
 Kullanım:
     python3 generate_images.py <prompts.json> <cikti_dizini> [--retry sahne,sahne]
 
 prompts.json biçimi:
     {"1": "sahne 1 prompt", "2": "...", ...}
+
+Neden Vertex: AI Studio ucu (generativelanguage + API anahtarı) ayrı bir ön
+ödemeli bakiyeden ödeniyor ve o bakiye boştu (RESOURCE_EXHAUSTED). Aynı model
+Vertex üzerinden Google Cloud faturasına yazılıyor, yani projedeki Cloud
+kredisinden. Batch API'nin %50 indirimi Vertex'te GCS giriş/çıkış zorunlu
+olduğu için kullanılmıyor; 8 görsel senkron üretiliyor.
 
 Öğrenilmiş kurallar (CONTENT_STRATEGY.md'de de kayıtlı):
   * Yasaklı sembolleri OLUMSUZ biçimde bile anma ("no swastikas" yazmak
@@ -13,83 +19,56 @@ prompts.json biçimi:
     uzak / silüet olarak tanımlanır.
   * "bombed buildings" gibi savaş hasarı ifadeleri de engellenebiliyor;
     nötr karşılıklar kullan ("a street still under repair").
-  * aspect_ratio mutlaka verilir, yoksa kare (1024x1024) döner.
+  * aspectRatio mutlaka verilir, yoksa kare döner. 16:9 -> 1344x768.
 """
 import base64
 import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import gemini_key  # noqa: E402
+from common import PROJECT, cloud_token  # noqa: E402
 
 MODEL = "gemini-2.5-flash-image"
+LOCATION = "global"
 
 
-def submit(prompts, display_name, aspect="16:9"):
-    key = gemini_key()
-    reqs = [{
-        "request": {
-            "contents": [{"parts": [{"text": p}]}],
-            "generation_config": {"image_config": {"aspect_ratio": aspect}},
-        },
-        "metadata": {"key": f"scene_{k}"},
-    } for k, p in sorted(prompts.items(), key=lambda kv: int(kv[0]))]
-
-    body = json.dumps({"batch": {
-        "display_name": display_name,
-        "input_config": {"requests": {"requests": reqs}},
-    }}).encode()
-    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
-           f"{MODEL}:batchGenerateContent?key={key}")
-    try:
-        req = urllib.request.Request(
-            url, data=body, headers={"Content-Type": "application/json"}, method="POST")
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            return json.loads(resp.read())["name"]
-    except Exception:
-        # Istek timeout gorunse bile is olusmus olabilir - listeden bul.
-        time.sleep(5)
-        listing = urllib.request.Request(
-            f"https://generativelanguage.googleapis.com/v1beta/batches?key={key}&pageSize=10")
-        with urllib.request.urlopen(listing, timeout=60) as resp:
-            for b in json.loads(resp.read()).get("operations", []):
-                if b.get("metadata", {}).get("displayName") == display_name:
-                    return b["name"]
-        raise
-
-
-def collect(op, out_dir, poll=20, limit=80):
-    key = gemini_key()
-    os.makedirs(out_dir, exist_ok=True)
-    for _ in range(limit):
-        time.sleep(poll)
-        req = urllib.request.Request(
-            f"https://generativelanguage.googleapis.com/v1beta/{op}?key={key}")
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            data = json.loads(resp.read())
-        state = data["metadata"]["state"]
-        print("state:", state, flush=True)
-        if state == "BATCH_STATE_SUCCEEDED":
-            saved, blocked = [], []
-            for item in data["response"]["inlinedResponses"]["inlinedResponses"]:
-                name = item["metadata"]["key"]
-                cand = (item.get("response", {}).get("candidates") or [{}])[0]
-                if "content" not in cand:
-                    blocked.append((name, cand.get("finishReason")))
-                    continue
-                for part in cand["content"].get("parts", []):
-                    if "inlineData" in part:
-                        with open(os.path.join(out_dir, f"{name}.png"), "wb") as fh:
-                            fh.write(base64.b64decode(part["inlineData"]["data"]))
-                        saved.append(name)
-                        break
-            return saved, blocked
-        if state in ("BATCH_STATE_FAILED", "BATCH_STATE_CANCELLED", "BATCH_STATE_EXPIRED"):
-            raise RuntimeError(f"batch {state}")
-    raise TimeoutError("batch zaman asimi")
+def generate(prompt, out_path, aspect="16:9", retries=3):
+    """Tek sahne üretir. Basarili ise True, guvenlik engeli ise sebep doner."""
+    url = (f"https://aiplatform.googleapis.com/v1/projects/{PROJECT}"
+           f"/locations/{LOCATION}/publishers/google/models/{MODEL}:generateContent")
+    body = json.dumps({
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "generationConfig": {"imageConfig": {"aspectRatio": aspect}},
+    }).encode()
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(
+                url, data=body, method="POST",
+                headers={"Authorization": f"Bearer {cloud_token()}",
+                         "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                data = json.loads(resp.read())
+            cand = (data.get("candidates") or [{}])[0]
+            if "content" not in cand:
+                return cand.get("finishReason", "BILINMEYEN")
+            for part in cand["content"].get("parts", []):
+                if "inlineData" in part:
+                    with open(out_path, "wb") as fh:
+                        fh.write(base64.b64decode(part["inlineData"]["data"]))
+                    return True
+            return "GORSEL_YOK"
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode()[:200]
+            print(f"  deneme {attempt + 1} basarisiz: {exc.code} {detail}", flush=True)
+            time.sleep(10)
+        except Exception as exc:
+            print(f"  deneme {attempt + 1} basarisiz: {exc}", flush=True)
+            time.sleep(10)
+    return "AG_HATASI"
 
 
 if __name__ == "__main__":
@@ -98,10 +77,19 @@ if __name__ == "__main__":
     if "--retry" in sys.argv:
         wanted = sys.argv[sys.argv.index("--retry") + 1].split(",")
         prompts = {k: v for k, v in prompts.items() if k in wanted}
-    op = submit(prompts, f"batch-{int(time.time())}")
-    print("op:", op, flush=True)
-    saved, blocked = collect(op, out_dir)
-    print("BASARILI:", saved)
+    os.makedirs(out_dir, exist_ok=True)
+
+    saved, blocked = [], []
+    for key in sorted(prompts, key=int):
+        name = f"scene_{key}"
+        result = generate(prompts[key], os.path.join(out_dir, f"{name}.png"))
+        if result is True:
+            saved.append(name)
+            print(f"{name}: OK", flush=True)
+        else:
+            blocked.append((name, result))
+            print(f"{name}: ENGELLI ({result})", flush=True)
+    print("\nBASARILI:", saved)
     if blocked:
         print("ENGELLI:", blocked)
         print("-> prompt'u notrlestirip --retry ile tekrar calistir")
