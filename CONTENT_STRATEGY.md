@@ -555,6 +555,53 @@ SEO açıklaması ve etiketler.
 
 ---
 
+## Analitik Teşhis #3 — CTR ve izleme süresi düşüşü (7 Eyl 2026)
+
+Erdem'in Studio'dan bildirdiği tetikleyici: V15 125 izlenme aldı ama **CTR
+%1,5** ve **ortalama izleme 1:45** — ikisi de düşüş.
+
+**Ölçülebilenler (Analytics API):**
+
+| Video | Abone-değil ort. izleme | Açılış cümlesi türü |
+|---|---|---|
+| V8 Four Hours | **4:34** | somut sahne |
+| V12 Lost Part | **3:28** | somut sahne |
+| V13 Platform | **3:13** | somut sahne |
+| V14 Bicycle | **2:04** | hikâye hakkında yorum |
+| V15 Correction | **1:45** (Studio) | hikâye hakkında yorum |
+
+Düşüş tek yönlü ve V15'te başlamıyor — V14'te başlıyor.
+
+**Tutunma (çalışma süresinin oranı olarak):** ilk %5'te (~40 sn) izleyicinin
+%31-52'si gitmiş oluyor (V12 %68,5 kalıyor, V14 %57,9, V13 %48,3). Bu **iyi
+performans gösteren videolarda da** böyle, yani yapısal. V14 ortada çöküyor:
+%30 noktasında yalnızca %10,5 kalıyor (V12 %25,8, V13 %31,0).
+
+**Trafik:** neredeyse tamamı RELATED_VIDEO (V12 119'un 100'ü, V13 43'ün 27'si,
+V14 22'nin 16'sı). **BROWSE_FEATURES hiç yok** — YouTube bu videoları ana
+akışa koymuyor. Önerilen-video yüzeyi doğası gereği düşük CTR'lı bir yüzeydir;
+%1,5'i ana akış CTR'ıyla kıyaslamak yanlış olur.
+
+**Elenen açıklama:** başlık uzunluğu. V11 89 karakter → 3:06; V15 86 karakter
+→ 1:45. Korelasyon yok, bu bir sebep değil.
+
+**Küçük resim (168 px yan sütun boyutunda test edildi):** V15'te karedeki en
+parlak nesne **lamba**, yüz değil; koyu balıkçı yaka koyu arka planla
+birleşiyor ve göz lambaya gidiyor. Ortalama parlaklık V14 70,7 / V15 59,6 /
+**V16 37,3** — V16 açık ara en karanlığı ve aynı riski taşıyor.
+
+**Kanıt gücü:** açılış cümlesi ayrımı n=5'e dayanıyor, yani güçlü bir işaret
+ama kanıtlanmış değil. İzlenmeler 22-119 aralığında, gürültü yüksek.
+Impressions/CTR **API'de yok**, yalnızca Studio'da. V15/V16 verisi API'ye
+2-3 günde düşer; teşhis o zaman doğrulanmalı.
+
+**Kararlar:** açılış cümlesi hikâyenin kendisiyle başlar, hikâye hakkında
+yorumla değil ("This story runs backwards", "This is not a story about
+Audrey Hepburn" gibi meta girişler kullanılmaz). Küçük resimde **yüz karedeki
+en parlak öğe** olmalı.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
