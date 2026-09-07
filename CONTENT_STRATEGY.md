@@ -37,8 +37,10 @@ kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token)
 **Telefon doğrulaması (kritik kurulum engeli):** Yeni bir YouTube kanalı
 doğrulanmadan **özel thumbnail yüklenemez** (API `403: doesn't have
 permissions to upload and set custom video thumbnails`) ve **15 dakikayı
-aşan video yüklenemez** (mevcut 12-13 dk standardı bu sınırın altında,
-sorun değil). Doğrulama **kanal bazındadır** — ana hesabın doğrulanmış
+aşan video yüklenemez**. Yeni 13-15 dk standardı bu sınıra dayanıyor:
+Audrey V16 15 dk 01 sn ile sınırın **üstünde** ve sorunsuz yüklendi, yani
+doğrulanmış kanalda sınır bağlamıyor. Yine de doğrulama düşerse ilk
+kırılacak yer burasıdır. Doğrulama **kanal bazındadır** — ana hesabın doğrulanmış
 olması marka kanalını kapsamaz. Google bir telefon numarasıyla **yılda
 en fazla 2 kanal** doğrulanmasına izin verir; Erdem'in numarası dolduğu
 için (kişisel hesap + Audrey kanalı) kalan 4 kanal **2 ek telefon
@@ -85,9 +87,10 @@ estate, UK ikametgahı nedeniyle ABD'de ölüm sonrası tanıtım hakkı
 ileri süremez.)
 
 Aşağıdaki bölümler Audrey Hepburn kanalı için yazılmıştır; teknik
-standartlar (8 sahne/8 görsel, 1690-1749 kr/sahne, 12-13 dk, Batch API,
-zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
-için geçerlidir**.
+standartlar (8 sahne/8 görsel, **13-15 dk**, Vertex AI, zoompan/encode
+ayarları, YouTube meta, Drive QC akışı) **tüm kanallar için geçerlidir**.
+Sahne başına karakter aralığı kanala göre değişir çünkü seslerin okuma
+hızı farklı — bkz. "Video süresi".
 
 ---
 
@@ -432,14 +435,96 @@ onayıyla tekrar public yapıldı.**
 genişleme planının temeli. Bu bulgu o modele karşı bir kanıt; alternatif,
 her kanalı bir kişi yerine bir temaya oturtmak.
 
+### Yayın saati standardı (5 Eylül 2026, Erdem'in kararı)
+
+**Varsayılan yayın saati: 00:00 (TR) = 21:00 UTC.** Uzun video da Shorts da
+bu slotu kullanır. Erdem ayrı bir saat vermedikçe her yayın buraya konur,
+sorulmaz.
+
+**Çakışma sorun değil.** Aynı saatte birden fazla içerik (uzun + Shorts,
+ya da iki Shorts) yayınlanabilir. Claude'un daha önce üç kez uyguladığı
+"çakışmayı önlemek için Shorts'u öne al" davranışı **iptal edildi**;
+saatler bu gerekçeyle kaydırılmaz.
+
+Not: TR = UTC+3, yani 00:00 TR bir **önceki günün 21:00 UTC**'sidir.
+Zamanlama yazılırken bu kayma hesaba katılmalı (`publishAt` UTC ister).
+
+### Monetizasyon eşikleri ve Shorts kararı (1 Eylül 2026)
+
+Erdem'in itirazı: "Shorts'tan para kazanmam için çok uzun bir izlenme süresi
+gerekiyor, bu hedef gerçekçi değil." İtiraz doğru; ölçüldü.
+
+**YouTube Partner Program eşikleri:** 1.000 abone **ve** ya 12 ayda 4.000
+izlenme saati ya da 90 günde 10 milyon Shorts izlenmesi. İkisi **hiçbir zaman
+birleşmiyor** ve **Shorts izlenme süresi 4.000 saate sayılmıyor.**
+⚠️ **1 Şubat 2027'de eşik ikiye katlanıyor** (8.000 saat / 20 milyon Shorts).
+
+**Audrey kanalının konumu (1 Eylül 2026, son 365 gün):**
+
+| Eşik | Gereken | Mevcut | Fark |
+|---|---|---|---|
+| Abone | 1.000 | 31 | 32× |
+| İzlenme saati | 4.000 | 86,4 | 46× |
+| Shorts izlenme (90 gün) | 10.000.000 | 5.766 | 1.735× |
+
+**Shorts monetizasyon yolu kapalı.** 1.735 kat fark kapatılabilir değil.
+
+**Claude'un önceki "Shorts'u ana ürün yap" önerisi eksik gerekçeliydi ve
+düzeltildi.** Gerekçe "kanalın izlenmesinin %74'ü Shorts'tan geliyor" idi;
+doğru ama varış noktası yok: Shorts'tan uzun videoya giden trafik ayda **2
+izlenme**, ve 5.766 Shorts izlenmesine karşılık bir yılda **+34 abone**.
+Shorts dağıtım üretiyor, gelire giden yolu beslemiyor.
+
+**Tek monetize edilebilir yol uzun video izlenme saati.** Bugünkü tutunmayla
+(12 dk videoda ~%20 = izlenme başına ~2,4 dk) 4.000 saat ≈ yılda **100.000
+uzun video izlenmesi**; haftada 2 video ile video başına ~960 izlenme
+gerekiyor. Mevcut: video başına 1-40. Tutunma %40'a çıkarsa gereken izlenme
+50.000'e iniyor — tutunma, izlenme kadar değerli bir kaldıraç.
+
+**Claude'un dürüst değerlendirmesi kayda geçti:** mevcut gidişatla 5 ay içinde
+(Şubat 2027 öncesi) eşiğe ulaşmak gerçekçi değil ve bunu değiştirecek
+kanıtlanmış bir yöntem elde yok.
+
+**ERDEM'İN KARARI (1 Eylül 2026): Shorts üretimi DURDURULMAYACAK, mevcut
+format aynen sürdürülecek.** Yukarıdaki analiz kararı değiştirmedi; karar
+bilgi tam olarak verildikten sonra alındı. Shorts her videoda üretilmeye ve
+planlanmaya devam eder.
+
 ### Prodüksiyon teknik standardı (Video 3'ten itibaren geçerli)
 **Önemli:** Bu standart yalnızca **henüz YouTube'a yüklenmemiş** videolar için
 geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
 sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
 yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (Erdem'in kararı, Video 3'ten itibaren).
-- **Video süresi (güncellendi 7 Eylül 2026):** Hedef **12-14 dakika**. Belirleyici olan **sahne başına karakter aralığıdır**, süre ondan türer: 8 × ~1720 kr, ölçülen ~18,4 kr/sn hızda ~13,5-14 dk verir. Diana V1 13 dk 42 sn çıktı ve Erdem süreyi onayladı; eski "12-13 dakika" ifadesi karakter aralığıyla çelişiyordu, aralık kanonik kabul edilip üst sınır genişletildi. Önceki metin: Hedef 12-13 dakika — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1690–1749** (Video 8'de düzeltildi). Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
-  - **Düzeltme (30 Ağu 2026, Video 8):** Önceki 1450–1499 aralığı ~15,7 kr/sn varsayımına dayanıyordu; gerçek ölçüm **~18,4 kr/sn** çıktı. Bu yüzden V4–V7 hedefin altında kaldı (V7: 11 dk 02 sn, 11.867 karakter). Yeni aralık ölçüme dayanıyor: 8 × ~1720 kr ≈ **12 dk**. Süre, TTS bittiğinde `TOPLAM` satırından doğrulanır; 12 dk altındaysa metin uzatılıp TTS tekrar üretilir. **Yayınlanmış videolar geriye dönük düzeltilmez.**
+- **Video süresi (Erdem'in kararı, 7 Eyl 2026):** Hedef **13-15 dakika**,
+  tüm kanallar için. 8 görsel korunur, sahne başına metin uzatılır.
+  - **Sahne başına karakter aralığı kanala göre hesaplanır.** Belirleyici olan
+    süre; karakter aralığı, o kanalın **ölçülen okuma hızından** türetilir.
+    Sesler belirgin biçimde farklı hızda okuduğu için tek bir aralık tüm
+    kanallara uymuyor:
+
+    | Kanal | Ses | Ölçülen hız | 13-15 dk için aralık |
+    |---|---|---|---|
+    | Audrey Hepburn | Enceladus (Vertex TTS) | 14,6–16,0 kr/sn | **1570–1630** |
+    | Princess Diana | Algieba (Cloud TTS Chirp3-HD) | **16,81 kr/sn** (V1 ölçümü) | **1640–1890** |
+
+    Diana'ya Audrey'nin 1570–1630 aralığı uygulanırsa video **12,5–12,9 dk**
+    çıkar, yani hedefin altında kalır. Yeni bir kanal açılırken ilk videonun
+    TTS çıktısından `TOPLAM` süresi ölçülüp aralık aynı yöntemle hesaplanır.
+  - **Neden değişti (7 Eyl 2026, Audrey V16):** Üretim Vertex AI'a taşındı ve
+    Vertex TTS belirgin biçimde daha yavaş okuyor (14,6–16,0 kr/sn; önceki
+    yolda 16,7–21,0). Aynı karakter sayısı V15'te 12,8 dk, V16'da 15,0 dk
+    verdi. Erdem 15 dk'yı kabul edip standardı 13-15 dk'ya çekti.
+  - **Diana V1 (7 Eyl 2026):** 8 × 1706–1748 kr = 13.801 kr → **13 dk 42 sn**,
+    16,81 kr/sn. Erdem süreyi onayladı; yukarıdaki Diana aralığı bu ölçümden
+    türetildi.
+  - **Önceki hedefler:** V4–V16 12-13 dk / 1690–1749 kr; V4–V7 1450–1499;
+    Video 3 öncesi 970–999 (Fliki kısıtı, emekli edildi). Speech-to-Text'in
+    60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
+  - **Düzeltme (30 Ağu 2026, V8):** 1450–1499 aralığı ~15,7 kr/sn varsayımına
+    dayanıyordu; gerçek ölçüm ~18,4 kr/sn çıktı, bu yüzden V4–V7 hedefin
+    altında kaldı (V7: 11 dk 02 sn). **Yayınlanmış videolar geriye dönük
+    düzeltilmez.**
 - **Konu serbestisi:** Konular tamamen uydurma olabilir (kurgu beyanı her videoda korunur).
 - **Görsel üretimi HER ZAMAN Batch API ile:** Görseller istisnasız Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, pratikte genelde dakikalar içinde biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
@@ -455,7 +540,9 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
   "WATCH THE FULL STORY / LINK IN DESCRIPTION" bindirmesi.
 - **Açıklamanın ilk satırı:** `CLICK TO WATCH THE FULL VIDEO 👉 <ana video linki>`
   + kısa kurgu beyanı + #Shorts etiketleri.
-- **Thumbnail:** dikey **9:16**, renkli, vurucu yakın plan (Batch API ile üretilir). YouTube'un thumbnail sistemi 16:9 tabanlı olduğu için dikey kapak bazı yüzeylerde yanlarda boşlukla gösterilebilir; Erdem 28 Ağu 2026'da mevcut Shorts kapaklarını inceleyip **iyi göründüğünü onayladı** ve dikey formatta devam kararı verdi. 16:9'a çevrilmeyecek.
+- **Thumbnail:** dikey **9:16**, renkli, vurucu yakın plan
+  (`generate_images.py --vertical`; oran açıkça verilmezse API 16:9 döner ve
+  Audrey V15'te bu yüzden bir kapak yatay çıktı). YouTube'un thumbnail sistemi 16:9 tabanlı olduğu için dikey kapak bazı yüzeylerde yanlarda boşlukla gösterilebilir; Erdem 28 Ağu 2026'da mevcut Shorts kapaklarını inceleyip **iyi göründüğünü onayladı** ve dikey formatta devam kararı verdi. 16:9'a çevrilmeyecek.
 - **Shorts görseli (öğrenilmiş kural):** Yatay sahne görselinin merkezden dikey kırpılması, kompozisyona göre ana karakteri kadraj dışında bırakabiliyor. Bu yüzden Short, **natif 9:16 üretilen dikey thumbnail görseliyle** derlenir (tek görsel + yavaş zoom) — hem yüz merkezde kalır hem ek maliyet olmaz, çünkü o görsel zaten thumbnail için üretiliyor.
 - **Süre:** Sahne 1 anlatımı 60 sn'yi aşarsa, kelime zamanlamalarından **doğal bir cümle sonu** bulunup orada kesilir (yarım cümle bırakılmaz); tercihen merak bırakan bir cümlede.
 - Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı
@@ -487,9 +574,10 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 2. Başlık kuralı doğrulaması — sonucu çözmediği açıkça teyit edilir.
 3. Hook tipi seçimi — atmosferik mi, doğrudan-detay-önce mi.
 4. Karakter sayısı doğrulaması — Python regex ile sahne etiketlerinden
-   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 8'den
-   itibaren **1690–1749** karakter; V4-V7 1450–1499, öncesinde 970–999 idi) olduğu
-   üretime/Erdem'e sunulmadan önce doğrulanır.
+   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin **o kanalın** güncel
+   aralığında olduğu üretime/Erdem'e sunulmadan önce doğrulanır
+   (Audrey 1570–1630; Diana 1640–1890 — bkz. "Video süresi" tablosu).
+   Geçmiş aralıklar: V8–V16 1690–1749, V4–V7 1450–1499, öncesi 970–999.
 5. **Tekrar/benzerlik kontrolü (kritik, kanal riski):** Yeni script/hikaye,
    daha önce üretilmiş videolarla (özellikle olay örgüsü, hook, açılış/kapanış
    yapısı ve görsel sahne kompozisyonları) karşılaştırılıp **belirgin şekilde
@@ -526,6 +614,88 @@ SEO açıklaması ve etiketler.
 4. **Anlatım Stili:** 3. şahıs anlatım, gerçek kişi isimleri açıkça kullanılır.
 5. **Anlatı Odağı:** İkincil figür/canlı içeren hikayelerde anlatı odağı tüm
    sahneler boyunca isimli ünlü kişide kalır (bkz. yukarıdaki süreç kuralı).
+
+---
+
+## Analitik Teşhis #3 — CTR ve izleme süresi düşüşü (7 Eyl 2026, Audrey kanalı)
+
+Erdem'in Studio'dan bildirdiği tetikleyici: V15 125 izlenme aldı ama **CTR
+%1,5** ve **ortalama izleme 1:45** — ikisi de düşüş.
+
+**Ölçülebilenler (Analytics API):**
+
+| Video | Abone-değil ort. izleme | Açılış cümlesi türü |
+|---|---|---|
+| V8 Four Hours | **4:34** | somut sahne |
+| V12 Lost Part | **3:28** | somut sahne |
+| V13 Platform | **3:13** | somut sahne |
+| V14 Bicycle | **2:04** | hikâye hakkında yorum |
+| V15 Correction | **1:45** (Studio) | hikâye hakkında yorum |
+
+Düşüş tek yönlü ve V15'te başlamıyor — V14'te başlıyor.
+
+**Tutunma (çalışma süresinin oranı olarak):** ilk %5'te (~40 sn) izleyicinin
+%31-52'si gitmiş oluyor (V12 %68,5 kalıyor, V14 %57,9, V13 %48,3). Bu **iyi
+performans gösteren videolarda da** böyle, yani yapısal. V14 ortada çöküyor:
+%30 noktasında yalnızca %10,5 kalıyor (V12 %25,8, V13 %31,0).
+
+**Trafik:** neredeyse tamamı RELATED_VIDEO. **BROWSE_FEATURES hiç yok** —
+YouTube bu videoları ana akışa koymuyor. Önerilen-video yüzeyi doğası gereği
+düşük CTR'lı bir yüzeydir; %1,5'i ana akış CTR'ıyla kıyaslamak yanlış olur.
+
+**Elenen açıklama:** başlık uzunluğu. V11 89 karakter → 3:06; V15 86 karakter
+→ 1:45. Korelasyon yok, bu bir sebep değil.
+
+**Küçük resim (168 px yan sütun boyutunda test edildi):** V15'te karedeki en
+parlak nesne **lamba**, yüz değil; koyu balıkçı yaka koyu arka planla
+birleşiyor ve göz lambaya gidiyor. Ortalama parlaklık V14 70,7 / V15 59,6 /
+**V16 37,3**.
+
+**Kanıt gücü:** açılış cümlesi ayrımı n=5'e dayanıyor, güçlü bir işaret ama
+kanıtlanmış değil. Impressions/CTR **API'de yok**, yalnızca Studio'da.
+
+**Kararlar:** açılış cümlesi hikâyenin kendisiyle başlar, hikâye hakkında
+yorumla değil. Küçük resimde **yüz karedeki en parlak öğe** olmalı.
+
+### Meta cümle kuralı (7 Eyl 2026) — Video 17'den itibaren
+
+"Meta cümle" = hikâyeyi anlatmak yerine hikâyenin kendisinden/kurgusundan söz
+eden cümle. Sahne 1'de ilk meta cümlenin **saniyesi** ölçüldüğünde sıralama
+izleme süresiyle birebir örtüşüyor:
+
+| Video | Sahne 1'de ilk meta cümle | Abone-değil ort. izleme |
+|---|---|---|
+| V12 | yok | **3:28** |
+| V13 | yok | **3:13** |
+| V16 | 0:25 | ? (test) |
+| V14 | 0:00 | **2:04** |
+| V15 | 0:00 | **1:45** |
+
+**Kural: sahne 1'de meta cümle hiç bulunmaz.** "This story runs backwards",
+"This is not a story about X" gibi meta girişler kullanılmaz. Hikâyenin nasıl
+anlatıldığına dair her açıklama 2. sahneye ya da sonrasına taşınır. Anlatı
+yapısı (ters kronoloji, topluluk anlatımı vb.) serbest — yasak olan onu
+**izleyiciye duyurmak**.
+
+V16 kasıtsız bir test durumu: 0:25'te kendi kurgusuna dönüyor. Hipotez
+doğruysa ortalama izleme süresi 2:04 ile 3:13 arasına düşmeli; 2:04'ün altına
+inerse meta-cümle açıklaması yanlıştır. Veri 9-10 Eyl civarında API'ye düşer.
+**V16 geriye dönük düzeltilmeyecek — düzeltmek testi yok ederdi.**
+
+### Kapak kuralı: "night" değil "dusk" (7 Eyl 2026'da ölçüldü)
+
+V16'nın kapağı düzeltilirken önce ışık talimatı güçlendirildi ama sahne gece
+kaldı; üretilen üç varyant da mevcuttan **daha karanlık** çıktı (YAVG 25-31,
+mevcut 37,3). Sorun ışık tarifi değil, **sahne tarifiydi**: "night" modeli her
+durumda karanlığa çekiyor ve "bright exposure / face is the brightest element"
+talimatlarını eziyor. Sahne alacakaranlığa alınınca aynı ışık talimatlarıyla
+73,6 çıktı; hafif kırpma ile **87,3**. Kanalın en iyi izleme süresine sahip
+kapağı olan V14 de "dusk" tarifinden geliyordu (70,7).
+
+Kapak üretim kuralı: sahne **dusk/twilight**, ışık kaynağı **kadraj dışında**
+(arka planda yüzden parlak lamba/pencere bırakılmaz), yüz kadraja hâkim.
+Sonuç **168 px genişliğinde** gözden geçirilir ve YAVG ölçülür; hedef bant
+**70-90**.
 
 ---
 

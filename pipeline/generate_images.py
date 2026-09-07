@@ -1,7 +1,11 @@
 """Vertex AI ile sahne görselleri üretir.
 
 Kullanım:
-    python3 generate_images.py <prompts.json> <cikti_dizini> [--retry sahne,sahne]
+    python3 generate_images.py <prompts.json> <cikti_dizini> [--retry sahne,sahne] [--vertical]
+
+--vertical: 9:16 (dikey) uretir — Shorts kapagi ve Shorts kaynak goreseli icin.
+Oran acikca verilmezse API 16:9 doner; Audrey V15'te bir Shorts kapagi bu
+yuzden yatay cikti.
 
 prompts.json biçimi:
     {"1": "sahne 1 prompt", "2": "...", ...}
@@ -81,6 +85,7 @@ def generate(prompt, out_path, aspect="16:9", retries=4, backoff=30):
 if __name__ == "__main__":
     prompts = json.load(open(sys.argv[1], encoding="utf-8"))
     out_dir = sys.argv[2]
+    aspect = "9:16" if "--vertical" in sys.argv else "16:9"
     if "--retry" in sys.argv:
         wanted = sys.argv[sys.argv.index("--retry") + 1].split(",")
         prompts = {k: v for k, v in prompts.items() if k in wanted}
@@ -91,7 +96,7 @@ if __name__ == "__main__":
         if n:
             time.sleep(20)   # dakikalik pencereyi arka arkaya doldurmamak icin
         name = f"scene_{key}"
-        result = generate(prompts[key], os.path.join(out_dir, f"{name}.png"))
+        result = generate(prompts[key], os.path.join(out_dir, f"{name}.png"), aspect)
         if result is True:
             saved.append(name)
             print(f"{name}: OK", flush=True)
