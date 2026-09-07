@@ -699,6 +699,29 @@ Sonuç **168 px genişliğinde** gözden geçirilir ve YAVG ölçülür; hedef b
 
 ---
 
+### Diana V1 — kapak kuralı öncesi, geriye dönük düzeltilmedi (8 Eyl 2026)
+
+Diana V1 ve Shorts'u, "dusk" kapak kuralı ölçülmeden önce üretildi ve
+yüklendi. Kural gelince ölçüldüler:
+
+| İçerik | YAVG (168 px) | Hedef bant 70-90 |
+|---|---|---|
+| Uzun video kapağı | **63,5** | altında |
+| Shorts kapağı | **96,5** | üstünde |
+
+Uzun videonun kapak prompt'unda "hospital corridor at **night**" geçiyordu —
+kuralın tarif ettiği hatanın kendisi.
+
+**Erdem'in kararı (8 Eyl 2026): ikisi de değiştirilmeyecek.** Uzun video
+yayına girmişti, Shorts ise yüklenmişti; teknik standart yalnızca henüz
+yüklenmemiş videoları bağlar. Kurallar **ileriye dönük** uygulanır.
+
+Yan fayda: V1 böylece bant dışı bir kapakla temiz bir ölçüm noktası oluyor.
+Bu kanalda dusk kuralının bir etkisi varsa, bant içinde kapağı olan ilk
+videoyla (V2) arasındaki CTR farkında görünür.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
