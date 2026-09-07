@@ -39,10 +39,21 @@ def align(original, stt):
     STT bazen 1-3 kelime kacirir; oransal indeks eslemesi bu kucuk
     farklara dayaniklidir ve kelime kelime esleme denemesinden daha
     saglam sonuc verir.
+
+    Ama buyuk bir fark oransal eslemeyi sessizce bozar: V16'da TTS
+    5. sahnenin ilk cumlesini (25 kelime) hic okumadi, ses kisaldi,
+    esleme kaydi ve altyazi butun sahne boyunca yanlis yerde kaldi.
+    cps guvenligi bunu yakalamiyor (137 karakter eksik, hiz neredeyse
+    ayni). Bu yuzden %3'u asan fark artik hata veriyor.
     """
     n, m = len(original), len(stt)
     if m == 0:
         return [(w, 0.0, 0.0) for w in original]
+    if n and abs(n - m) > max(6, n * 0.03):
+        raise ValueError(
+            f"metin {n} kelime, STT {m} kelime ({n - m:+d}). Bu kadar buyuk "
+            "bir fark oransal eslemeyi kaydirir; sesin metnin tamamini "
+            "okudugunu dogrula (TTS bir cumleyi atlamis olabilir).")
     out = []
     for i, w in enumerate(original):
         idx = round(i * (m - 1) / (n - 1)) if n > 1 else 0

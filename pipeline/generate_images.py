@@ -1,4 +1,8 @@
-"""Gemini Batch API ile sahne görselleri üretir (%50 indirimli).
+"""Vertex AI ile sahne görselleri üretir (sıralı, senkron).
+
+Fatura notu: API anahtarıyla çağrılan Batch API artık kullanılmıyor;
+gerekçe common.py içindeki vertex_generate'te yazılı. submit/collect
+eski batch yolunu koruyor ama varsayılan akış render() üzerinden gider.
 
 Kullanım:
     python3 generate_images.py <prompts.json> <cikti_dizini> [--retry sahne,sahne]
@@ -28,9 +32,44 @@ import time
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import gemini_key  # noqa: E402
+from common import gemini_key, vertex_generate  # noqa: E402
 
 MODEL = "gemini-2.5-flash-image"
+
+
+def render(prompts, out_dir, aspect="16:9", retries=3):
+    """Prompt'ları Vertex üzerinden tek tek üretir; (kaydedilen, engellenen).
+
+    Batch yerine sıradan çağrılar: Vertex'in toplu işi girdi/çıktı için GCS
+    ya da BigQuery istiyor, video başına 8 görsel için bu zahmete değmez.
+    Sıralı çalışınca 8 görsel yaklaşık 2-3 dakika sürüyor — eski batch
+    yolundan (10-30 dk) belirgin biçimde hızlı.
+    """
+    os.makedirs(out_dir, exist_ok=True)
+    saved, blocked = [], []
+    for k, prompt in sorted(prompts.items(), key=lambda kv: int(kv[0])):
+        name = f"scene_{k}"
+        body = {"contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {"imageConfig": {"aspectRatio": aspect}}}
+        for attempt in range(retries):
+            try:
+                parts = vertex_generate(MODEL, body, timeout=180)
+                data = next((p["inlineData"]["data"] for p in parts if "inlineData" in p), None)
+                if data is None:
+                    # Metin dondu, gorsel yok: IMAGE_SAFETY engeli.
+                    blocked.append((name, "".join(p.get("text", "") for p in parts)[:120]))
+                else:
+                    with open(os.path.join(out_dir, f"{name}.png"), "wb") as fh:
+                        fh.write(base64.b64decode(data))
+                    saved.append(name)
+                    print(f"  {name} OK", flush=True)
+                break
+            except Exception as exc:
+                if attempt == retries - 1:
+                    blocked.append((name, str(exc)[:120]))
+                    break
+                time.sleep(5 * (attempt + 1))
+    return saved, blocked
 
 
 def submit(prompts, display_name, aspect="16:9"):
@@ -106,9 +145,7 @@ if __name__ == "__main__":
     aspect = ("9:16" if "--vertical" in sys.argv else
               sys.argv[sys.argv.index("--aspect") + 1] if "--aspect" in sys.argv
               else "16:9")
-    op = submit(prompts, f"batch-{int(time.time())}", aspect)
-    print("op:", op, flush=True)
-    saved, blocked = collect(op, out_dir)
+    saved, blocked = render(prompts, out_dir, aspect)
     print("BASARILI:", saved)
     if blocked:
         print("ENGELLI:", blocked)

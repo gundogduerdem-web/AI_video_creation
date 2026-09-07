@@ -99,8 +99,8 @@ S[4] = (
 )
 
 S[5] = (
-"Here is what was actually happening in the room, which nobody on that street learned until 1998 and "
-"which can be told in four sentences. In 1947 a woman called Elsa Vermeer taught ballet in "
+"What was actually happening in that room can be told in four sentences, and nobody living on that "
+"street learned any of it until 1998. In 1947 a woman called Elsa Vermeer taught ballet in "
 "a first-floor room in Amsterdam to a class of eleven girls, one of whom was Audrey, for four months "
 "and no longer, because the class ran out of money. Thirteen years later Elsa was sixty-eight, "
 "living alone in Rome in one room in number seven, and had been going blind for six years and was by "

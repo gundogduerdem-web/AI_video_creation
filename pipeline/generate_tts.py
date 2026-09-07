@@ -1,4 +1,7 @@
-"""Gemini TTS ile sahne seslendirmesi üretir (senkron — batch desteklemiyor).
+"""Gemini TTS ile sahne seslendirmesi üretir (Vertex AI, senkron).
+
+Fatura notu: API anahtarı yerine Vertex kullanılıyor; gerekçe common.py
+içindeki vertex_generate'te yazılı.
 
 Kullanım:
     python3 generate_tts.py <script.txt> <cikti_dizini> <ses_adi>
@@ -18,7 +21,7 @@ import urllib.request
 import wave
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import gemini_key  # noqa: E402
+from common import vertex_generate  # noqa: E402
 
 MODEL = "gemini-2.5-flash-preview-tts"
 
@@ -37,24 +40,17 @@ MIN_CPS, MAX_CPS = 12.0, 26.0
 
 
 def synth(text, voice, out_path, retries=3):
-    key = gemini_key()
-    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
-           f"{MODEL}:generateContent?key={key}")
-    body = json.dumps({
-        "contents": [{"parts": [{"text": text}]}],
+    body = {
+        "contents": [{"role": "user", "parts": [{"text": text}]}],
         "generationConfig": {
             "responseModalities": ["AUDIO"],
             "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}},
         },
-    }).encode()
+    }
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(
-                url, data=body, headers={"Content-Type": "application/json"}, method="POST")
-            with urllib.request.urlopen(req, timeout=150) as resp:
-                data = json.loads(resp.read())
-            pcm = base64.b64decode(
-                data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+            parts = vertex_generate(MODEL, body, timeout=150)
+            pcm = base64.b64decode(parts[0]["inlineData"]["data"])
             dur = len(pcm) / 2 / 24000
             cps = len(text) / dur if dur else 0
             if not MIN_CPS <= cps <= MAX_CPS:

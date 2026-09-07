@@ -64,7 +64,7 @@ seçiciyle ayrı satır olarak çıkar.
 ## Akış
 
 ```bash
-# 1) Görseller (Batch API, %50 indirim)
+# 1) Görseller (Vertex AI, sıralı; Shorts kapağı için --vertical)
 python3 generate_images.py prompts.json $WORK/imgs
 
 # 2) Seslendirme (senkron; Audrey=Enceladus, Diana=Algieba)
@@ -107,8 +107,35 @@ ifadeleri de engellenebiliyor.
 **Aspect ratio.** `generationConfig.imageConfig.aspectRatio` verilmezse kare
 (1024×1024) döner; 16:9 istemek için açıkça belirtilmeli.
 
-**Batch timeout yanıltıcı.** İstek timeout görünse bile iş oluşmuş olabilir —
-`generate_images.py` bu durumda batch listesinden işi bulup devam eder.
+**Faturalandırma: Vertex AI kullanılıyor, API anahtarı değil.** API anahtarıyla
+çağrılan `generativelanguage.googleapis.com` AI Studio'nun **prepay** bakiyesinden
+düşer; Cloud projesindeki kredi (ör. deneme kredisi) buna uygulanmaz. 7 Eylül
+2026'da o bakiye bitti ve görsel + TTS'in tamamı `429 RESOURCE_EXHAUSTED — Your
+prepayment credits are depleted` vermeye başladı; Cloud konsolunda kredi bol
+görünüyordu, çünkü o ayrı bir havuz. Aynı modeller Vertex üzerinden (
+`aiplatform.googleapis.com`, `speech_token.json` ile OAuth) Cloud faturasından
+işleniyor ve kredi geçerli. Ortak yardımcı: `common.vertex_generate`.
+
+**Görseller artık sıralı, batch değil.** Vertex'in toplu işi girdi/çıktı için GCS
+ya da BigQuery istiyor; video başına 8 görsel için değmiyor. Sıralı üretim 8
+görseli ~1 dakikada bitiriyor (eski batch yolu 10-30 dk sürüyordu ve V15'te bir
+kapak işi zaman aşımına uğramıştı). `submit`/`collect` eski batch yolu olarak
+duruyor ama varsayılan akış `render()`.
+
+**Vertex TTS daha yavaş okuyor.** Aynı metin, aynı ses: API anahtarı yolunda
+16,7-21,0 kr/sn, Vertex'te 14,6-16,9 kr/sn. V15 (12,8 dk) ile V16 (15,0 dk)
+arasındaki fark neredeyse tamamen bu. **Süreyi karakter sayısından tahmin etme,
+TTS çıktısından oku.** 12-13 dk hedefi isteniyorsa sahne başına ~1450-1500
+karakter gerekir (1690-1749 değil).
+
+**TTS bir cümleyi tamamen atlayabilir.** V16'da 5. sahnenin açılışı ("Here is
+what was actually happening in the room… which can be told in four sentences")
+üst üste iki denemede hiç okunmadı — model bunu okunacak metin değil, bir giriş
+yönergesi gibi ele aldı. Cümle yönerge gibi durmayacak şekilde yeniden yazılınca
+düzeldi. cps guard'ı bunu **yakalamaz** (137 karakter eksilince hız neredeyse
+aynı kalıyor); yakalayan şey metin/STT kelime farkıdır, o yüzden `subtitles.py`
+%3'ü aşan farkta artık hata veriyor. Aksi halde altyazı bütün sahne boyunca
+kayık çıkar ve bu sessizce yayına gider.
 
 **Speech-to-Text.** API anahtarı desteklemiyor, OAuth şart ve token
 **cloud-platform** kapsamlı olmalı — Drive kapsamı yetmiyor

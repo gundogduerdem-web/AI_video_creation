@@ -30,6 +30,7 @@ WORK = os.environ.get(
     "7cf1db21-c849-5360-ab3c-cb73ab4434ba/scratchpad",
 )
 
+PROJECT_ID = "gen-lang-client-0486434271"
 SHEET_ID = "1LaEweSHZb4L_Y-AhnuRxiz7o7qSONKsxYSXhdWTBLBo"
 DRIVE_PARENT = "1X2emDeckCcXm6LWDqFG5bj-uvZLZv9kT"  # "AI Videos" klasörü
 US_LOCATION = {"latitude": 39.8283, "longitude": -98.5795}
@@ -58,6 +59,31 @@ def access_token(token_file):
         headers={"Content-Type": "application/x-www-form-urlencoded"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read())["access_token"]
+
+
+def vertex_generate(model, body, location="global", timeout=180):
+    """Vertex AI üzerinden generateContent çağırır ve parts listesini döndürür.
+
+    Neden Vertex: API anahtarıyla çağrılan generativelanguage.googleapis.com
+    AI Studio'nun *prepay* bakiyesinden düşüyor; Cloud projesindeki kredi ona
+    uygulanmıyor ve bakiye bitince her istek 429 "prepayment credits are
+    depleted" veriyor (7 Eylül 2026'da üretim bu yüzden durdu). Vertex aynı
+    modelleri Cloud faturasından işliyor, yani projedeki kredi geçerli.
+
+    Kimlik: speech_token.json (cloud-platform kapsamı) — Speech-to-Text ile
+    aynı yetki, ek bir onay gerekmiyor.
+    """
+    host = ("aiplatform.googleapis.com" if location == "global"
+            else f"{location}-aiplatform.googleapis.com")
+    url = (f"https://{host}/v1/projects/{PROJECT_ID}/locations/{location}"
+           f"/publishers/google/models/{model}:generateContent")
+    req = urllib.request.Request(
+        url, data=json.dumps(body).encode(), method="POST",
+        headers={"Authorization": f"Bearer {access_token('speech_token.json')}",
+                 "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        data = json.loads(resp.read())
+    return data["candidates"][0]["content"]["parts"]
 
 
 def youtube_token(channel="youtube_token.json"):
