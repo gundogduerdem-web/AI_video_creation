@@ -600,6 +600,21 @@ yorumla değil ("This story runs backwards", "This is not a story about
 Audrey Hepburn" gibi meta girişler kullanılmaz). Küçük resimde **yüz karedeki
 en parlak öğe** olmalı.
 
+**Kapak prompt'unda "night" yazılmaz — "dusk" yazılır (7 Eyl 2026'da ölçüldü).**
+V16'nın kapağı düzeltilirken önce ışık talimatı güçlendirildi ama sahne gece
+kaldı; üretilen üç varyant da mevcuttan **daha karanlık** çıktı (YAVG 25-31,
+mevcut 37,3). Sorun ışık tarifi değil, sahne tarifiydi: "night" modeli her
+durumda karanlığa çekiyor ve "bright exposure / face is the brightest element"
+talimatlarını eziyor. Sahne alacakaranlığa alınınca aynı ışık talimatlarıyla
+73,6 çıktı; hafif kırpma ile **87,3**. Kanalın en iyi izleme süresine sahip
+kapağı olan V14 de zaten "dusk" tarifinden geliyordu (70,7) — yani parlaklık
+farkı baştan beri gece/alacakaranlık ayrımından kaynaklanıyormuş.
+
+Kapak üretim kuralı: sahne **dusk/twilight**, ışık kaynağı **kadraj dışında**
+(arka planda yüzden parlak lamba/pencere bırakılmaz), yüz kadraja hâkim.
+Sonuç **168 px genişliğinde** (öneri sütunu boyutu) gözden geçirilir ve YAVG
+ölçülür; hedef bant **70-90**.
+
 ---
 
 ## Hikaye Anlatım Özellikleri
