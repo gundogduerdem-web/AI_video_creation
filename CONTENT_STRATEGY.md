@@ -37,8 +37,10 @@ kanal için bir kez OAuth onayı verir (kanal başına ayrı refresh token)
 **Telefon doğrulaması (kritik kurulum engeli):** Yeni bir YouTube kanalı
 doğrulanmadan **özel thumbnail yüklenemez** (API `403: doesn't have
 permissions to upload and set custom video thumbnails`) ve **15 dakikayı
-aşan video yüklenemez** (mevcut 12-13 dk standardı bu sınırın altında,
-sorun değil). Doğrulama **kanal bazındadır** — ana hesabın doğrulanmış
+aşan video yüklenemez**. Yeni 13-15 dk standardı bu sınıra dayanıyor:
+V16 15 dk 01 sn ile sınırın **üstünde** ve sorunsuz yüklendi, yani bu
+kanal doğrulanmış durumda ve sınır bizi bağlamıyor. Yine de doğrulama
+düşerse ilk kırılacak yer burasıdır. Doğrulama **kanal bazındadır** — ana hesabın doğrulanmış
 olması marka kanalını kapsamaz. Google bir telefon numarasıyla **yılda
 en fazla 2 kanal** doğrulanmasına izin verir; Erdem'in numarası dolduğu
 için (kişisel hesap + Audrey kanalı) kalan 4 kanal **2 ek telefon
@@ -65,7 +67,7 @@ estate, UK ikametgahı nedeniyle ABD'de ölüm sonrası tanıtım hakkı
 ileri süremez.)
 
 Aşağıdaki bölümler Audrey Hepburn kanalı için yazılmıştır; teknik
-standartlar (8 sahne/8 görsel, 1690-1749 kr/sahne, 12-13 dk, Batch API,
+standartlar (8 sahne/8 görsel, 1570-1630 kr/sahne, 13-15 dk, Vertex AI,
 zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
 için geçerlidir**.
 
@@ -460,10 +462,12 @@ geçerlidir. Zaten YouTube'a yüklenmiş (private dahil) bir video, kalite
 sorunu tespit edilse bile geriye dönük olarak değiştirilmez/yeniden
 yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 - **Sahne/görsel sayısı:** Video başına **8 sahne / 8 görsel** (Erdem'in kararı, Video 3'ten itibaren).
-- **Video süresi (Video 4'ten itibaren):** Hedef **12-13 dakika** — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1690–1749** (Video 8'de düzeltildi). Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
+- **Video süresi (Video 17'den itibaren):** Hedef **13-15 dakika** (Erdem'in kararı, 7 Eyl 2026) — 8 görsel korunur, sahne başına metin uzatılır. Sahne başına karakter aralığı: **1570–1630**.
+  - **Neden değişti (7 Eyl 2026, Video 16):** Üretim Vertex AI'a taşındı (fatura gerekçesi aşağıda) ve Vertex TTS belirgin biçimde daha yavaş okuyor: ölçülen aralık **14,6–16,0 kr/sn**, önceki yolda 16,7–21,0 idi. Aynı karakter sayısı V15'te 12,8 dk, V16'da 15,0 dk verdi. Erdem 15 dk'yı kabul edip standardı 13-15 dk'ya çekti. Yeni aralık ölçüme dayanıyor: 8 × 1570 = 13,1 dk (en hızlı okuma), 8 × 1630 = 14,9 dk (en yavaş okuma) — iki uç da hedefin içinde.
+  - **Önceki hedef (Video 4–16):** 12-13 dakika, sahne başına 1690–1749 karakter. Eski 970-999 aralığı Fliki kısıtından geliyordu ve Video 3 ile birlikte emekli edildi. Speech-to-Text'in 60 sn üstü otomatik ses bölme mekanizması uzun sahneleri zaten destekliyor.
   - **Düzeltme (30 Ağu 2026, Video 8):** Önceki 1450–1499 aralığı ~15,7 kr/sn varsayımına dayanıyordu; gerçek ölçüm **~18,4 kr/sn** çıktı. Bu yüzden V4–V7 hedefin altında kaldı (V7: 11 dk 02 sn, 11.867 karakter). Yeni aralık ölçüme dayanıyor: 8 × ~1720 kr ≈ **12 dk**. Süre, TTS bittiğinde `TOPLAM` satırından doğrulanır; 12 dk altındaysa metin uzatılıp TTS tekrar üretilir. **Yayınlanmış videolar geriye dönük düzeltilmez.**
 - **Konu serbestisi:** Konular tamamen uydurma olabilir (kurgu beyanı her videoda korunur).
-- **Görsel üretimi HER ZAMAN Batch API ile:** Görseller istisnasız Gemini **Batch API** üzerinden üretilir (%50 indirim; işlem 24 saate kadar sürebilir, pratikte genelde dakikalar içinde biter). TTS ve Speech-to-Text batch desteklemediği için senkron kalır.
+- **Görsel üretimi Vertex AI ile, sıralı (7 Eyl 2026'dan itibaren):** Görseller `gemini-2.5-flash-image` ile Vertex üzerinden tek tek üretilir; 8 görsel ~1 dakika sürüyor. **Eski Batch API yolu (%50 indirim) terk edildi:** API anahtarı AI Studio'nun prepay bakiyesinden düşüyor ve o bakiye 7 Eyl 2026'da bitip tüm üretimi durdurdu, üstelik batch pratikte 10-30 dk sürüyordu ve V15'te bir kapak işi zaman aşımına uğradı. Vertex Cloud faturasından işlediği için projedeki kredi geçerli. Vertex'in kendi toplu işi girdi/çıktı için GCS/BigQuery istediğinden 8 görsel için kullanılmıyor. TTS ve Speech-to-Text zaten senkron.
 - **Görsel çözünürlüğü:** Gemini görsel üretiminde `generationConfig.imageConfig.aspectRatio: "16:9"` parametresi kullanılır (native 1344x768 çıktı); kare (1024x1024) görseli zorla 16:9'a genişletmek bulanıklığa yol açtığı için kullanılmaz.
 - **Ken Burns (zoompan) efekti:** Yavaş ve sınırlı — `scale=2688:1512:flags=lanczos` ile ön ölçekleme, zoom artışı `min(zoom+0.00007,1.12)` (önceki `0.0006` / max `1.3` çok hızlıydı ve sahne sonunda yüzleri kadraj dışına taşırıyordu).
 - **Video encode kalitesi:** `-preset slow -crf 18` (önceki `-preset fast`, düşük netlik).
@@ -477,7 +481,7 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
   "WATCH THE FULL STORY / LINK IN DESCRIPTION" bindirmesi.
 - **Açıklamanın ilk satırı:** `CLICK TO WATCH THE FULL VIDEO 👉 <ana video linki>`
   + kısa kurgu beyanı + #Shorts etiketleri.
-- **Thumbnail:** dikey **9:16**, renkli, vurucu yakın plan (Batch API ile üretilir). YouTube'un thumbnail sistemi 16:9 tabanlı olduğu için dikey kapak bazı yüzeylerde yanlarda boşlukla gösterilebilir; Erdem 28 Ağu 2026'da mevcut Shorts kapaklarını inceleyip **iyi göründüğünü onayladı** ve dikey formatta devam kararı verdi. 16:9'a çevrilmeyecek.
+- **Thumbnail:** dikey **9:16**, renkli, vurucu yakın plan (`generate_images.py --vertical`; oran açıkça verilmezse API 16:9 döner ve V15'te bu yüzden bir kapak yatay çıktı). YouTube'un thumbnail sistemi 16:9 tabanlı olduğu için dikey kapak bazı yüzeylerde yanlarda boşlukla gösterilebilir; Erdem 28 Ağu 2026'da mevcut Shorts kapaklarını inceleyip **iyi göründüğünü onayladı** ve dikey formatta devam kararı verdi. 16:9'a çevrilmeyecek.
 - **Shorts görseli (öğrenilmiş kural):** Yatay sahne görselinin merkezden dikey kırpılması, kompozisyona göre ana karakteri kadraj dışında bırakabiliyor. Bu yüzden Short, **natif 9:16 üretilen dikey thumbnail görseliyle** derlenir (tek görsel + yavaş zoom) — hem yüz merkezde kalır hem ek maliyet olmaz, çünkü o görsel zaten thumbnail için üretiliyor.
 - **Süre:** Sahne 1 anlatımı 60 sn'yi aşarsa, kelime zamanlamalarından **doğal bir cümle sonu** bulunup orada kesilir (yarım cümle bırakılmaz); tercihen merak bırakan bir cümlede.
 - Shorts, ana videosu public olmadan public yapılmaz; yayın onay kapısı
@@ -509,9 +513,9 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
 2. Başlık kuralı doğrulaması — sonucu çözmediği açıkça teyit edilir.
 3. Hook tipi seçimi — atmosferik mi, doğrudan-detay-önce mi.
 4. Karakter sayısı doğrulaması — Python regex ile sahne etiketlerinden
-   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 8'den
-   itibaren **1690–1749** karakter; V4-V7 1450–1499, öncesinde 970–999 idi) olduğu
-   üretime/Erdem'e sunulmadan önce doğrulanır.
+   (`[SCENE1]...[/SCENE1]` vb.) her sahnenin güncel aralıkta (Video 17'den
+   itibaren **1570–1630** karakter; V8-V16 1690–1749, V4-V7 1450–1499,
+   öncesinde 970–999 idi) olduğu üretime/Erdem'e sunulmadan önce doğrulanır.
 5. **Tekrar/benzerlik kontrolü (kritik, kanal riski):** Yeni script/hikaye,
    daha önce üretilmiş videolarla (özellikle olay örgüsü, hook, açılış/kapanış
    yapısı ve görsel sahne kompozisyonları) karşılaştırılıp **belirgin şekilde

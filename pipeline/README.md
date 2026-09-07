@@ -125,8 +125,8 @@ duruyor ama varsayılan akış `render()`.
 **Vertex TTS daha yavaş okuyor.** Aynı metin, aynı ses: API anahtarı yolunda
 16,7-21,0 kr/sn, Vertex'te 14,6-16,9 kr/sn. V15 (12,8 dk) ile V16 (15,0 dk)
 arasındaki fark neredeyse tamamen bu. **Süreyi karakter sayısından tahmin etme,
-TTS çıktısından oku.** 12-13 dk hedefi isteniyorsa sahne başına ~1450-1500
-karakter gerekir (1690-1749 değil).
+TTS çıktısından oku.** Güncel 13-15 dk standardının karşılığı sahne başına
+1570-1630 karakterdir (1690-1749 değil).
 
 **TTS bir cümleyi tamamen atlayabilir.** V16'da 5. sahnenin açılışı ("Here is
 what was actually happening in the room… which can be told in four sentences")
@@ -151,11 +151,13 @@ bölünüyor ve kesim noktası enerji taraması ile **en sessiz ana** kaydırıl
 ofsetidir; örnek sayısıyla karıştırılırsa parçalar iki kat uzun olur ve API
 400 verir.
 
-**Süre hedefi ölçümle doğrulanır.** Anlatım hızı sabit değil: ölçülen
-aralık **16,7-21,0 karakter/saniye** (içeriğe göre değişiyor). 12-13 dakika
-için sahne başına **1690-1749** karakter iyi bir başlangıç, ama karakter
-sayısı süreyi garanti etmez — TTS bitince `TOPLAM` satırındaki süre mutlaka
-kontrol edilir.
+**Süre hedefi ölçümle doğrulanır.** Anlatım hızı sabit değil ve backend'e
+göre de değişiyor: Vertex'te ölçülen aralık **14,6-16,0 karakter/saniye**
+(V16, 8 sahne), API anahtarı yolunda 16,7-21,0 idi. Güncel hedef **13-15
+dakika** ve bunun karşılığı sahne başına **1570-1630** karakter: en hızlı
+okumada 8x1570 = 13,1 dk, en yavaş okumada 8x1630 = 14,9 dk, yani aralığın
+iki ucu da hedefin içinde kalıyor. Karakter sayısı yine de süreyi garanti
+etmez — TTS bitince `TOPLAM` satırındaki süre mutlaka kontrol edilir.
 
 **TTS metni tekrarlayabiliyor.** V9'da model 8. sahnenin metnini baştan sona
 iki kez okudu: 1746 karakter için 177 saniye. Sessizce geçse videonun sonunda
