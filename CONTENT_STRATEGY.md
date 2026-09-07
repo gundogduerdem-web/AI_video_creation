@@ -600,6 +600,38 @@ yorumla değil ("This story runs backwards", "This is not a story about
 Audrey Hepburn" gibi meta girişler kullanılmaz). Küçük resimde **yüz karedeki
 en parlak öğe** olmalı.
 
+### Meta cümle ölçümü (7 Eyl 2026) ve V16 testi
+
+"Meta cümle" = hikâyeyi anlatmak yerine hikâyenin kendisinden/kurgusundan söz
+eden cümle. Sahne 1'de ilk meta cümlenin **saniyesi** ölçüldüğünde sıralama
+izleme süresiyle birebir örtüşüyor:
+
+| Video | Sahne 1'de ilk meta cümle | Abone-değil ort. izleme |
+|---|---|---|
+| V12 | yok | **3:28** |
+| V13 | yok | **3:13** |
+| V16 | 0:25 | ? |
+| V14 | 0:00 | **2:04** |
+| V15 | 0:00 | **1:45** |
+
+**V16 kasıtsız bir test durumu.** Teşhisten önce yazıldı; somut açılıyor ama
+0:25'te "This story is made out of those fourteen fragments, and the reason to
+tell it that way is…" ile kendi kurgusuna dönüyor — yani tutunmanın en çok
+sızdığı ilk 40 saniyenin ortasında. Hipotez doğruysa V16'nın ortalama izleme
+süresi **2:04 ile 3:13 arasına** düşmeli.
+
+**Düşürülebilir tahmin:** V16 > 2:04 çıkarsa hipotez destek görür; 2:04'ün
+altına düşerse meta-cümle açıklaması yanlıştır ve düşüşün sebebi başka yerde
+aranmalıdır. Veri API'ye 9-10 Eyl civarında düşer. **V16'nın kapağı 7 Eyl'de
+değiştirildi; bu CTR'ı etkiler ama izleme süresini değil, dolayısıyla test
+bozulmaz.** V16 bu yüzden geriye dönük düzeltilmeyecek — düzeltmek testi yok
+ederdi.
+
+**Video 17'den itibaren kural:** sahne 1'de meta cümle **hiç** bulunmaz.
+Hikâyenin nasıl anlatıldığına dair her açıklama 2. sahneye ya da sonrasına
+taşınır. Anlatı yapısı (ters kronoloji, topluluk anlatımı vb.) serbest —
+yasak olan onu **izleyiciye duyurmak**.
+
 **Kapak prompt'unda "night" yazılmaz — "dusk" yazılır (7 Eyl 2026'da ölçüldü).**
 V16'nın kapağı düzeltilirken önce ışık talimatı güçlendirildi ama sahne gece
 kaldı; üretilen üç varyant da mevcuttan **daha karanlık** çıktı (YAVG 25-31,
