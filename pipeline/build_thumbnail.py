@@ -23,6 +23,7 @@ GOLD = "#E8B923"
 OUTLINE = 8
 SHADE = 78          # metin tarafindaki karartma yogunlugu (0-255)
 YAVG_BAND = (70, 90)   # 168 px'de hedef ortalama parlaklik
+AUTO_REACH = 30        # banda bu kadar uzaklikta ise gama ile duzeltilir
 FONT = os.environ.get(
     "ANTON_FONT",
     "/tmp/claude-0/-home-user-AI-video-creation/"
@@ -56,6 +57,39 @@ def fit(draw, text, max_w, max_h, start, min_size=34):
     return font, wrap(draw, text, font, max_w), int(min_size * 1.06)
 
 
+def yavg(im):
+    """Oneri sutunu boyutunda (168 px) ortalama parlaklik."""
+    small = im.convert("L").resize((168, int(168 * H / W)), Image.LANCZOS)
+    return float(np.asarray(small, dtype=np.float32).mean())
+
+
+def fit_exposure(im, band=YAVG_BAND, reach=AUTO_REACH):
+    """Kareyi gama ile hedef banda ceker (bant yakinindaysa).
+
+    Sahne tarifiyle parlaklik tutturmak kumar: ayni konuda dusk 65,8,
+    high-key overcast 124,7, golgeli overcast 54,7 verdi. Gama duzeltmesi
+    ayni isi deterministik yapiyor ve bir uretim daha harcamiyor. Bant cok
+    uzaksa dokunmaz — o zaman sorun pozlama degil sahnenin kendisidir.
+    """
+    lo, hi = band
+    before = yavg(im)
+    if lo <= before <= hi:
+        return im, before, before, 1.0
+    target = lo + (hi - lo) / 2
+    if not (lo - reach <= before <= hi + reach):
+        return im, before, before, 1.0
+    a = np.asarray(im, dtype=np.float32) / 255.0
+    # tek gama degeriyle hedefe yakinsa
+    g = 1.0
+    for _ in range(24):
+        out = Image.fromarray((np.clip(a ** g, 0, 1) * 255).astype(np.uint8))
+        cur = yavg(out)
+        if abs(cur - target) < 0.6:
+            break
+        g *= 1.0 - (target - cur) / 400.0
+    return out, before, cur, g
+
+
 def stroked(draw, xy, text, font, fill):
     draw.text(xy, text, font=font, fill=fill,
               stroke_width=OUTLINE, stroke_fill="black")
@@ -63,6 +97,9 @@ def stroked(draw, xy, text, font, fill):
 
 def build(base_path, out_path, name, hook, side="left"):
     im = Image.open(base_path).convert("RGB").resize((W, H), Image.LANCZOS)
+    im, y0, y1, gamma = fit_exposure(im)
+    if gamma != 1.0:
+        print(f"pozlama duzeltildi: YAVG {y0:.1f} -> {y1:.1f} (gama {gamma:.3f})")
 
     # Metin tarafini hafifce karart: kontur tek basina okunurlugu tasimiyor.
     # Karartma, metnin okunmasi icin gerekli ama kareyi genel olarak
@@ -95,8 +132,7 @@ def build(base_path, out_path, name, hook, side="left"):
     print(f"{out_path} ({W}x{H}, {kb} KB, {len(lines)} satir, {hook_font.size}pt)")
 
     # Parlaklik kontrolu oneri sutunu boyutunda (168 px) yapilir.
-    small = im.convert("L").resize((168, int(168 * H / W)), Image.LANCZOS)
-    yavg = float(np.asarray(small, dtype=np.float32).mean())
+    yavg = yavg_final = globals()["yavg"](im)
     lo, hi = YAVG_BAND
     verdict = "hedef bandi" if lo <= yavg <= hi else (
         "COK KARANLIK - sahneyi dusk yaz, isik kaynagini kadraj disinda tut"
