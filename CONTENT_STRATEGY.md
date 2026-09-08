@@ -649,6 +649,38 @@ Sonuç **168 px genişliğinde** (öneri sütunu boyutu) gözden geçirilir ve Y
 
 ---
 
+### Arama talebi testi — zaten yapılmış (8 Eyl 2026)
+
+V18 gerçek + aranabilir bir konuyla kurgulanacaktı. Senaryo yazıldıktan sonra
+katalog kontrol edilince iki şey çıktı ve test iptal edildi.
+
+**1. Konu zaten işlenmiş.** 23-28 Ağustos bloğu tam olarak bu alanı kaplıyor:
+"The Man Audrey Hepburn Never Named" (amcası Otto), "Ate Tulip Bulbs to
+Survive World War II", "Danced Where Clapping Could Get You Killed" (kara
+akşamlar), "The Three Minutes That Ended Her Real Dream" (bale), "A German
+Officer Slept Below Her Bedroom", ve Shorts "Hid What the Nazis Were Hunting"
+(direniş). V18 taslağının 8 sahnesinden 5'i bunlarla birebir örtüşüyordu.
+**Ders: senaryo yazmadan önce katalog taranır.**
+
+**2. Test zaten yapılmış.** O blok kurgu içerikliydi ama başlıkları gerçek ve
+aranabilir konulardı — ve arama sıralamasını belirleyen şey içeriğin doğruluğu
+değil, başlık/metadata ve etkileşimdir. Ölçüm:
+
+| | İzlenme | Arama | Arama payı | Browse |
+|---|---|---|---|---|
+| Aranabilir gerçek-konu başlığı (Tulip Bulbs) | 14 | 2 | %14,3 | 0 |
+| Uydurma premise başlıkları (6 video) | 595 | 21 | %3,5 | 0 |
+
+**Sonuç:** aranabilir başlık mekanizma olarak çalışıyor (arama payı 4 katına
+çıkıyor) ama mutlak katkısı 2 izlenme, ve o video toplamda 40 kat daha az
+izlenme aldı. 39 aboneyle baş terimlerde yerleşik kanallarla yarışılamıyor.
+Kanalın çalışan tek yüzeyi önerilen video; arama bir kaldıraç değil.
+
+**Karar:** konu değişimi bir büyüme kaldıracı olarak elendi. Kalan kaldıraç
+tutunma ve CTR — yani önerilen videoyu besleyen iki şey.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
