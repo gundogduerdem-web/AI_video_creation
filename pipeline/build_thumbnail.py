@@ -15,11 +15,14 @@ Kanal standardı (CONTENT_STRATEGY.md):
 import os
 import sys
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H = 1280, 720
 GOLD = "#E8B923"
 OUTLINE = 8
+SHADE = 78          # metin tarafindaki karartma yogunlugu (0-255)
+YAVG_BAND = (70, 90)   # 168 px'de hedef ortalama parlaklik
 FONT = os.environ.get(
     "ANTON_FONT",
     "/tmp/claude-0/-home-user-AI-video-creation/"
@@ -62,10 +65,14 @@ def build(base_path, out_path, name, hook, side="left"):
     im = Image.open(base_path).convert("RGB").resize((W, H), Image.LANCZOS)
 
     # Metin tarafini hafifce karart: kontur tek basina okunurlugu tasimiyor.
+    # Karartma, metnin okunmasi icin gerekli ama kareyi genel olarak
+    # karartiyor ve parlaklik standardini bozuyor (V1 kapagi 63,5 boyle
+    # dustu). Bu yuzden hem yogunluk hem genislik sinirli tutuluyor;
+    # okunurlugu asil tasiyan sey konturdur.
     shade = Image.new("L", (W, H), 0)
     ImageDraw.Draw(shade).rectangle(
-        [0, 0, int(W * 0.60), H] if side == "left" else [int(W * 0.40), 0, W, H],
-        fill=140)
+        [0, 0, int(W * 0.52), H] if side == "left" else [int(W * 0.48), 0, W, H],
+        fill=SHADE)
     im = Image.composite(Image.new("RGB", (W, H), "black"), im,
                          shade.filter(ImageFilter.GaussianBlur(90)))
 
@@ -86,6 +93,16 @@ def build(base_path, out_path, name, hook, side="left"):
     im.save(out_path, "JPEG", quality=92)
     kb = os.path.getsize(out_path) // 1024
     print(f"{out_path} ({W}x{H}, {kb} KB, {len(lines)} satir, {hook_font.size}pt)")
+
+    # Parlaklik kontrolu oneri sutunu boyutunda (168 px) yapilir.
+    small = im.convert("L").resize((168, int(168 * H / W)), Image.LANCZOS)
+    yavg = float(np.asarray(small, dtype=np.float32).mean())
+    lo, hi = YAVG_BAND
+    verdict = "hedef bandi" if lo <= yavg <= hi else (
+        "COK KARANLIK - sahneyi dusk yaz, isik kaynagini kadraj disinda tut"
+        if yavg < lo else "COK PARLAK")
+    print(f"YAVG (168px) = {yavg:.1f}  [hedef {lo}-{hi}]  -> {verdict}")
+    return yavg
 
 
 if __name__ == "__main__":
