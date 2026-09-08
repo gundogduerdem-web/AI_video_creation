@@ -681,6 +681,55 @@ tutunma ve CTR — yani önerilen videoyu besleyen iki şey.
 
 ---
 
+### CTR teşhisi — üç ölçülmüş kusur (8 Eyl 2026)
+
+İzleme süresi ve CTR ayrı kaldıraçlar; 7 Eyl teşhisi yalnızca birincisini
+ele alıyordu. CTR tarafında ölçülen üç kusur:
+
+**1. Kanca tıklama anında görünmüyor.** Son 8 uzun videonun 8'inde başlık
+iki cümleli ve ~60 karakterde kırpılıyor, yani ödülü taşıyan ikinci cümle
+karar anında hiç görünmüyor:
+
+| Görünen | Kesilen |
+|---|---|
+| A Roman Street Watched Audrey Hepburn for Four Months. All F | ourteen of Them Were Wrong. |
+| A Journalist Invented a Story About Audrey Hepburn. She Wait | ed 11 Years to Correct It. |
+| Audrey Hepburn's Wartime Bicycle Was Found 45 Years Later. S | he Refused to Take It Back. |
+| For 22 Years Audrey Hepburn Stood on the Same Platform on th | e Same Day. Nobody Knew. |
+
+Not: başlık uzunluğu 7 Eyl'de **izleme süresi** için elenmişti (V11 89
+karakterle 3:06 aldı). CTR için durum farklı — mesele uzunluk değil,
+kancanın kırpılan yarıda kalması.
+
+**2. Yedi ardışık kapak birbirinin aynı.** V10-V16'nın hepsi tek başına,
+sakin ifadeli, üç-çeyrek profil bir yüz. Öneri sütununda ayırt edilemiyorlar,
+üstelik trafiğimizin çoğu kendi videolarımızın birbirini önermesinden geldiği
+için izleyici aynı videoyu tekrar görüyor sanıyor.
+
+**3. Kapaklar neredeyse gri.** Ölçülen doygunluk (0-255): V10 14,2 · V11 13,5
+· V12 11,9 · V13 8,3 · V14 25,6 · V15 **4,1** · V16 13,6. Yedisinin altısı
+15'in altında. Erdem'in CTR şikâyeti V15 içindi ve V15 setin en düşüğü.
+
+**Kurallar (Video 18'den itibaren):**
+* Kanca ilk **~55 karaktere** yazılır; başlık kırpıldığında da tam anlaşılır.
+* Kapakta çeşitlilik: her seferinde tek sakin yüz değil — iki kişi, tepki,
+  nesne, eller, sahne. Kompozisyonun kendisi hikâyeyi anlatmalı.
+* Doygunluk hedefi **>20**; gerekiyorsa hafif renk düzeltmesi uygulanır
+  (fazlası teni turuncuya çeviriyor — V18'de saturation 1,55 denendi ve
+  geri alındı, 1,18 doğru değer).
+
+**Kanıt sınırı:** bunların CTR'ı yükselttiği **kanıtlanmadı** — gösterim ve
+CTR API'de yok, yalnızca Studio'da. Yukarıdakiler ölçülmüş kusurlar; etkisi
+Studio'dan izlenecek.
+
+**Parlaklık hedefi düzeltmesi:** 7 Eyl'de konan "YAVG 70-90" hedefi yüz
+ağırlıklı kırpımlardan türetilmişti ve iki kişilik/geniş kompozisyonlarda
+yanıltıyor — V18'in kapağı 51,8 ölçüyor ama iki yüz de kadrenin en parlak
+öğesi. Ölçüm tüm kare yerine **yüz bölgesinden** yapılmalı; bu yapılana
+kadar sayı tek başına ölçüt sayılmaz, 168 px kontrolü esas alınır.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.

@@ -1,0 +1,186 @@
+# -*- coding: utf-8 -*-
+"""V18 — "The Translator". Tamamen kurgu.
+Yapi: otuz yila yayilan SEANSLAR — ayni odada, ayni is, degisen her sey.
+Duygusal cekirdek: gerekli olmak ama gorunmemek; mesleki becerisi yok
+olmak olan birinin bir kez bunu bozmasi. (Kanalda ilk)
+Katalog kontrolu: 61 videonun hicbirinde cevirmen/aracilik yok.
+
+Yeni kurallar (7-8 Eyl teshisi):
+  * Sahne 1'de META CUMLE YOK.
+  * 1570-1630 karakter/sahne (Vertex TTS).
+"""
+import json, os
+
+S = {}
+
+S[1] = (
+"In February 1959, in a hotel room in Rome with too much furniture in it, a woman of thirty-four "
+"named Giulia Sarti sat down in a chair placed slightly behind and to the left of an actress, which "
+"is where the chair is always placed, and translated an interview from English into Italian for "
+"fifty minutes. She was paid eleven thousand lire. She did the same job in the same city for the "
+"same actress, on and off, for the next twenty-nine years. The chair matters, and it is worth saying "
+"why before anything else happens. It is behind the subject so that the journalist looks at the "
+"subject and not at you. It is to the left because most people turn right when they are thinking and "
+"you do not want to be in the way of that. You do not lean forward. You do not react to anything "
+"that is said, ever, in either direction — not to a joke, not to bad news, not to a lie. If a "
+"question is rude you translate it exactly as rude as it was, and if the answer is evasive you "
+"preserve the evasion precisely, including the pauses. You do not improve anything. A person who "
+"says something badly in one language is entitled to say it just as badly in the other, and the "
+"instinct to tidy it up is the first thing an interpreter is trained out of. Giulia was taught this at twenty-two by a man "
+"who had done it at trade negotiations, and he told her that the job was not to be a bridge, because "
+"a bridge is a thing you see. The job was to be a window that nobody notices is there, and the "
+"measure of a good day was that at the end of it neither party could describe your face. She repeated "
+"that sentence to trainees for the rest of her career."
+)
+
+S[2] = (
+"She was good at it. She was good at it in a way that had a cost she did not think about until much "
+"later, which is that thirty years of professional invisibility is a skill you cannot switch off at "
+"six o'clock. Her sister said, at Giulia's funeral, that talking to her about anything difficult was "
+"like handing something to a very reliable person who then handed it straight back to you unchanged "
+"and slightly improved, and that this was wonderful and also the loneliest possible thing to be on "
+"the receiving end of. Giulia never married. She had a flat near the Testaccio market, a great many "
+"books in four languages, and a professional reputation of the specific kind that produces steady "
+"work and no fame whatsoever: the production offices in Rome had a short list of interpreters who "
+"could be trusted in a room with somebody important, and she was on it from about 1956 onward and "
+"never came off it. Between 1959 and 1988 she worked with the actress on something in the region of "
+"two hundred separate occasions. Interviews, mostly. Some press conferences. Two long afternoons "
+"with lawyers. One hospital. She kept a work diary, because everybody freelance does, and the entries "
+"are one line each and contain the date, the client, the duration and the fee, and nothing else at "
+"all, for twenty-nine years. She was not unusual in this. Ask anybody who has done "
+"the job a long time and they will say the same thing: the diary is for the accountant, and "
+"writing down what was said in a room is how you stop being sent into rooms. There is one departure "
+"from the format in the whole run, and it is a number in a margin in 1976."
+)
+
+S[3] = (
+"What she heard in those rooms would have been worth money, and this is the part that people always "
+"get to eventually when they hear what she did. She was present for a great deal. She was in the "
+"room in 1964 when a journalist asked a question about the actress's marriage that was "
+"phrased so unpleasantly that the publicist stood up, and Giulia rendered it into Italian at "
+"exactly the temperature it had been asked at, and then translated the answer back, which was four "
+"words long and ended the interview. She was there in 1968 for a conversation that was not an "
+"interview at all and that she has never described to anybody. She was there in 1971 when the "
+"actress cried, briefly and without any noise, and then continued, and Giulia went on translating "
+"through it in the same voice she had been using for the previous half hour, because stopping would "
+"have made it an event. She was offered money for what she knew on four occasions that she recorded, "
+"the largest of them in 1976 and substantial enough that she wrote the figure down, which is the "
+"only time in twenty-nine years of diaries that she wrote down a number that was not a fee. She "
+"turned all four down. Not, she said later, out of loyalty. Loyalty would have implied a relationship "
+"and there was not one. It was closer to disgust at being asked, and underneath that something more "
+"practical and less flattering: a woman who sells one room has no rooms afterward, and Giulia had "
+"another twelve years of work in front of her and intended to do it. She said both of those reasons "
+"out loud, in that order, and refused to pretend the second one was not there."
+)
+
+S[4] = (
+"They were not friends. The temptation to make it into a friendship is strong and it would be "
+"false. In twenty-nine years and two hundred "
+"sessions they had, by Giulia's own count, eleven conversations that were not work. All eleven were "
+"short. Most were about the weather or the traffic or where the coffee was, and two were about "
+"Giulia's sister's illness in 1979, and one, in 1965, was about a coat. They were not on first-name "
+"terms in any consistent way. The actress did not know where Giulia lived, or that she had a sister, "
+"until 1979, and did not know she had ever been married to the language teacher in Milan for four "
+"years in her twenties, because it never came up and Giulia would not have raised it. What existed "
+"between them instead was something that does not have a good name in English and that anybody who "
+"has worked closely with the same person for decades will recognise anyway. Giulia could tell from "
+"the first sentence of an answer whether the day was going to be difficult. The actress had, by "
+"about 1970, developed the habit of pausing a fraction longer than necessary before a complicated "
+"reply, which was not for the journalist's benefit and was not for hers either. It was just what the "
+"room had become. Two people who have been in a hundred and something rooms together develop a "
+"working shorthand whether or not they like each other, and the shorthand is not affection and "
+"should not be mistaken for it. It is closer to what two people who share a difficult job have: an "
+"accurate map of the other, built from watching, containing almost no personal information."
+)
+
+S[5] = (
+"The break came in October 1981, in Rome, in a room at the top of a hotel on the via Veneto, in the "
+"eleventh minute of an interview with a magazine that had sent a young man of about twenty-six. He "
+"was not malicious. That is the thing Giulia was most insistent about afterward, and she was "
+"insistent about very little. He was underprepared and slightly frightened and he had been given a "
+"list of questions by an editor, and about a third of the way down that list was a question about "
+"the actress's father, and specifically about the year he had left, and it was worded in a way that "
+"assumed a fact that was not true. Giulia heard it in English. She then had, by her own account, "
+"somewhere between one and two seconds in which to decide what to do, and in that time she did the "
+"arithmetic that twenty-two years in the chair had made automatic: the question as asked could not "
+"be answered without either correcting a stranger about the worst thing in your life, or letting the "
+"false version stand in print. Both were bad. There was no third option available to the person "
+"being interviewed. There was, however, a third option available to the interpreter, and Giulia took "
+"it, and it was the only unprofessional act of her working life. She was fifty-six years old and had "
+"been doing the job for thirty-four years without a single complaint on her record, and she has "
+"never claimed that the pressure of the moment explains it. She said she knew exactly what she was "
+"doing. She said the speed was the problem: not that there was no time to think, but that there was "
+"just enough."
+)
+
+S[6] = (
+"She translated the question wrongly. Deliberately, and well. What came out of her mouth in Italian "
+"was a question about the same period of the actress's childhood, in the same register, of the same "
+"approximate length, arriving at the same place in the conversation — and containing none of the "
+"assumption. It was a good question. It was, if anything, a better question than the one the young "
+"man had asked, and he never knew he had not asked it, and he went away pleased with the answer he "
+"got, which was long and thoughtful and completely usable. The interview ran in December. Nobody "
+"noticed anything, because there was nothing to notice: there is no record of what a question "
+"sounded like before it was translated, which is precisely the fact that makes an interpreter "
+"dangerous and is precisely why the whole profession is built on people who will not do what Giulia "
+"did. She knew all of that while she was doing it. She said afterward that she was not proud of it "
+"and would not have done it twice, and that the argument that it had produced a better outcome for "
+"everybody in the room was exactly the argument every interpreter who has ever ruined the record has "
+"used, and that the only thing separating her from those people was that she had stopped at one. She "
+"also said, and this is the detail that makes the whole thing land differently, that the hardest "
+"part was not the decision. It was the next forty minutes, during which she had to go on translating "
+"normally, at normal speed, in a room containing one person who did not know what she had done and "
+"one who certainly did."
+)
+
+S[7] = (
+"The actress knew. Of course she knew — she had understood the English perfectly well, she had heard "
+"the question as asked, and she then heard something else come out in Italian and had perhaps a "
+"second herself to decide whether to correct the interpreter in front of a journalist. She did not. "
+"She answered the question Giulia had asked. They worked together for another seven years after "
+"that, perhaps thirty more sessions, and neither of them ever mentioned it, and the not mentioning "
+"was not awkwardness. Giulia was very clear on this point when she finally described it, decades "
+"later, to a colleague who was training. She said that the silence afterward was the closest thing "
+"to being thanked that the job permits, and that anybody waiting for more than that in this "
+"profession has misunderstood what they signed up for. She said that the actress's manner toward her "
+"did not change in any way that a third person in the room could have detected, and that this was "
+"correct, and that she would have thought less of her if it had. And then she said the part that the "
+"colleague remembered and wrote down, which was that for twenty-two years she had been a window, and "
+"for two seconds in 1981 she had been a person, and that two seconds was the right amount. The "
+"colleague, who was twenty-nine and had expected the story to end with something warmer, asked "
+"whether she had ever wanted more than that. Giulia said that wanting it was not the problem and "
+"that everyone in the profession wants it. The problem is that the moment you take it, you are no "
+"longer any use to the person you took it from."
+)
+
+S[8] = (
+"Giulia Sarti retired in 1991 and died in 2003, at seventy-eight, in the flat near the market. Her "
+"sister found the work diaries, twenty-nine of them, and read the whole run looking for the thing "
+"everybody assumes must be in there, and it is not. There is no account of the famous rooms. There "
+"is no gossip. There is nothing about 1968 and nothing about 1981. Every entry is a date, a client, "
+"a duration and a fee, in the same hand, getting slightly smaller after 1985. The single departure "
+"from the format in twenty-nine years is the figure she was offered in 1976 and turned down, written "
+"in the margin with no comment beside it. The story only exists at all because of the colleague she "
+"trained, who was told it once, in 1994, as a warning rather than as an anecdote, and who repeated "
+"it after Giulia died and always with the same framing she had been given: that the interpreter did "
+"a thing she should not have done, that it worked, and that this is the reason it is dangerous. The "
+"sister kept the diaries for a while and then could not think of any reason to, and they went out "
+"with the rest of the flat in 2004. So the only surviving trace of twenty-nine years in those rooms "
+"is a story told twice, by a woman telling it against herself. This "
+"story is a work of fiction. Giulia, the interview, the diaries and every detail in it are invented, "
+"created for storytelling and not drawn from any record. The rule she breaks is real, and is taught "
+"in those terms: you carry the question across as it was asked, including when it is cruel, and "
+"including when you can see what it is about to do to the person sitting in front of you."
+)
+
+for k in sorted(S):
+    n = len(S[k])
+    print(k, n, ("OK" if 1570 <= n <= 1630 else n - 1600))
+
+here = os.path.dirname(os.path.abspath(__file__))
+json.dump({str(k): S[k] for k in sorted(S)},
+          open(os.path.join(here, "scenes.json"), "w", encoding="utf-8"),
+          ensure_ascii=False, indent=1)
+with open(os.path.join(here, "script.txt"), "w", encoding="utf-8") as fh:
+    for k in sorted(S):
+        fh.write(f"[SCENE{k}]\n{S[k]}\n[/SCENE{k}]\n\n")
