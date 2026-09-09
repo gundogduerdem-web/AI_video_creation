@@ -68,9 +68,16 @@ here = os.path.dirname(os.path.abspath(__file__))
 json.dump(S, open(os.path.join(here, "prompts.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)
 
-COLOUR = ("rich saturated colour, warm amber light from an open doorway against cool blue "
-          "dusk in the corridor, strong colour contrast, bright clean exposure on faces, "
-          "fine film grain, painterly photorealism")
+# 9 Eyl: fotograf cipasi ZORUNLU. Bu blok dusurulunce (8 Eyl CTR
+# duzeltmesinde) kapaklar illustrasyona kaydi. "painterly" KULLANILMAZ,
+# doygunluk prompt'a YAZILMAZ — post'ta verilir.
+PHOTO = ("Colour cinematic film still, 35mm colour film photograph, shot on Kodak stock, "
+         "photographed with a fast prime lens, natural skin texture with visible pores and "
+         "fine lines, real fabric texture, subtle lens falloff, visible film grain, shallow "
+         "depth of field, naturalistic imperfect lighting, documentary photographic realism")
+
+LIGHT = ("warm practical light from an open doorway against cool blue dusk in the corridor, "
+         "faces clearly the brightest thing in the frame, deep but natural shadows")
 
 A = ("a fictional depiction of a woman resembling Audrey Hepburn in her early thirties, very "
      "slender, dark hair, large expressive dark eyes, delicate features, a simple dark dress, "
@@ -81,7 +88,7 @@ json.dump({"1": (f"A doorway at dusk in 1962 Rome. On the left of the frame and 
                  f"an expression of surprise and concern, her face the brightest thing in the "
                  f"picture. On the right, facing her and seen three-quarters from behind, a "
                  f"thin exhausted boy of fifteen holding out a brown paper parcel with both "
-                 f"hands. The parcel is between them at the centre. {COLOUR}, 16:9")},
+                 f"hands. The parcel is between them at the centre. {LIGHT}. {PHOTO}, 16:9")},
           open(os.path.join(here, "thumb_h.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)
 
@@ -89,7 +96,7 @@ json.dump({"1": (f"Vertical composition of a doorway at dusk in 1962 Rome. Above
                  f"from inside the flat, {A}, in the open doorway looking down with surprise "
                  f"and concern, her face the brightest thing in the frame. Below her and seen "
                  f"from behind, a thin boy of fifteen holding out a brown paper parcel with "
-                 f"both hands. {COLOUR}, vertical 9:16 composition")},
+                 f"both hands. {LIGHT}. {PHOTO}, vertical 9:16 composition")},
           open(os.path.join(here, "thumb_v.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)
 

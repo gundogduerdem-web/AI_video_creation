@@ -714,9 +714,49 @@ için izleyici aynı videoyu tekrar görüyor sanıyor.
 * Kanca ilk **~55 karaktere** yazılır; başlık kırpıldığında da tam anlaşılır.
 * Kapakta çeşitlilik: her seferinde tek sakin yüz değil — iki kişi, tepki,
   nesne, eller, sahne. Kompozisyonun kendisi hikâyeyi anlatmalı.
-* Doygunluk hedefi **>20**; gerekiyorsa hafif renk düzeltmesi uygulanır
-  (fazlası teni turuncuya çeviriyor — V18'de saturation 1,55 denendi ve
-  geri alındı, 1,18 doğru değer).
+* **Fotoğraf çıpası prompt'ta ZORUNLU** (aşağıya bkz).
+* Doygunluk **post'ta** yükseltilir, prompt'ta değil. `saturation` 1,5-1,6
+  iyi; 1,85'te ten turuncuya kayıyor.
+
+### Kapak illüstrasyona kaydı — sebep ve düzeltme (9 Eyl 2026)
+
+V18 ve V19'un kapakları fotoğraf değil, 3B render/illüstrasyon gibi çıktı.
+Erdem fark etti. **Sahne görselleri etkilenmedi** — yalnızca kapaklar.
+
+**Sebep bendeydi.** 8 Eyl'deki CTR düzeltmesinde kapak prompt'unu yeniden
+yazarken fotoğraf çıpasını düşürdüm. Eski kapaklar `"Colour cinematic film
+still, rich saturated colour..."` diye başlıyordu; ben onu atıp yerine
+`"rich saturated colour, strong colour contrast, bright clean exposure"`
+koydum. Doygunluk talebi + fotoğraf çıpasının yokluğu + baştan beri orada
+duran `"painterly"` kelimesi birleşince model illüstrasyona kaydı.
+
+**Kural: kapak prompt'u bu blokla biter (`painterly` KULLANILMAZ):**
+
+```
+Colour cinematic film still, 35mm colour film photograph, shot on Kodak
+stock, photographed with a fast prime lens, natural skin texture with
+visible pores and fine lines, real fabric texture, subtle lens falloff,
+visible film grain, shallow depth of field, naturalistic imperfect
+lighting, documentary photographic realism
+```
+
+Doygunluk/parlaklık talebi prompt'a **yazılmaz**; ışık yalnızca sahne
+diliyle tarif edilir ("warm practical light from an open doorway against
+cool blue dusk", "faces the brightest thing in the frame"). Renk gücü
+sonradan ffmpeg ile verilir.
+
+**Doygunluk hedefi (>20) geri çekildi.** O sayı illüstrasyon bulaşmış bir
+görüntüden türetilmişti. Gerçek fotoğrafik bir alacakaranlık iç mekânı
+doğal olarak daha düşük ölçüyor: V18'in fotoğrafik hâli post'ta 1,55 ile
+bile 9,96, V19'unki 18,5 — ikisi de 168 px'te iyi okunuyor. Kare geneli
+SATAVG karanlık kıyafet ve nötr duvarlarla düşüyor, yani tek başına ölçüt
+değil. **Ölçüt 168 px kontrolüdür**; sayı yalnızca yardımcı.
+
+**Yayınlanmış iki kapak değiştirildi** (V18 ZuEMpBVKBF4, V19 0kAtEsUqktc).
+Video dosyalarına dokunulmadı.
+
+---
+
 
 **Kanıt sınırı:** bunların CTR'ı yükselttiği **kanıtlanmadı** — gösterim ve
 CTR API'de yok, yalnızca Studio'da. Yukarıdakiler ölçülmüş kusurlar; etkisi
