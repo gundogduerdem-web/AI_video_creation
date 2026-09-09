@@ -46,7 +46,7 @@ def render(prompts, out_dir, aspect="16:9", retries=3):
     yolundan (10-30 dk) belirgin biçimde hızlı.
     """
     os.makedirs(out_dir, exist_ok=True)
-    saved, blocked = [], []
+    saved, blocked, failed = [], [], []
     for k, prompt in sorted(prompts.items(), key=lambda kv: int(kv[0])):
         name = f"scene_{k}"
         body = {"contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -66,10 +66,16 @@ def render(prompts, out_dir, aspect="16:9", retries=3):
                 break
             except Exception as exc:
                 if attempt == retries - 1:
-                    blocked.append((name, str(exc)[:120]))
+                    # API hatasi engel DEGILDIR; ayri raporlanir, cunku
+                    # "prompt'u notrlestir" tavsiyesi 429'da yanlis yon
+                    # gosteriyor (8 Eyl'de bir kez buna harcandi).
+                    failed.append((name, str(exc)[:120]))
                     break
-                time.sleep(5 * (attempt + 1))
-    return saved, blocked
+                # 429 bu modelde sik; 5-10 sn beklemek yetmiyordu ve
+                # V19'da 8 gorselin 3'u ilk turda dustu. Daha uzun bekle.
+                time.sleep(20 * (attempt + 1) if "429" in str(exc)
+                           else 5 * (attempt + 1))
+    return saved, blocked, failed
 
 
 def submit(prompts, display_name, aspect="16:9"):
@@ -145,8 +151,12 @@ if __name__ == "__main__":
     aspect = ("9:16" if "--vertical" in sys.argv else
               sys.argv[sys.argv.index("--aspect") + 1] if "--aspect" in sys.argv
               else "16:9")
-    saved, blocked = render(prompts, out_dir, aspect)
+    saved, blocked, failed = render(prompts, out_dir, aspect)
     print("BASARILI:", saved)
     if blocked:
-        print("ENGELLI:", blocked)
+        print("ENGELLI (IMAGE_SAFETY):", blocked)
         print("-> prompt'u notrlestirip --retry ile tekrar calistir")
+    if failed:
+        print("HATA (API):", failed)
+        print("-> prompt sorunu degil; --retry ile aynen tekrar dene "
+              "(429 genelde es zamanli is fazlaligindan, tek basina calisir)")
