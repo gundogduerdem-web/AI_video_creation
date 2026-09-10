@@ -770,6 +770,34 @@ kadar sayı tek başına ölçüt sayılmaz, 168 px kontrolü esas alınır.
 
 ---
 
+### Kapak üstü yazı (10 Eyl 2026'dan itibaren)
+
+Erdem kapağa **merak uyandırıcı biçimde konuyu yazmamızı** istedi. V20 bunun
+ilk uygulaması. Niş standardı buydu ve tek istisna bizdik (8 Eyl teşhisi).
+
+**Yazı modele çizdirilmez.** Görsel modelleri metni bozuk üretir. Fotoğraf
+üretilir, yazı sonradan **ffmpeg drawtext** ile eklenir — tipografi böylece
+kontrollü ve keskin olur.
+
+Kalıp (V20):
+```
+drawbox=x=0:y=520:w=1280:h=200:color=black@0.62:t=fill,
+drawtext=...:text='<KANCA SATIRI>':fontcolor=white:fontsize=62:y=548,
+drawtext=...:text='<KONU SATIRI>':fontcolor=0xE8B923:fontsize=52:y=630
+```
+
+Kurallar:
+* İki satır: üstte **merak** (`BORN 4 DAYS APART`), altta **konu**
+  (`ONE BECAME AUDREY HEPBURN`). İkinci satır kanal altın sarısı (0xE8B923).
+* Kompozisyon yazıya yer bırakacak şekilde kurulur — V20'de figürler üstte,
+  alt üçte bir boş.
+* Sonuç **168 px**'te okunacak: 62/52 punto o boyutta okunuyor, daha küçüğü
+  denenmedi.
+* Fotoğraf çıpası korunur (9 Eyl kuralı); yazı fotoğrafı illüstrasyona
+  çevirmez, prompt çevirir.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
