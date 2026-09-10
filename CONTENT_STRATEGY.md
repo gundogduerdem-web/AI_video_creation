@@ -791,8 +791,13 @@ Kurallar:
   (`ONE BECAME AUDREY HEPBURN`). İkinci satır kanal altın sarısı (0xE8B923).
 * Kompozisyon yazıya yer bırakacak şekilde kurulur — V20'de figürler üstte,
   alt üçte bir boş.
-* Sonuç **168 px**'te okunacak: 62/52 punto o boyutta okunuyor, daha küçüğü
-  denenmedi.
+* Sonuç **168 px**'te okunacak: yatayda (1280 px) 62/52 punto iyi.
+* **Dikeyde (1080 px) 62 punto SIĞMIYOR.** S19'da 'THE ADDRESS DID NOT EXIST'
+  ve 'HE WALKED NINE HOURS ANYWAY' iki satır da kenarlardan kesildi ve
+  kontrol edilmeden yüklendi. Dikeyde satır **~14 karakteri geçmemeli**;
+  uzun kanca iki satıra bölünür (76 punto) ve konu satırı 44 puntoya iner.
+* **Yazı eklendikten sonra küçük boyutta MUTLAKA bakılır** — kesilme
+  yalnızca orada görünüyor.
 * Fotoğraf çıpası korunur (9 Eyl kuralı); yazı fotoğrafı illüstrasyona
   çevirmez, prompt çevirir.
 
