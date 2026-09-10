@@ -97,9 +97,6 @@ def stroked(draw, xy, text, font, fill):
 
 def build(base_path, out_path, name, hook, side="left"):
     im = Image.open(base_path).convert("RGB").resize((W, H), Image.LANCZOS)
-    im, y0, y1, gamma = fit_exposure(im)
-    if gamma != 1.0:
-        print(f"pozlama duzeltildi: YAVG {y0:.1f} -> {y1:.1f} (gama {gamma:.3f})")
 
     # Metin tarafini hafifce karart: kontur tek basina okunurlugu tasimiyor.
     # Karartma, metnin okunmasi icin gerekli ama kareyi genel olarak
@@ -112,6 +109,13 @@ def build(base_path, out_path, name, hook, side="left"):
         fill=SHADE)
     im = Image.composite(Image.new("RGB", (W, H), "black"), im,
                          shade.filter(ImageFilter.GaussianBlur(90)))
+
+    # Pozlama duzeltmesi karartmadan SONRA yapilir. Once yapilinca karartma
+    # duzeltmeyi geri aliyordu: V4'te taban 108,1 -> 80,5'e cekildi, karartma
+    # 63,5'e dusurdu ve kare banda girmedi.
+    im, y0, y1, gamma = fit_exposure(im)
+    if gamma != 1.0:
+        print(f"pozlama duzeltildi: YAVG {y0:.1f} -> {y1:.1f} (gama {gamma:.3f})")
 
     draw = ImageDraw.Draw(im)
     margin = 52
