@@ -11,7 +11,11 @@ NOT: Gosterim (impressions) ve CTR **API'de yok** — yalnizca Studio arayuzunde
 Bu yuzden "kac kisiye gosterildi" sorusu API'den cevaplanamaz; en yakin vekil
 trafik kaynagi kirilimidir (browse/suggested payi dusukse dagitim yok demektir).
 
-Kimlik: youtube_token.json (yt-analytics.readonly kapsami sart).
+Kimlik: varsayilan youtube_token.json (Audrey). Baska kanal icin komutun
+sonuna `--channel <ad>` eklenir; publish.py ile ayni isimlendirme.
+Bayrak olmadan SESSIZCE Audrey kanalini sorgular - Diana verisi sanilip
+Audrey verisi okunmustu, bu yuzden komut satiri artik kanali basiyor.
+yt-analytics.readonly kapsami sart.
 """
 import json
 import os
@@ -23,6 +27,8 @@ from datetime import date, timedelta
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import youtube_token  # noqa: E402
 
+TOKEN_FILE = "youtube_token.json"   # --channel ile degistirilir
+
 BASE = "https://youtubeanalytics.googleapis.com/v2/reports"
 
 
@@ -30,7 +36,7 @@ def query(**params):
     params.setdefault("ids", "channel==MINE")
     url = f"{BASE}?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(
-        url, headers={"Authorization": f"Bearer {youtube_token()}"})
+        url, headers={"Authorization": f"Bearer {youtube_token(TOKEN_FILE)}"})
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.loads(resp.read())
 
@@ -49,7 +55,24 @@ def show(data, title):
         print("(veri yok)")
 
 
+def _pop_channel(argv):
+    """argv'den `--channel <ad>` bayragini ayiklar; token dosyasini doner."""
+    if "--channel" not in argv:
+        return "youtube_token.json", None
+    i = argv.index("--channel")
+    if i + 1 >= len(argv):
+        sys.exit("--channel bir kanal adi bekliyor (ornek: --channel diana)")
+    name = argv[i + 1]
+    del argv[i:i + 2]
+    return ("youtube_token.json" if name == "audrey"
+            else f"youtube_token_{name}.json"), name
+
+
 if __name__ == "__main__":
+    _argv = sys.argv[1:]
+    TOKEN_FILE, _chan = _pop_channel(_argv)
+    sys.argv = [sys.argv[0]] + _argv
+    print(f"[kanal: {_chan or 'audrey (varsayilan)'} -> {TOKEN_FILE}]\n")
     cmd = sys.argv[1]
     if cmd == "sources":
         vid = sys.argv[2]
