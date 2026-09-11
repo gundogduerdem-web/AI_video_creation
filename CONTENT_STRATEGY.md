@@ -803,6 +803,24 @@ Kurallar:
 
 ---
 
+### Kapakta Audrey MUTLAKA görünür (12 Eyl 2026)
+
+V21'in ilk kapağında Audrey hiç yoktu — hikâyenin merkezinde başka bir kadın
+(Agnes) olduğu için kapağa da onu koydum. Erdem düzelttirdi ve haklı:
+**kanalın tıklanma sebebi Audrey'nin yüzü.** Hikâye kimin üzerine olursa
+olsun, kapakta Audrey görünecek.
+
+Hikâyenin merkezinde başka biri varsa çözüm **diptik**: bir yanda Audrey,
+öbür yanda o kişi, ince koyu bir ayırıcıyla. V21'de yazı da bunun üstüne
+kuruldu — "900 LETTERS FOR HER / WENT TO HER" — iki "HER" iki yüze karşılık
+geliyor, yani kompozisyon konuyu da anlatıyor.
+
+Yatayda sol/sağ, dikeyde üst/alt. İki yarının parlaklığı ayrı ayrı
+dengelenir (V21'de Agnes tarafına brightness +0,13 ve doygunluk 1,50
+gerekti; Audrey tarafı +0,02 / 1,40).
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
