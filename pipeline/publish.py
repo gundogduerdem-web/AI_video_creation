@@ -7,6 +7,9 @@ Kullanım:
     # yayın zamanı ata (TR saatini UTC'ye çevirerek ver: TR = UTC+3)
     python3 publish.py schedule <video_id> 2026-08-28T19:00:00Z
 
+    # hemen public yap (zamanlamadan)
+    python3 publish.py public <video_id>
+
     # Drive'a kalite kontrol kopyası
     python3 publish.py drive <dosya.mp4>
 
@@ -100,6 +103,27 @@ def schedule(vid, publish_at, token_file="youtube_token.json"):
     with urllib.request.urlopen(req, timeout=60) as resp:
         status = json.loads(resp.read())["status"]
     print(f"{vid} -> publishAt {status.get('publishAt')}")
+
+
+def make_public(vid, token_file="youtube_token.json"):
+    """Videoyu hemen public yapar (publishAt kullanmadan).
+
+    schedule() ileri bir tarih icin privacyStatus'u private birakir; bu
+    fonksiyon o tarihi beklemeden yayina alir. publishAt alani, privacyStatus
+    public'e cekilirken gonderilemez, bu yuzden gonderilmiyor.
+    """
+    token = youtube_token(token_file)
+    body = json.dumps({"id": vid, "status": {
+        "privacyStatus": "public",
+        "selfDeclaredMadeForKids": False}}).encode()
+    req = urllib.request.Request(
+        "https://www.googleapis.com/youtube/v3/videos?part=status",
+        data=body, method="PUT",
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        status = json.loads(resp.read())["status"]
+    print(f"{vid} -> {status['privacyStatus']}")
+    return status
 
 
 def drive_upload(path, name=None):
@@ -208,6 +232,8 @@ if __name__ == "__main__":
         upload(argv[1], argv[2], argv[3] if len(argv) > 3 else None, token_file=token)
     elif cmd == "schedule":
         schedule(argv[1], argv[2], token_file=token)
+    elif cmd == "public":
+        make_public(argv[1], token_file=token)
     elif cmd == "drive":
         drive_upload(argv[1])
     elif cmd == "status":
