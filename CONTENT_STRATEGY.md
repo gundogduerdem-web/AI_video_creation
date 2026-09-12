@@ -843,13 +843,22 @@ verisi yarım, V21-V22'ninki yok). Eski kapakların kendi içindeki yayılım
 Ayrıca V18'de aynı anda açılış cümlesi kuralı da değişti. CTR API'de yok,
 onu yalnızca Erdem görüyor.
 
-**Karar:** kompozisyon V12-V15'in yaptığı şeye dönüyor — **tek yüz, yakın
-plan, yüz kadraja hâkim.** İki figürlü geniş plan ve diptik kullanılmaz.
-Audrey'nin kapakta görünmesi kuralı (12 Eyl) böyle karşılanır: kadrajı
-bölerek değil, onu özne yaparak. Yazı ince bir alt şeride iner (40/46 punto)
-ve yüzü kapatmaz.
+**KANONİK KAPAK KURALI (13 Eyl 2026, Erdem onayladı):**
 
-V21 ve V22'nin yayındaki kapakları bu kurala göre değiştirildi.
+1. **Tek yüz, yakın plan** — Audrey kadraja hâkim ve **belirgin**. İki
+   figürlü geniş plan, diptik, bölünmüş kadraj KULLANILMAZ.
+2. **Gerçekçi** — film-fotoğrafı bloğu zorunlu, `painterly` yasak,
+   doygunluk prompt'ta istenmez (9 Eyl kuralı). Geniş plan + düz ışık
+   modeli render'a itiyor; yakın plan bunu da çözüyor.
+3. **Yazı kalır** (Erdem, 13 Eyl: "yazı şimdilik kalsın") ama **ince bir
+   alt şeritte** ve yüzü kapatmaz: yatayda 40/46 punto y=596'da,
+   dikeyde 56/50 punto y=1610'da.
+4. Hikâyenin merkezinde başka biri olsa bile kapakta Audrey vardır
+   (12 Eyl kuralı) — kadrajı bölerek değil, onu özne yaparak.
+5. Sonuç **168 px**'te (dikeyde 270 px) gözden geçirilir.
+
+Bu kurala göre dört yayındaki/zamanlanmış kapak değiştirildi: V21, V22,
+S21, S22.
 
 ---
 
