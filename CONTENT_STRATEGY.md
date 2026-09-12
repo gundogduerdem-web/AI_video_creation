@@ -821,6 +821,38 @@ gerekti; Audrey tarafı +0,02 / 1,40).
 
 ---
 
+### Kapak kompozisyonu geri alındı (13 Eyl 2026)
+
+Erdem izlenme ve CTR düşüşünü bildirdi ve sebebi olarak kapak değişikliklerini
+işaret etti. İki itirazı da yerinde çıktı:
+
+* **V20 illüstrasyon gibi görünüyor** — fotoğraf bloğu prompt'ta olmasına
+  rağmen; iki figürlü geniş plan, düz ışık ve pürüzsüz ten onu oraya itmiş.
+* **V21 ortadan ikiye bölünmüş ve özensiz** — sert %50 bölme, siyah ayırıcı,
+  ve iki yarının renk sıcaklığı/greni tutmuyor; tek tasarım değil, iki
+  yapıştırılmış fotoğraf gibi okunuyor.
+
+**Ölçüm (aynı yaştaki birikmiş izlenme, 2. gün):** eski tek-yüz kapaklar
+V12 109 · V13 43 · V14 51 · V15 162; yeni kapaklar V16 66 · **V18 31** ·
+**V19 25**. Yeni kapaklı iki video listenin en altında.
+
+**Kanıt sınırı — bu bir ispat değil:** örneklem iki buçuk video (V20'nin
+verisi yarım, V21-V22'ninki yok). Eski kapakların kendi içindeki yayılım
+(13-162) yeni-eski farkından büyük. V15'in 162'si zaten aykırı bir değer
+(sonradan ortalama izleme 0:51'e düştü, yani Shorts kaynaklı bir sıçrama).
+Ayrıca V18'de aynı anda açılış cümlesi kuralı da değişti. CTR API'de yok,
+onu yalnızca Erdem görüyor.
+
+**Karar:** kompozisyon V12-V15'in yaptığı şeye dönüyor — **tek yüz, yakın
+plan, yüz kadraja hâkim.** İki figürlü geniş plan ve diptik kullanılmaz.
+Audrey'nin kapakta görünmesi kuralı (12 Eyl) böyle karşılanır: kadrajı
+bölerek değil, onu özne yaparak. Yazı ince bir alt şeride iner (40/46 punto)
+ve yüzü kapatmaz.
+
+V21 ve V22'nin yayındaki kapakları bu kurala göre değiştirildi.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
