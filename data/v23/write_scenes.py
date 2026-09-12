@@ -1,0 +1,188 @@
+# -*- coding: utf-8 -*-
+"""V23 — "The Interview". Tamamen kurgu.
+Yapi: TEK KONUSMA, bastan sona — elli dakikalik bir is gorusmesi, sirayla.
+(Kanalda ilk. V8 bir karsilasmaydi ama ozetlenerek anlatiliyordu; burada
+konusmanin kendisi sirayla ilerliyor ve hikaye soylenmeyenlerde.)
+Duygusal cekirdek: hak ettigin bir yakinligi one surmemeyi secmek.
+(Kanalda ilk)
+Katalog kontrolu: 61+ videonun hicbirinde tek konusma yapisi yok.
+
+Kurallar: sahne 1'de META CUMLE YOK; 1570-1630 karakter/sahne.
+"""
+import json, os
+
+S = {}
+
+S[1] = (
+"On a Thursday morning in April 1979, a woman of sixty named Marta Brouwer took two buses and then "
+"walked eleven minutes uphill to a house above a lake in the canton of Vaud, to be interviewed for "
+"a position as housekeeper. She had the advertisement in her bag, cut from a newspaper, and a "
+"folder with three references in it, and she had left home at twenty past six for an appointment at "
+"half past nine because she did not trust the second bus. She was forty minutes early. She spent "
+"those forty minutes walking up and down a lane out of sight of the gate, because arriving early is "
+"as rude as arriving late. At twenty-eight minutes past nine she walked up the "
+"drive and rang the bell. The door was opened by the woman who had placed the advertisement, and "
+"Marta Brouwer, who had spent the previous three weeks preparing what she would say about her "
+"experience and her references and her willingness to live in, recognised her within about a second "
+"and a half, and understood in the second after that exactly where from, and made a decision in the "
+"second after that which she kept to for the following eleven years. None of this showed. The "
+"woman who opened the door saw a neat, slightly out of breath woman of sixty with a folder under "
+"her arm, said good morning, and asked whether she had found the house easily. Marta said that she "
+"had. That was the first thing she said in that house and it was not quite true either, and she "
+"thought about it for years afterward, because she had not intended to start with a small lie and "
+"had done it in under four seconds out of pure politeness."
+)
+
+S[2] = (
+"The decision was to say nothing about it. Not to lie, which she would have refused to do, and not "
+"to conceal anything she was asked about — simply not to raise it. In the hall, being shown where "
+"to put her coat, she was working out whether the thing was even true, because a face is not "
+"evidence, thirty-five years is a long time and the person in front of her had been fifteen. By "
+"the time she sat down in the kitchen, which is where the interview took place, she was certain, "
+"and the certainty was not about the face. It was about a particular way of standing with the "
+"weight on one hip and the other foot turned slightly out, which is a thing that is trained into "
+"dancers before they are twelve and which stays in the body for life, and which Marta had watched "
+"every Tuesday and Thursday afternoon in a cold room in Arnhem in 1943 and 1944 from the back row, "
+"where the girls who were not any good stood. They had been in the same class fourteen months and "
+"had never been friends. Marta left in the spring of 1944 because her "
+"family moved, and had not thought about any of it in years. She had not, to be exact, thought "
+"about it once in the previous decade. The class came back to her in the hall in the way things do "
+"come back, all at once and in the wrong order, with one detail leading: the smell of the room in "
+"Arnhem, damp, a paraffin heater lit for twenty minutes and then put out to save fuel. Marta could "
+"not have told you the teacher's name. She could have drawn "
+"the heater. That is how memory works in people who are not sentimental about it: you get the wrong "
+"things back and they are not the ones anybody would choose."
+)
+
+S[3] = (
+"The interview itself was entirely ordinary and took fifty minutes and is worth going through more "
+"or less in order, because nothing in it is remarkable and that is the point. It began with coffee, "
+"which Marta accepted and did not drink, and with an apology about the kitchen being the only warm "
+"room, which was true. The first question was how she had travelled, and Marta said two buses and a "
+"walk, and did not mention the forty minutes. The second was about the references, and the woman "
+"read all three of them properly, taking about four minutes, in silence, which Marta said "
+"afterward was the moment she decided she would take the job if it was offered. People do not "
+"usually read references in front of you. They glance at them and ask you something else, and the "
+"glance tells you that the decision is being made on some other basis, and you spend the rest of "
+"the conversation trying to find out what it is. This woman read them like a document, front and "
+"back, and then asked a question about the second one that could only have come from having read "
+"it. The question was about a two-month gap in 1971 that the reference did not explain. Marta "
+"explained it — a sister, an operation, a sublet flat — and the woman said that was fine and moved "
+"on, and did not do the thing that Marta had been braced for, which is to say something warm about "
+"the sister. She simply accepted the answer as an answer. Marta said later that she had worked for "
+"four employers in her life and that this was the only interview in which she had felt like a "
+"competent adult rather than somebody being kindly handled."
+)
+
+S[4] = (
+"The questions after that were practical and there were a great many of them. Could she drive, and "
+"on which side had she learned. Did she mind dogs. What did she do about laundry that had been put "
+"away damp by somebody else, which Marta recognised as a real question about a real irritation in "
+"that house and answered accordingly. Was she willing to be in the house alone for long periods, "
+"sometimes weeks. Had she worked for a family with children who were grown and came back, which is "
+"a different job from working for a family with children in it. Did she have a view about being "
+"asked to do things that were not in the original description, and Marta said that she did have a "
+"view, and that it was that she would rather be asked than have it assumed, and that if it was "
+"asked she would nearly always say yes. The woman wrote that down. Marta noticed her writing it "
+"down and noticed also that she had written almost nothing else, and could not tell whether this "
+"was good. It turned out afterward that it was: the note about being asked rather than having it "
+"assumed was read back to her, almost word for word, in the second week of the job, when she was "
+"asked to do something that was not in the description. She said yes. She said afterward that the "
+"asking took four seconds and bought about nine years of goodwill, and that she had never worked "
+"anywhere else where anybody had understood that. There was one question she answered badly and "
+"knew it, about what she would do if she thought an instruction was a mistake, and the woman did "
+"not press her and did not write it down."
+)
+
+S[5] = (
+"Twice the conversation came close to the thing. The first was about halfway through, when the "
+"woman asked where Marta was from originally, and Marta said Holland, and the woman said that she "
+"had spent part of the war there herself, and there was a pause of perhaps two seconds in which "
+"Marta could have said the name of a town, and did not, and said instead that it had been a hard "
+"place to be in those years. That is a true sentence and it is not an evasion and it closed the "
+"subject, and both of them let it close. The second was nearer the end and worse. The woman, "
+"looking at the third reference, said that Marta must have been very young when she started work, "
+"and did the arithmetic out loud, and arrived at the right year, and said the year aloud — the year "
+"they had both been in that room in Arnhem — and then went on to the next question without any "
+"change in her voice at all. Marta said afterward that she had no idea, then or in the eleven years "
+"that followed, whether that had been a coincidence or an invitation, and that she had decided "
+"quite deliberately not to find out. There is a version of this where the two of them arrive at it "
+"together and it is a warm scene and something is said. That did not happen and Marta was clear "
+"that she did not want it to. She said that she had spent the second half of the interview slightly "
+"afraid of exactly that scene, and that what she felt when the moment passed was not "
+"disappointment. It was relief, and then, about a minute later, a small professional satisfaction "
+"at having held her nerve, which she admitted was an odd thing to feel about saying nothing."
+)
+
+S[6] = (
+"The reason she gave, when she finally explained it to her niece in 1994, was not modesty and was "
+"not shyness and she was impatient with both of those suggestions. It was that she had come there "
+"to be hired. She said that the moment you tell somebody you knew them when they were fifteen, you "
+"have changed what the conversation is, and you cannot change it back, and from that point on you "
+"are not a housekeeper with good references being assessed on her merits — you are a person from "
+"the past, which is a different and much weaker position, and which also puts the other person in "
+"the position of having to produce a reaction. She said she had watched people do this to famous "
+"people all her life and had never once seen it improve anything for anybody. And then she said the "
+"part her niece wrote down: that she had wanted the job, that she was sixty and the work was not "
+"easy to get at sixty, and that using a cold room in Arnhem to get it would have been the same as "
+"selling something, even though nobody would ever have called it that. Her niece pushed her on "
+"this, and asked whether it would really have been so bad to mention it once she had the job, in "
+"the second year, say, over coffee. Marta said that was the same thing with a delay on it, and that "
+"the delay only made it worse, because by then it would have arrived out of nowhere and the other "
+"person would have had to work out why it had been kept back. Asked whether she had liked her, "
+"Marta said that liking is not really available in that direction, and that what she had instead "
+"was a very high opinion of somebody she had watched work for eleven years."
+)
+
+S[7] = (
+"She was offered the position eleven days later by letter and she took it, and she worked in that "
+"house from June 1979 until the spring of 1990, when her knees made the stairs impossible. Eleven "
+"years. In that time the subject came up exactly once more, in 1986, when a visitor in the house "
+"was talking about the Dutch famine and got a detail wrong, and Marta, who was in the room with a "
+"tray, corrected the detail without thinking and then heard herself do it. She said the silence "
+"afterward was about a second long and was probably only in her own head. Nothing was said. The "
+"conversation moved on. She went out with the tray and stood in the corridor for a moment and then "
+"went back to work, and she told her niece that for about a week afterward she had expected to be "
+"asked, and had prepared an answer, and was not asked, and that she was never able to decide "
+"whether not being asked was tact or whether nobody had noticed anything at all. The detail, for "
+"the record, was about the ration in the last weeks before the liberation, and the visitor had it "
+"roughly twice as high as it was. Marta corrected it by a number and said nothing else. She said "
+"that she had heard her own voice say the figure and had thought, quite calmly, that she had just "
+"undone eleven years in one sentence, and that she had then carried the tray out because there was "
+"nothing else to do with it. Nothing came of it. The prepared answer went unused and was still "
+"word-perfect eight years later. She said that was the strangest part of the eleven years: not the "
+"keeping quiet, which was easy, but carrying a speech around for a conversation that never "
+"happened."
+)
+
+S[8] = (
+"When she left in 1990 there was a lunch, and a clock, and a letter that she kept in the same folder "
+"as the three references, which by then were thirty years out of date and which she had never "
+"thrown away. The letter thanked her for eleven years and said several specific things about her "
+"work, and it did not mention Arnhem, and Marta said that she read it twice looking for a mention "
+"of Arnhem and was relieved not to find one. She died in 1997. Her niece, who is the source for all "
+"of this, has been asked more than once whether her aunt regretted the silence, and has always "
+"answered the same way: that Marta did not think of it as a silence, because in her view nothing "
+"had been withheld. A thing that is nobody's business is not a secret. It is just a thing that was "
+"true and did not come up, and there were eleven years in which it did not come up, and the not "
+"coming up was the whole of what she was proud of. This story is a work of fiction. Marta, the "
+"interview, the references and every detail in it are invented, created for storytelling and not "
+"drawn from any record. What is not invented is the choice at the centre of it, which people in "
+"service positions make constantly and which is almost never recorded: the choice not to convert a "
+"private connection into a claim on somebody. It happens in kitchens and corridors every day, "
+"leaves no evidence by its nature, and is only ever heard about because somebody decides, very "
+"late, to tell a niece. That niece has never been able to decide whether her aunt did something "
+"admirable or simply something careful, and suspects Marta would have said there is no difference."
+)
+
+for k in sorted(S):
+    n = len(S[k])
+    print(k, n, ("OK" if 1570 <= n <= 1630 else n - 1600))
+
+here = os.path.dirname(os.path.abspath(__file__))
+json.dump({str(k): S[k] for k in sorted(S)},
+          open(os.path.join(here, "scenes.json"), "w", encoding="utf-8"),
+          ensure_ascii=False, indent=1)
+with open(os.path.join(here, "script.txt"), "w", encoding="utf-8") as fh:
+    for k in sorted(S):
+        fh.write(f"[SCENE{k}]\n{S[k]}\n[/SCENE{k}]\n\n")
