@@ -515,6 +515,14 @@ yüklenmez — bu tamamen Erdem'in ayrı kararına bırakılır.
     Vertex TTS belirgin biçimde daha yavaş okuyor (14,6–16,0 kr/sn; önceki
     yolda 16,7–21,0). Aynı karakter sayısı V15'te 12,8 dk, V16'da 15,0 dk
     verdi. Erdem 15 dk'yı kabul edip standardı 13-15 dk'ya çekti.
+  - **Süre hedefi bandın ORTASI olmalı, kenarı değil (13 Eyl 2026, V8'de öğrenildi):**
+    Aynı ses aynı metni her yeniden okuyuşunda **%3-5 farklı sürede** okuyor.
+    V8'de ölçülen aralık 17,0–19,5 kr/sn; bir sahne 1660 karakteri 85 sn'de,
+    benzer uzunlukta bir diğeri 109 sn'de okudu. Bu yüzden bandın alt kenarını
+    (13 dk) hedefleyen düzeltme turları tutmuyor — bir turda karakter eklendiği
+    hâlde toplam süre düştü. Doğru yöntem: **~13,5-14 dk hedefle**, varyans hangi
+    yöne giderse gitsin bant içinde kalınsın. V8 üç başarısız turdan sonra bu
+    yöntemle tek turda 13,63 dk'ya oturdu.
   - **Diana V1 (7 Eyl 2026):** 8 × 1706–1748 kr = 13.801 kr → **13 dk 42 sn**,
     16,81 kr/sn. Erdem süreyi onayladı; yukarıdaki Diana aralığı bu ölçümden
     türetildi.
