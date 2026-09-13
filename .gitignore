@@ -13,3 +13,4 @@ pipeline/*.mp4
 pipeline/*.wav
 pipeline/*.jpg
 pipeline/*.png
+pipeline/shorts/
