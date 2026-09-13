@@ -7,9 +7,9 @@ __pycache__/
 *.pyc
 
 # Derleme ara ciktilari (build_video.sh pipeline/ icinde uretir; 100+ MB)
-pipeline/v*_clips/
-pipeline/v*_segs/
-pipeline/v*_texts/
-pipeline/v*_subs/
+pipeline/v*_*/
 pipeline/v*_concat.txt
 pipeline/*.mp4
+pipeline/*.wav
+pipeline/*.jpg
+pipeline/*.png
