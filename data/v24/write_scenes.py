@@ -1,0 +1,194 @@
+# -*- coding: utf-8 -*-
+"""V24 — "Twenty Minutes, Two Accounts". Tamamen kurgu.
+Yapi: IKI UZLASMAZ TANIKLIK — ayni yirmi dakika, 22 yil arayla verilmis
+iki durust ifade, yan yana isletiliyor ve BILEREK cozulmuyor. (Kanalda ilk;
+V16 bir sokagin coklu taniklariydi ama hepsi ayni yone bakiyordu, burada
+iki ifade birbirini cururtuyor.)
+Duygusal cekirdek: iki kisinin ayni olayi durustce ve birbiriyle
+bagdasmaz bicimde hatirlamasi; uzerinde anlastiklari tek ayrinti, ikisinin
+de onemsemedigi ayrinti. (Kanalda ilk)
+Katalog kontrolu: 71 baslikta rakip ifade yapisi yok.
+
+Kurallar: sahne 1'de META CUMLE YOK; 1570-1630 karakter/sahne.
+"""
+import json, os
+
+S = {}
+
+S[1] = (
+"At twenty past three on a Thursday afternoon in October 1966, a hired car with a broken fan belt "
+"was pushed the last forty yards into Byrne's garage in a village in County Wicklow, and the "
+"woman who had been travelling in it crossed the road to the post office to wait, because the "
+"garage had no heating and the post office had a stove. The post office was the front room of a "
+"house. It had a counter, a brass scale, a bench along the wall under the window, and the stove, "
+"which was always overdone. There were six people in the room, or seven, depending on which "
+"account you take, and that disagreement is the smallest of the ones that follow. The wait lasted "
+"twenty minutes. Those twenty minutes were described in print twice. Once in 1970, by a man of "
+"thirty-eight, to a reporter from a county paper writing a feature about the village, who had been "
+"told there was a story worth having. And once in 1992, by a woman of forty-five, in a long "
+"interview recorded for a local history project and transcribed in full, nine pages of it. The "
+"two descriptions run to about the same length. They agree about the weather, which was wet, and "
+"the fan belt, and the stove, and the time of day, and how long the wait lasted, and who fixed "
+"the car. They agree, in one case to the minute, about when the car was ready. Past that point "
+"they do not agree about anything at all, and both of the people giving them were, by every test "
+"anybody has been able to apply, telling the truth as they remembered it. Neither of them knew, "
+"at the time of speaking, that the other account existed, and one of the two was dead before the "
+"other was recorded."
+)
+
+S[2] = (
+"The man's account came first and is the shorter of the two. His name was Peadar Doyle, he was "
+"thirty-four on the day and thirty-eight when he gave it, and he had been in the post office to "
+"collect a parcel that had failed to be delivered twice. He said that the woman came in, that "
+"everybody in the room knew who she was within about five seconds and that nobody said so, and "
+"that she went straight to the window and stood with her back to the room and looked out at the "
+"garage for the whole of the time she was there. He said she spoke to nobody. He was specific "
+"about that and repeated it: not to the postmistress, not to the people on the bench, not to him. "
+"He said that at some point a small girl came in from the garage and stood beside her and held up "
+"a notebook, and that the woman looked down at the child, said something very short, and turned "
+"back to the window, and that the child went and sat down. And he said that when the car was "
+"ready she went out without a word to anybody in the room. Doyle was not bitter and the reporter "
+"recorded as much. He said twice that she owed nobody anything and that she had probably had a "
+"long day. What he said, and it is the line the paper printed in larger type, was that he had "
+"been disappointed and had never quite got over being disappointed, and that he was aware this "
+"said more about him than about her. The reporter asked him whether he had considered that she "
+"might simply not have seen anybody, and Doyle said that he had considered it for four years. The "
+"feature ran to a page and a half and this was eleven lines of it. The rest was about a creamery."
+)
+
+S[3] = (
+"The second account came twenty-two years later, from Nuala Hanlon, who was nineteen in 1966 and "
+"behind the counter that afternoon because the post office belonged to her mother. She said the "
+"woman came in, that everybody knew who she was and had the manners not to show it, and that she "
+"asked whether she might wait inside and was told she could. She said the woman then spent most "
+"of the twenty minutes on the bench beside her grandmother. Her grandmother was eighty-four, had "
+"been confused for about two years, sat in the post office most afternoons because she could not "
+"be left at home, and talked to whoever was on the bench about a shop in Dublin that had closed "
+"in 1938. Nuala Hanlon said the woman listened to the whole of it, asked two questions about the "
+"shop, and did not once look at the door. She said that when the child came in with the notebook "
+"the woman took it, had it for a minute or so, and gave it back, and that the child sat down "
+"looking at it. And she said that when the car was ready the woman said goodbye to her mother by "
+"name, to her grandmother, to the child, and to the man waiting for the parcel. She was asked "
+"whether she was certain. She said she was, and that she had told it the same way for twenty-six "
+"years and had never been contradicted, because nobody had ever put the two versions side by "
+"side. She was asked one further question, whether her grandmother had understood who she was "
+"talking to. She said almost certainly not, and that this was the part she had thought about most "
+"since: that the only person in the room who got a real conversation was the only one in it with "
+"no idea."
+)
+
+S[4] = (
+"They cannot both be true, and the break is not at the edges. It is at the centre and it is "
+"total. In one account the woman stands at a window for twenty minutes with her back to the room. "
+"In the other she sits on a bench for most of that time talking to a confused old woman about a "
+"shop that closed before the war. Those are not two angles on one event. They are two different "
+"events. The same is true of the leaving: one has her going out without a word, the other has her "
+"going round the room saying goodbye to four people, one of them by name. And the same is true of "
+"the child, which is the part everybody who has looked at this has got stuck on. A notebook is "
+"held up. Either it is handed back after a few seconds with a short sentence, or it is taken and "
+"kept for a minute and given back. There is no version of a room in which both of those happen. "
+"People who want it resolved try to build a sequence that contains both — she stood at the window "
+"and then sat down, she refused and then relented — and it does not work. The total is twenty "
+"minutes and both witnesses describe their version as occupying nearly all of it. Doyle was asked "
+"directly whether she had sat down at any point and said no. Hanlon was asked whether the woman "
+"had stood at the window and said only at the very end, when the car came. There is one more "
+"conflict and it explains the head count. Doyle describes six people in the room. Hanlon "
+"describes seven, and the extra one is her grandmother, who appears in Doyle's account nowhere at "
+"all: not on the bench, not spoken to, not mentioned in a single line about a room he stood in "
+"for twenty minutes."
+)
+
+S[5] = (
+"The notebook survives, which ought to settle it and does the opposite. It is a child's exercise "
+"book with a soft red cover, it belonged to a girl of six called Aoife Byrne whose father owned "
+"the garage, and it was kept, first by her mother and then by her, and it was produced in 1994 "
+"when somebody working on the history project finally thought to ask. There is no signature in "
+"it. There is no name, no date, no autograph of any kind, and the pages either side are school "
+"work in pencil. What there is, on the inside of the back cover, is a drawing in blue ink of a "
+"dog. It takes up about a third of the cover, it is done in a continuous line without lifting the "
+"pen, and it is unsigned. The dog has one ear up. Nobody in the Byrne family has ever known when "
+"it was made or by whom, and Aoife Byrne's mother, who was alive until 1989, was asked and said "
+"she had always assumed one of the children did it. Put that drawing beside the two accounts and "
+"it supports both of them without preference. For Doyle's version it is the proof: the child "
+"asked for a signature, was told no, and the book came back unsigned, and the dog is a dog some "
+"child drew some other afternoon. For Hanlon's it is also the proof: the book was taken and held "
+"for a minute, which is long enough to draw a dog and far too long to write a name, and it came "
+"back with something in it that a six-year-old who could not yet read would actually want. The "
+"ink has been examined exactly once, by nobody qualified, and the finding was that it is blue. "
+"There is no further test available and there is no third person alive who saw the book that "
+"afternoon."
+)
+
+S[6] = (
+"The obvious next move is to find a reason to prefer one witness, and there isn't one. Peadar "
+"Doyle was a quantity surveyor, sober, well regarded, and gave his account four years after the "
+"event rather than twenty-six, which is the strongest single thing in his favour. He had no "
+"grievance that anybody has found. He had not tried to speak to her, so he had not been refused "
+"anything, and his own summary was that the fault was his for expecting something. He died in "
+"1981 without ever being asked about it again. Nuala Hanlon had the better vantage point — behind "
+"the counter, facing the room, for the entire twenty minutes, whereas Doyle was at the parcel end "
+"with his back half turned — and she was the only person in the room with a professional reason "
+"to watch everybody in it. Against her is the gap of twenty-six years, and the fact that the "
+"woman on the bench was her own grandmother, which is exactly the sort of detail memory improves "
+"on. In her favour is that her account contains things nobody would invent: that her grandmother "
+"talked about the shop for a long time and was boring about it, that she herself was embarrassed, "
+"and that she considered interrupting and did not. That last detail is the sort of thing a "
+"witness gives away without noticing, and it is why most people who have read both lean towards "
+"her. Leaning is not knowing. And there is a point on the other side: a man about to describe "
+"somebody as cold does not usually stop twice to say she owed him nothing. Doyle's account is the "
+"less flattering one and he is the one who keeps arguing against himself in it, which is not how "
+"invention behaves."
+)
+
+S[7] = (
+"Both of them mention the coat. Doyle says she kept it on, which he noticed because the room was "
+"hot and he had taken his own off within a minute. Hanlon says the same in almost the same words, "
+"and adds that she remembers thinking the woman must be cold, and that this was the only unusual "
+"thing about her. Neither of them makes anything of it. In both transcripts it is scene-setting, "
+"a line of atmosphere on the way to the part they thought was important. Put the two accounts "
+"side by side, though, and the coat is the only thing in the room that both of them saw, and it "
+"says the same thing in both. She kept her coat on in a room with an overdone stove for twenty "
+"minutes. That is what a person does when they intend to be gone in a moment and keep not being "
+"gone. It does not tell you whether she stood or sat, or what she said to a six-year-old. What it "
+"does is make both versions the same story underneath: a woman waiting out a delay she had not "
+"planned for, in a hot room full of people who knew her face, wanting to be in the car. Whether "
+"she got through it by turning to a window or by sitting down beside somebody's grandmother is a "
+"real difference and it matters. But the coat was on either way, and the two witnesses who could "
+"not agree on anything else both saw it and thought nothing of it at all. There is a second "
+"detail of the same kind: both say she never once asked how much longer the car would be. Doyle "
+"offers this as evidence that she was not interested in the room, Hanlon as evidence that she was "
+"not in any hurry, and it is neither. It is what a person does who knows that asking makes a wait "
+"longer."
+)
+
+S[8] = (
+"Aoife Byrne was traced in 1994. She was thirty-four, she still had the exercise book, and she "
+"was the one person alive who had been within arm's length of the whole thing. She remembers the "
+"garage and she remembers the red cover and she has no memory of the afternoon whatsoever. Not a "
+"fragment. She was asked about the dog and said she had looked at it for most of her childhood, "
+"had never known where it came from, and had assumed for years that she had drawn it herself. She "
+"was asked which account she believed and said she had no way of choosing and did not much want "
+"one, and that she came out of both of them fine either way. The two witnesses never met. Doyle "
+"died eleven years before Hanlon gave her interview and she did not know his account existed "
+"until she was shown it. She read it twice, said the man was clearly honest and clearly mistaken, "
+"and then said she supposed he would have said the same about her. Asked whether it bothered her "
+"to be doubted, she said what bothered her was different: that between them they had used up the "
+"only twenty minutes there were, and that whatever actually happened in that room was now "
+"somewhere underneath two careful descriptions of it and was not coming back out. That is the "
+"honest end of this. Two people looked at the same woman for twenty minutes and paid attention, "
+"and the attention is what destroyed the record. This story is a work of fiction. The village, "
+"the post office, Doyle, the Hanlons, the Byrnes, the notebook and every detail in it are "
+"invented, created for storytelling and not drawn from any record."
+)
+
+for k in sorted(S):
+    n = len(S[k])
+    print(k, n, ("OK" if 1570 <= n <= 1630 else n - 1600))
+
+here = os.path.dirname(os.path.abspath(__file__))
+json.dump({str(k): S[k] for k in sorted(S)},
+          open(os.path.join(here, "scenes.json"), "w", encoding="utf-8"),
+          ensure_ascii=False, indent=1)
+with open(os.path.join(here, "script.txt"), "w", encoding="utf-8") as fh:
+    for k in sorted(S):
+        fh.write(f"[SCENE{k}]\n{S[k]}\n[/SCENE{k}]\n\n")
