@@ -71,6 +71,38 @@ standartlar (8 sahne/8 görsel, 1570-1630 kr/sahne, 13-15 dk, Vertex AI,
 zoompan/encode ayarları, YouTube meta, Drive QC akışı) **tüm kanallar
 için geçerlidir**.
 
+### Çoklu kanal araç zinciri (15 Eyl 2026, Erdem'in talimatı)
+
+Erdem'in isteği: "bütün kanallarımı yönetmeni, yayın zamanını excele
+girmeni ve bu zaman geldiğinde de yayınlamanı istiyorum." Pipeline buna
+göre kanal-bilinçli hale getirildi.
+
+* **`pipeline/channels.json`** — kanal kaydı: sheet sekmesi, YouTube token
+  dosyası, anlatıcı sesi, `ready` bayrağı. Kanal eklemek kod işi değil.
+* **`pipeline/cly`** — tek komut arayüzü; her komut `--channel <slug>`
+  alıyor, varsayılan `audrey`. `cly setup <slug>` o kanalda yayına kadar
+  kalan adımları yazdırıyor.
+* **`pipeline/sync.py`** — sheet'in "Yayın zamanı" kolonunu YouTube'un
+  `publishAt` alanıyla karşılaştırır, farkı raporlar, `--apply` ile işler.
+  **Yayını YouTube yapıyor** (publishAt saatinde video kendi kendine
+  public oluyor), yani konteynerin o an ayakta olması gerekmiyor; sync'in
+  işi saatin gerçekten işlendiğini garanti etmek.
+* **Onay kapısı koda gömüldü:** `sync --apply` yalnızca sheet'in **Onay**
+  kolonunda onay yazan satırları zamanlıyor; "Onay bekliyor" onay
+  sayılmıyor. Kurulumu bitmemiş kanalda `upload`/`schedule` hiç
+  çalışmıyor (`channels.py: require_ready`).
+
+**İlk çalıştırmada bulunan tutarsızlık:** Audrey sekmesindeki 44 satırın
+**32'sinde** Durum kolonu gerçeği yansıtmıyordu (YouTube'da public, sheet'te
+"Zamanlandı"/"Private"). `sync --fix-status` ile düzeltildi; iki taraf artık
+birebir uyuşuyor. Bu, sheet'in yayın takvimi için tek kaynak olmasının
+neden makine kontrolü gerektirdiğinin kanıtı.
+
+**Kalan engel (Erdem'de):** Diana/Jackie/Armstrong/Rogers sekmeleri sheet'te
+var ama YouTube tarafında kanal + OAuth token + telefon doğrulaması yok.
+Bu üçü tamamlanmadan o kanallarda **üretim yapılabilir, yayın yapılamaz**.
+`cly setup <slug>` her kanal için kalan adımları listeliyor.
+
 ---
 
 # Audrey Hepburn: Untold Stories — İçerik Stratejisi

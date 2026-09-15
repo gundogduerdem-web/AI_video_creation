@@ -1,17 +1,23 @@
 """YouTube'a private yükleme, thumbnail, zamanlama ve Drive QC kopyası.
 
+Her komut `--channel <slug>` alir (varsayilan: audrey; PIPELINE_CHANNEL
+ortam degiskeni de gecerli). Kanal kayitlari channels.json icinde.
+
 Kullanım:
     # video + thumbnail yükle (private, zamanlamasız)
-    python3 publish.py upload <video.mp4> <seo.json> <thumb.jpg>
+    python3 publish.py upload <video.mp4> <seo.json> <thumb.jpg> [--channel X]
 
     # yayın zamanı ata (TR saatini UTC'ye çevirerek ver: TR = UTC+3)
-    python3 publish.py schedule <video_id> 2026-08-28T19:00:00Z
+    python3 publish.py schedule <video_id> 2026-08-28T19:00:00Z [--channel X]
 
     # Drive'a kalite kontrol kopyası
     python3 publish.py drive <dosya.mp4>
 
     # kanaldaki private/zamanlı videoları listele
-    python3 publish.py status
+    python3 publish.py status [--channel X]
+
+    # tek videonun durumunu kesin olarak oku (status listesi gecikmeli)
+    python3 publish.py check <video_id> [...] [--channel X]
 
 seo.json:  {"title": ..., "description": ..., "tags": [...]}
 
@@ -26,6 +32,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import DRIVE_PARENT, US_LOCATION, drive_token, youtube_token  # noqa: E402
+from channels import require_ready, resolve, take_channel_arg  # noqa: E402
 
 
 def upload(video, seo_path, thumb=None, token_file="youtube_token.json"):
@@ -148,15 +155,49 @@ def status(token_file="youtube_token.json"):
                           f"| {v['snippet']['title'][:55]}")
 
 
+def check(vids, token_file="youtube_token.json"):
+    """Verilen video id'lerinin gizlilik/publishAt degerlerini dogrudan okur.
+
+    status() kanalin uploads playlist'ini tariyor ve o liste YouTube tarafinda
+    gecikmeli guncelleniyor: yeni yuklenen bir video zamanlandigi halde
+    status cikisinda gorunmeyebiliyor. Zamanlamayi dogrulamak icin bu komut
+    kullanilir.
+    """
+    token = youtube_token(token_file)
+    url = ("https://www.googleapis.com/youtube/v3/videos"
+           f"?part=snippet,status&id={','.join(vids)}")
+    with urllib.request.urlopen(urllib.request.Request(
+            url, headers={"Authorization": f"Bearer {token}"}), timeout=30) as resp:
+        items = json.loads(resp.read())["items"]
+    for v in items:
+        st = v["status"]
+        print(f"  {v['id']} | {st['privacyStatus']:7s} "
+              f"| publishAt={st.get('publishAt', 'YOK')} "
+              f"| {v['snippet']['title'][:50]}")
+    found = {v["id"] for v in items}
+    for missing in [v for v in vids if v not in found]:
+        print(f"  {missing} | BULUNAMADI (bu kanala ait degil ya da silinmis)")
+    return items
+
+
 if __name__ == "__main__":
-    cmd = sys.argv[1]
+    argv, slug = take_channel_arg(sys.argv[1:])
+    ch = resolve(slug)
+    tok = ch["youtube_token"]
+    cmd = argv[0] if argv else ""
     if cmd == "upload":
-        upload(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
+        require_ready(ch)
+        upload(argv[1], argv[2], argv[3] if len(argv) > 3 else None, tok)
     elif cmd == "schedule":
-        schedule(sys.argv[2], sys.argv[3])
+        require_ready(ch)
+        schedule(argv[1], argv[2], tok)
     elif cmd == "drive":
-        drive_upload(sys.argv[2])
+        drive_upload(argv[1])
     elif cmd == "status":
-        status()
+        require_ready(ch)
+        status(tok)
+    elif cmd == "check":
+        require_ready(ch)
+        check(argv[1:], tok)
     else:
         print(__doc__)

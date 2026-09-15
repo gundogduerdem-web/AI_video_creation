@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""cly — kanal portfoyunun tek komut arayuzu.
+
+Her komut `--channel <slug>` alir (varsayilan: audrey). Kanal kayitlari
+channels.json icinde: sheet sekmesi, YouTube token dosyasi, anlatici sesi.
+Kanal eklemek kod isi degil, o dosyaya bir giris yazmak.
+
+  cly channels                          kanallari ve kurulum durumunu listele
+  cly setup <slug>                      kanalin eksik kurulum adimlarini yazdir
+
+  cly images <prompts.json> <dizin> [--vertical]
+  cly tts <script.txt> <dizin> [ses]    ses verilmezse kanalin sesi kullanilir
+  cly timings <ses_dizini> <dizin>
+  cly build <ad> <script.txt> <img> <aud> <tim>
+  cly short <ad> <s1.txt> <tim.json> <wav> <dikey.png> [kesim_sn]
+
+  cly upload <video.mp4> <seo.json> <thumb.jpg>
+  cly drive <dosya.mp4>
+  cly schedule <video_id> <2026-09-15T21:00:00Z>
+  cly check <video_id> [...]            tek video durumu (status gecikmeli)
+  cly status                            kanaldaki private/zamanli videolar
+
+  cly sheet [satir]                     kanalin sheet sekmesini yazdir
+  cly sync [--apply] [--fix-status] [--all]
+                                        sheet'teki yayin saatini YouTube ile
+                                        karsilastir; --apply ile isle
+
+Yayin kapisi: `upload`, `schedule` ve `sync --apply` yalnizca kurulumu
+bitmis kanalda calisir, ve `sync --apply` yalnizca sheet'in Onay kolonunda
+onay yazan satirlari isler.
+"""
+import os
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from channels import resolve, take_channel_arg  # noqa: E402
+
+# komut -> (script, kanal bayragini script'e de gecir mi)
+PY_SCRIPTS = {
+    "images": ("generate_images.py", False),
+    "timings": ("transcribe.py", False),
+    "short": ("build_short.py", False),
+    "upload": ("publish.py", True),
+    "drive": ("publish.py", True),
+    "schedule": ("publish.py", True),
+    "check": ("publish.py", True),
+    "status": ("publish.py", True),
+    "sync": ("sync.py", True),
+}
+PUBLISH_CMDS = {"upload", "drive", "schedule", "check", "status"}
+
+
+def run(args):
+    return subprocess.call(args, cwd=HERE)
+
+
+def main():
+    argv, slug = take_channel_arg(sys.argv[1:])
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        print(__doc__)
+        return 0
+    cmd, rest = argv[0], argv[1:]
+    ch = resolve(slug)
+    chan_args = ["--channel", ch["slug"]]
+
+    if cmd == "channels":
+        return run([sys.executable, "channels.py"])
+    if cmd == "setup":
+        return setup(resolve(rest[0]) if rest else ch)
+    if cmd == "tts":
+        # Ses verilmediyse kanalin kayitli sesi kullanilir; kanallarin sesleri
+        # ayrisma icin farkli tutuluyor (CONTENT_STRATEGY.md).
+        if len(rest) < 3:
+            if not ch["voice"]:
+                print(f"'{ch['slug']}' icin ses secilmemis (channels.json: voice). "
+                      f"Ya oraya yaz ya komuta ekle.", file=sys.stderr)
+                return 1
+            rest = list(rest) + [ch["voice"]]
+        return run([sys.executable, "generate_tts.py", *rest])
+    if cmd == "build":
+        return run(["./build_video.sh", *rest])
+    if cmd == "sheet":
+        return run([sys.executable, "sheet.py", ch["slug"], *rest])
+    if cmd in PY_SCRIPTS:
+        script, pass_chan = PY_SCRIPTS[cmd]
+        sub = [cmd, *rest] if script in ("publish.py", "sync.py") else list(rest)
+        if script == "sync.py":
+            sub = list(rest)
+        return run([sys.executable, script, *sub, *(chan_args if pass_chan else [])])
+    print(f"bilinmeyen komut: {cmd}\n", file=sys.stderr)
+    print(__doc__)
+    return 1
+
+
+def setup(ch):
+    """Bir kanalin yayina hazir olmasi icin kalan adimlari yazdirir."""
+    from common import CREDS
+    tok = os.path.join(CREDS, ch["youtube_token"])
+    print(f"{ch['slug']} — {ch['name']}")
+    print(f"  sheet sekmesi : {ch['sheet_tab']}")
+    print(f"  anlatici sesi : {ch['voice'] or 'SECILMEDI'}")
+    print(f"  token dosyasi : {ch['youtube_token']} "
+          f"({'var' if os.path.exists(tok) else 'YOK'})")
+    print(f"  kayit durumu  : {'hazir' if ch['ready'] else 'kurulum bekliyor'}")
+    if ch["ready"] and os.path.exists(tok):
+        print("  -> yayina hazir")
+        return 0
+    print("\n  Kalan adimlar:")
+    n = 1
+    if not os.path.exists(tok):
+        print(f"  {n}. Erdem YouTube kanalini olusturur ve OAuth onayi verir; "
+              f"kod {ch['youtube_token']} olarak kaydedilir.")
+        print("     Onay linki: python3 -c \"from common import consent_url; "
+              "print(consent_url(['https://www.googleapis.com/auth/youtube',"
+              "'https://www.googleapis.com/auth/youtube.upload',"
+              "'https://www.googleapis.com/auth/yt-analytics.readonly']))\"")
+        print("     Onayda DOGRU kanal secilmeli — marka kanallari ayri satir olarak cikar.")
+        n += 1
+    if not ch["voice"]:
+        print(f"  {n}. Anlatici sesi secilir ve channels.json'a yazilir "
+              f"(her kanalin sesi farkli).")
+        n += 1
+    print(f"  {n}. Telefon dogrulamasi: Studio -> Ayarlar -> Kanal -> "
+          f"Ozellik uygunlugu -> Orta duzey.")
+    print("     Dogrulanmamis kanalda ozel thumbnail yuklenemez (403) ve 15 dk "
+          "ustu video kabul edilmez. Thumbnail CTR omurgasi oldugu icin "
+          "dogrulama bitene kadar o kanalda YAYIN YAPILMAZ (uretim yapilabilir).")
+    print("     Bir numarayla yilda en fazla 2 kanal dogrulanabiliyor.")
+    print(f"  {n + 1}. channels.json'da \"ready\": true yapilir.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

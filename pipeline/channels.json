@@ -1,0 +1,47 @@
+{
+  "audrey": {
+    "name": "Audrey Hepburn",
+    "title": "Audrey Hepburn: Untold Stories",
+    "sheet_tab": "Audrey Hepburn",
+    "youtube_token": "youtube_token.json",
+    "voice": "Enceladus",
+    "ready": true,
+    "notes": "Kurulu ve yayinda. Telefon dogrulamasi var (15 dk ustu video ve ozel thumbnail yuklenebiliyor)."
+  },
+  "diana": {
+    "name": "Princess Diana",
+    "title": "Princess Diana: Untold Stories",
+    "sheet_tab": "Princess Diana",
+    "youtube_token": "youtube_token_diana.json",
+    "voice": "Algieba",
+    "ready": false,
+    "notes": "Ses Erdem tarafindan secildi. Kanal + OAuth onayi + telefon dogrulamasi bekliyor."
+  },
+  "jackie": {
+    "name": "Jacqueline Kennedy",
+    "title": "Jacqueline Kennedy: Untold Stories",
+    "sheet_tab": "Jacqueline Kennedy",
+    "youtube_token": "youtube_token_jackie.json",
+    "voice": null,
+    "ready": false,
+    "notes": "Ses kurulumda secilecek. Kanal + OAuth onayi + telefon dogrulamasi bekliyor."
+  },
+  "armstrong": {
+    "name": "Louis Armstrong",
+    "title": "Louis Armstrong: Untold Stories",
+    "sheet_tab": "Louis Armstrong",
+    "youtube_token": "youtube_token_armstrong.json",
+    "voice": null,
+    "ready": false,
+    "notes": "Ses kurulumda secilecek. Kanal + OAuth onayi + telefon dogrulamasi bekliyor."
+  },
+  "rogers": {
+    "name": "Kenny Rogers",
+    "title": "Kenny Rogers: Untold Stories",
+    "sheet_tab": "Kenny Rogers",
+    "youtube_token": "youtube_token_rogers.json",
+    "voice": null,
+    "ready": false,
+    "notes": "Ses kurulumda secilecek. Kanal + OAuth onayi + telefon dogrulamasi bekliyor."
+  }
+}

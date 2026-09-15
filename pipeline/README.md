@@ -61,6 +61,61 @@ Drive için aynı akış, tek kapsam: `https://www.googleapis.com/auth/drive`
 ⚠️ YouTube onayında **doğru kanal** seçilmeli — marka kanalları hesap
 seçiciyle ayrı satır olarak çıkar.
 
+## Kanallar (`cly`)
+
+Portföy beş kanal: Audrey Hepburn (yayında), Princess Diana, Jacqueline
+Kennedy, Louis Armstrong, Kenny Rogers. Hepsi tek merkezî sheet'te, kanal
+başına bir sekme.
+
+Kanal kaydı `channels.json` içinde: sheet sekmesi, YouTube token dosyası,
+anlatıcı sesi, kurulum durumu. **Kanal eklemek kod işi değil** — o dosyaya
+bir giriş yazılır. Hiçbir script'te artık tek kanal varsayımı yok; kanal
+`--channel <slug>` ile ya da `PIPELINE_CHANNEL` ile verilir, verilmezse
+`audrey` kullanılır.
+
+`cly` hepsinin tek arayüzü:
+
+```bash
+./cly channels          # kanallar ve kurulum durumu
+./cly setup diana       # o kanalda yayına kadar kalan adımlar
+./cly --help            # komut listesi
+```
+
+Her komut `--channel` alır, örn. `./cly status --channel diana`.
+
+**Yayın kapıları kodda:** kurulumu bitmemiş kanalda `upload`/`schedule`
+çalışmaz (`channels.py: require_ready`), ve `sync --apply` yalnızca
+sheet'in **Onay** kolonunda onay yazan satırları işler. Erdem'in açık
+onayı olmadan hiçbir video public/scheduled olmaz kuralı böylece koda
+gömülü.
+
+### Sheet yayın takviminin kaynağı
+
+Yayın saati iki yerde duruyor: YouTube'un `publishAt` alanı ve sheet'in
+"Yayın zamanı" kolonu. Bu ikisi sessizce ayrışabiliyor — 13 Eylül 2026'da
+bir video sheet'te "Yayında" yazarken YouTube'da private + publishAt=yarın
+duruyordu. `sync` iki tarafı karşılaştırır:
+
+```bash
+./cly sync                 # karşılaştır, yazma
+./cly sync --apply         # sheet'teki saati YouTube'a işle (onaylı satırlar)
+./cly sync --fix-status    # public olanların Durum hücresini düzelt
+./cly sync --all           # tüm kurulu kanallar
+```
+
+Yayını YouTube yapar: `publishAt` saati geldiğinde video kendi kendine
+public olur, bu yüzden konteynerin o an ayakta olması gerekmiyor. `sync`'in
+işi saatin gerçekten işlendiğini garanti etmek. Yakaladığı durumlar:
+sheet'te saat var YouTube'da yok, iki taraf farklı, saat geçmiş ama video
+hâlâ private (kaçırılmış yayın), onay yok, video o kanala ait değil.
+
+Sheet'e yazılan kanonik saat formatı (ikisi de okunuyor):
+
+```
+2026-09-16 00:00 (Çarşamba gecesi) = 2026-09-15 21:00 UTC
+2026-09-16 00:00        <- saat dilimi yazılmazsa TR (UTC+3) sayılır
+```
+
 ## Akış
 
 ```bash
@@ -82,6 +137,7 @@ python3 build_short.py isim s1.txt timings/scene_1.json audio/scene_1.wav dikey.
 
 # 6) Senaryo tablosu (Drive'daki AI video scenario sheet)
 python3 sheet.py "Audrey Hepburn"          # son satırları göster
+python3 sheet.py diana                     # kanal slug'ı da geçerli
 # kod içinden: from sheet import append_row, update_cell
 
 # 7) Yayın
@@ -89,7 +145,17 @@ python3 publish.py upload isim.mp4 seo.json thumb.jpg
 python3 publish.py drive isim.mp4          # kalite kontrol kopyası
 python3 publish.py schedule <video_id> 2026-08-28T19:00:00Z
 python3 publish.py status                  # zamanlamaları doğrula
+python3 publish.py check <video_id>        # tek videonun kesin durumu
 ```
+
+Her adım `cly` üzerinden de çağrılabilir ve o zaman kanal bilgisi
+otomatik geçer (örn. `./cly tts script.txt $WORK/audio` sesi
+`channels.json`'dan alır).
+
+**`status` gecikmeli, `check` değil.** `status` kanalın uploads
+playlist'ini tarıyor ve YouTube o listeyi gecikmeli güncelliyor: yeni
+yüklenmiş bir video zamanlandığı hâlde `status` çıkışında görünmeyebilir.
+Zamanlamayı doğrulamak için `check <video_id>` kullanılır.
 
 `$WORK` = `$PIPELINE_WORK` (varsayılan scratchpad).
 
