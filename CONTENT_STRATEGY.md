@@ -730,6 +730,41 @@ videoyla (V2) arasındaki CTR farkında görünür.
 
 ---
 
+## Diana kanalı — 8 video sonrası dağıtım tablosu ve Erdem'in kararı (15 Eyl 2026)
+
+Sekiz uzun video + yedi Shorts yayınlandıktan sonraki durum:
+
+| İçerik | Yayında | İzlenme |
+|---|---|---|
+| V1-S (Shorts) | 9 Eyl | 1094 |
+| V6-S (Shorts) | 13 Eyl | 337 |
+| V2-S (Shorts) | 10 Eyl | 166 |
+| V2 (uzun) | 9 Eyl | 39 |
+| V1 (uzun) | 8 Eyl | 17 |
+| V7 (uzun) | 13 Eyl | 4 |
+| V3 (uzun) | 10 Eyl | 1 |
+| V8 (uzun) | 15 Eyl | 0 |
+
+**Uzun videolarda ortalama izlenme süresi 53-90 sn** (videolar 13-14 dk).
+Shorts tutunması %102-147 (100 üstü = tekrar izleme).
+
+**Denenen ve sonuç vermeyen düzeltmeler:** açılış cümlesinin öne çekilmesi
+(V5'ten itibaren iddia ilk cümlede), kapak parlaklık standardı (V2'den
+itibaren 70-90 bandı), sahne 1'de meta cümle yasağı, sekiz videoda sekiz
+farklı anlatı yapısı ve üç farklı duygusal kayıt. Hiçbiri uzun video
+dağıtımını açmadı. Sorun içerik kalitesinde değil: algoritma uzun videoları
+**test bile etmiyor**, dolayısıyla retention'ı iyileştirecek izleyici hiç
+gelmiyor. Bu, Audrey kanalındaki tablonun birebir tekrarı.
+
+**ERDEM'İN KARARI (15 Eyl 2026): Bu konseptle devam edilecek.** Uzun video
++ Shorts üretimi mevcut formatta sürdürülür. Karar, yukarıdaki veri ve üç
+alternatif (devam / Shorts'u ana ürün yapmak / tek kişi yerine tema kanalı
+modeline geçmek) açıkça sunulduktan sonra alındı. Claude bu tartışmayı
+yeniden açmaz; yeni bir veri kırılması olmadıkça üretim aynı standartlarla
+devam eder.
+
+---
+
 ## Hikaye Anlatım Özellikleri
 
 - **3. Şahıs Anlatıcı:** Objektif bir anlatıcı perspektifi.
